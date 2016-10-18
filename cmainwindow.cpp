@@ -7,8 +7,10 @@ cMainWindow::cMainWindow(QWidget *parent) :
 	ui(new Ui::cMainWindow)
 {
 	ui->setupUi(this);
+	ui->m_lpMainTab->setCurrentIndex(0);
 
-	m_kodiVideoLibrary.connect("C:\\Users\\birkeh\\.kodi\\userdata\\Database\\MyVideos99.db");
+	setWindowTitle("qtKodiAdmin");
+	m_kodiLibrary.init("C:\\Users\\birkeh\\.kodi");
 }
 
 cMainWindow::~cMainWindow()

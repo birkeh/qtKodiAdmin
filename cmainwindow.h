@@ -1,7 +1,8 @@
 #ifndef CMAINWINDOW_H
 #define CMAINWINDOW_H
 
-#include "ckodivideolibrary.h"
+
+#include "ckodilibrary.h"
 
 #include <QMainWindow>
 
@@ -21,7 +22,7 @@ public:
 
 private:
 	Ui::cMainWindow*	ui;
-	cKodiVideoLibrary	m_kodiVideoLibrary;
+	cKodiLibrary		m_kodiLibrary;
 };
 
 #endif // CMAINWINDOW_H

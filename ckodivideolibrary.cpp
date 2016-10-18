@@ -17,10 +17,10 @@ cKodiVideoLibrary::~cKodiVideoLibrary()
 		m_db.close();
 }
 
-qint16 cKodiVideoLibrary::connect(const QString& szFileName)
+qint16 cKodiVideoLibrary::init(const QString& szFileName)
 {
 	if(m_bConnected)
-		return(true);
+		return(m_iVersion);
 
 	if(!QFile(szFileName).exists())
 		return(-1);
@@ -48,5 +48,12 @@ qint16 cKodiVideoLibrary::connect(const QString& szFileName)
 
 	m_iVersion		= query.value("idVersion").toInt();
 	m_bConnected	= true;
+	return(m_iVersion);
+}
+
+qint16 cKodiVideoLibrary::version()
+{
+	if(!m_bConnected)
+		return(-1);
 	return(m_iVersion);
 }

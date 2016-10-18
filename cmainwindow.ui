@@ -1,24 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>cMainWindow</class>
- <widget class="QMainWindow" name="cMainWindow" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="cMainWindow">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>785</width>
+    <height>575</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>cMainWindow</string>
   </property>
-  <widget class="QMenuBar" name="menuBar" />
-  <widget class="QToolBar" name="mainToolBar" />
-  <widget class="QWidget" name="centralWidget" />
-  <widget class="QStatusBar" name="statusBar" />
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTabWidget" name="m_lpMainTab">
+      <property name="currentIndex">
+       <number>3</number>
+      </property>
+      <widget class="QWidget" name="m_lpTabMovies">
+       <attribute name="title">
+        <string>Movies</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="m_lpTabTVShows">
+       <attribute name="title">
+        <string>TV Shows</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="m_lpTabMusic">
+       <attribute name="title">
+        <string>Music</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="m_lpTabMusicShows">
+       <attribute name="title">
+        <string>Music Shows</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>785</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
+ <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
 </ui>

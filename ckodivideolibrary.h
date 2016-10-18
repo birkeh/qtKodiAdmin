@@ -11,7 +11,8 @@ public:
 	cKodiVideoLibrary();
 	~cKodiVideoLibrary();
 
-	qint16		connect(const QString& szFileName);
+	qint16			init(const QString& szFileName);
+	qint16			version();
 private:
 	QSqlDatabase	m_db;
 	bool			m_bConnected;

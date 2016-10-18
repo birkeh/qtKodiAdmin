@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         cmainwindow.cpp \
-    ckodivideolibrary.cpp
+    ckodivideolibrary.cpp \
+    ckodilibrary.cpp
 
 HEADERS  += cmainwindow.h \
-    ckodivideolibrary.h
+    ckodivideolibrary.h \
+    ckodilibrary.h
 
 FORMS    += cmainwindow.ui
