@@ -22,3 +22,16 @@ HEADERS  += cmainwindow.h \
     ckodilibrary.h
 
 FORMS    += cmainwindow.ui
+
+RESOURCES += \
+    atkodidb.qrc
+
+DISTFILES += \
+    icons/Images.png \
+    icons/Musics.png \
+    icons/TV Shows.png \
+    icons/Videos.png \
+    icons/Images.ico \
+    icons/Musics.ico \
+    icons/TV Shows.ico \
+    icons/Videos.ico
