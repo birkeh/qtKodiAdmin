@@ -1,3 +1,12 @@
 <RCC>
-    <qresource prefix="/"/>
+    <qresource prefix="/">
+        <file>icons/Images.ico</file>
+        <file>icons/Images.png</file>
+        <file>icons/Musics.ico</file>
+        <file>icons/Musics.png</file>
+        <file>icons/TV Shows.ico</file>
+        <file>icons/TV Shows.png</file>
+        <file>icons/Videos.ico</file>
+        <file>icons/Videos.png</file>
+    </qresource>
 </RCC>
