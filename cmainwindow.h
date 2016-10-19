@@ -2,6 +2,8 @@
 #define CMAINWINDOW_H
 
 
+#include "cmoviewidget.h"
+#include "ctvshowwidget.h"
 #include "ckodilibrary.h"
 
 #include <QMainWindow>
@@ -22,7 +24,12 @@ public:
 
 private:
 	Ui::cMainWindow*	ui;
+	cMovieWidget*		m_lpMovieWidget;
+	cTVShowWidget*		m_lpTVShowWidget;
 	cKodiLibrary		m_kodiLibrary;
+
+	void				initUI();
+	void				initDB();
 };
 
 #endif // CMAINWINDOW_H

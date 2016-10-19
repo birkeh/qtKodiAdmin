@@ -21,52 +21,17 @@
        <enum>QTabWidget::West</enum>
       </property>
       <property name="tabShape">
-       <enum>QTabWidget::Triangular</enum>
+       <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>-1</number>
       </property>
       <property name="iconSize">
        <size>
-        <width>32</width>
-        <height>32</height>
+        <width>64</width>
+        <height>64</height>
        </size>
       </property>
-      <widget class="QWidget" name="m_lpTabMovies">
-       <attribute name="icon">
-        <iconset>
-         <normalon>:/icons/icons/Videos.ico</normalon>
-        </iconset>
-       </attribute>
-       <attribute name="title">
-        <string>Movies</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="m_lpTabTVShows">
-       <attribute name="icon">
-        <iconset>
-         <normalon>:/icons/icons/TV Shows.ico</normalon>
-        </iconset>
-       </attribute>
-       <attribute name="title">
-        <string>TV Shows</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="m_lpTabMusic">
-       <attribute name="icon">
-        <iconset>
-         <normalon>:/icons/icons/Musics.ico</normalon>
-        </iconset>
-       </attribute>
-       <attribute name="title">
-        <string>Music</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="m_lpTabMusicShows">
-       <attribute name="title">
-        <string>Music Shows</string>
-       </attribute>
-      </widget>
      </widget>
     </item>
    </layout>
