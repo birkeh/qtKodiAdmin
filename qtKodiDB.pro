@@ -24,7 +24,7 @@ HEADERS  += cmainwindow.h \
 FORMS    += cmainwindow.ui
 
 RESOURCES += \
-    atkodidb.qrc
+    qtkodidb.qrc
 
 DISTFILES += \
     icons/Images.png \
