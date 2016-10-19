@@ -34,4 +34,12 @@ RESOURCES += \
 
 DISTFILES += \
     icons/TV Shows.png \
-    icons/TV Shows.ico
+    icons/TV Shows.ico \
+    icons/Images.png \
+    icons/Musics.png \
+    icons/TV Shows.png \
+    icons/Videos.png \
+    icons/Images.ico \
+    icons/Musics.ico \
+    icons/TV Shows.ico \
+    icons/Videos.ico
