@@ -4,6 +4,9 @@
 
 #include "cmoviewidget.h"
 #include "ctvshowwidget.h"
+#include "cmusicwidget.h"
+#include "cmusicvideoswidget.h"
+
 #include "ckodilibrary.h"
 
 #include <QMainWindow>
@@ -26,6 +29,8 @@ private:
 	Ui::cMainWindow*	ui;
 	cMovieWidget*		m_lpMovieWidget;
 	cTVShowWidget*		m_lpTVShowWidget;
+	cMusicWidget*		m_lpMusicWidget;
+	cMusicVideosWidget*	m_lpMusicVideoWidget;
 	cKodiLibrary		m_kodiLibrary;
 
 	void				initUI();

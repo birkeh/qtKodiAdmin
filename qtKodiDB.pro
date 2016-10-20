@@ -17,17 +17,27 @@ SOURCES += main.cpp\
     ckodivideolibrary.cpp \
     ckodilibrary.cpp \
     cmoviewidget.cpp \
-    ctvshowwidget.cpp
+    ctvshowwidget.cpp \
+    cmaintabbar.cpp \
+    cmaintabwidget.cpp \
+    cmusicwidget.cpp \
+    cmusicvideoswidget.cpp
 
 HEADERS  += cmainwindow.h \
     ckodivideolibrary.h \
     ckodilibrary.h \
     cmoviewidget.h \
-    ctvshowwidget.h
+    ctvshowwidget.h \
+    cmaintabbar.h \
+    cmaintabwidget.h \
+    cmusicwidget.h \
+    cmusicvideoswidget.h
 
 FORMS    += cmainwindow.ui \
     cmoviewidget.ui \
-    ctvshowwidget.ui
+    ctvshowwidget.ui \
+    cmusicwidget.ui \
+    cmusicvideoswidget.ui
 
 RESOURCES += \
     qtkodidb.qrc
