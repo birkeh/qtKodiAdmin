@@ -52,4 +52,5 @@ DISTFILES += \
     icons/Images.ico \
     icons/Musics.ico \
     icons/TV Shows.ico \
-    icons/Videos.ico
+    icons/Videos.ico \
+    icons/empty.ico

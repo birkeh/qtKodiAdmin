@@ -3,20 +3,22 @@
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QStatusBar>
 
 
 class cKodiVideoLibrary
 {
 public:
-	cKodiVideoLibrary();
+	cKodiVideoLibrary(QSqlDatabase& db);
 	~cKodiVideoLibrary();
 
-	qint16			init(const QString& szFileName);
+	qint16			init();
 	qint16			version();
+
+	qint32			load();
 private:
 	QSqlDatabase	m_db;
 	bool			m_bConnected;
-	QString			m_szFileName;
 	qint16			m_iVersion;
 };
 

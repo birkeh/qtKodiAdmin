@@ -1,65 +1,85 @@
 #include "ckodilibrary.h"
 
 
+#include <QTime>
 #include <QDir>
 #include <QString>
 #include <QStringList>
 
 
-cKodiLibrary::cKodiLibrary() :
-	m_szPath(""),
-	m_szAddons(""),
-	m_szADSP(""),
-	m_szEpg(""),
-	m_szMyMusic(""),
-	m_szMyVideos(""),
-	m_szTextures(""),
-	m_szTV(""),
-	m_szViewModes("")
+cKodiLibrary::cKodiLibrary(QStatusBar* lpMainWindowStatusBar, QSqlDatabase& dbVideos) :
+	m_command(command_none),
+	m_lpMainWindowStatusBar(lpMainWindowStatusBar),
+	m_dbVideos(dbVideos)
 {
 }
 
-cKodiLibrary::~cKodiLibrary()
+void cKodiLibrary::stop()
 {
+	QMutexLocker	locker(&m_mutex);
+
+	while(m_command != command_none)
+		msleep(100);
+
+	m_command	= command_stop;
 }
 
-QString cKodiLibrary::findFile(const QString& szPath, const QString& szFile)
+void cKodiLibrary::run()
 {
-	QDir		fileList(szPath + QDir::separator() + QString("Userdata") + QDir::separator() + QString("Database"), szFile + QString("*.*"));
-	QString		fileName("");
-	QStringList	files		= fileList.entryList(QDir::Files);
-	qint16		iVersion	= -1;
+	bool	bStop	= false;
+	QTime	timer;
+	timer.restart();
 
-	for(int x = 0;x < files.count();x++)
+	for(;;)
 	{
-		QString	tmp	= files.at(x);
-		tmp			= tmp.left(tmp.lastIndexOf("."));
-		tmp			= tmp.mid(szFile.length());
-		if(iVersion < tmp.toInt())
+		switch(m_command)
 		{
-			fileName	= files.at(x);
-			iVersion	= tmp.toInt();
+		case command_none:
+			break;
+		case command_init:
+			doInit();
+			m_command	= command_none;
+			break;
+		case command_stop:
+			bStop		= true;
+			break;
+		default:
+			break;
 		}
+
+		if(bStop)
+			break;
+		msleep(10);
 	}
-	if(fileName.length())
-		return(fileList.cleanPath(fileList.absoluteFilePath(fileName)));
-	return(fileName);
 }
 
-bool cKodiLibrary::init(const QString& szPath)
+void cKodiLibrary::init()
 {
-	m_szPath		= szPath;
-	m_szAddons		= findFile(m_szPath, "Addons");
-	m_szADSP		= findFile(m_szPath, "ADSP");
-	m_szEpg			= findFile(m_szPath, "Epg");
-	m_szMyMusic		= findFile(m_szPath, "MyMusic");
-	m_szMyVideos	= findFile(m_szPath, "MyVideos");
-	m_szTextures	= findFile(m_szPath, "Textures");
-	m_szTV			= findFile(m_szPath, "TV");
-	m_szViewModes	= findFile(m_szPath, "ViewModes");
+	QMutexLocker	locker(&m_mutex);
 
-	if(m_kodiVideoLibrary.init(m_szMyVideos) != -1)
-		return(true);
+	while(m_command != command_none)
+		msleep(100);
 
-	return(false);
+	m_command	= command_init;
+}
+
+bool cKodiLibrary::doInit()
+{
+	QMutexLocker	locker(&m_mutex);
+	qint32			iVideoCount	= 0;
+
+	m_lpMainWindowStatusBar->showMessage("Initializing Videos ...");
+
+	if(!m_dbVideos.open())
+		return(false);
+
+	m_lpKodiVideoLibrary	= new cKodiVideoLibrary(m_dbVideos);
+	if(m_lpKodiVideoLibrary->init() != -1)
+		iVideoCount	= m_lpKodiVideoLibrary->load();
+	emit initDone(iVideoCount);
+
+	m_command	= command_none;
+	m_lpMainWindowStatusBar->showMessage("Done.", 3000);
+
+	return(iVideoCount != 0);
 }

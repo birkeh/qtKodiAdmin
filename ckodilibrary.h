@@ -4,27 +4,42 @@
 
 #include "ckodivideolibrary.h"
 
+#include <QStatusBar>
+#include <QThread>
+#include <QMutexLocker>
 
-class cKodiLibrary
+
+class cKodiLibrary : public QThread
 {
+	Q_OBJECT
+
 public:
-	cKodiLibrary();
-	~cKodiLibrary();
+	cKodiLibrary(QStatusBar* lpMainWindowStatusBar, QSqlDatabase& dbVideos);
+public slots:
+	void				stop();
+	void				init();
 
-	bool				init(const QString &szPath);
+signals:
+	void				initDone(qint32 iMovieCount);
+
 private:
-	QString				m_szPath;
-	QString				m_szAddons;
-	QString				m_szADSP;
-	QString				m_szEpg;
-	QString				m_szMyMusic;
-	QString				m_szMyVideos;
-	QString				m_szTextures;
-	QString				m_szTV;
-	QString				m_szViewModes;
-	cKodiVideoLibrary	m_kodiVideoLibrary;
+	enum commands
+	{
+		command_none	= 0,
+		command_init	= 1,
+		command_stop	= 99,
+	};
 
-	QString				findFile(const QString& szPath, const QString& szFile);
+	commands			m_command;
+	QMutex				m_mutex;
+	QStatusBar*			m_lpMainWindowStatusBar;
+	cKodiVideoLibrary*	m_lpKodiVideoLibrary;
+
+	QSqlDatabase		m_dbVideos;
+
+	void				run();
+
+	bool				doInit();
 };
 
 #endif // CKODILIBRARY_H

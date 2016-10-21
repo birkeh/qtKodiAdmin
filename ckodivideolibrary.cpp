@@ -2,11 +2,14 @@
 
 #include <QFile>
 #include <QVariant>
+#include <QStringList>
+
+#include <QSqlQuery>
 
 
-cKodiVideoLibrary::cKodiVideoLibrary() :
+cKodiVideoLibrary::cKodiVideoLibrary(QSqlDatabase& db) :
+	m_db(db),
 	m_bConnected(false),
-	m_szFileName(""),
 	m_iVersion(-1)
 {
 }
@@ -17,22 +20,10 @@ cKodiVideoLibrary::~cKodiVideoLibrary()
 		m_db.close();
 }
 
-qint16 cKodiVideoLibrary::init(const QString& szFileName)
+qint16 cKodiVideoLibrary::init()
 {
 	if(m_bConnected)
 		return(m_iVersion);
-
-	if(!QFile(szFileName).exists())
-		return(-1);
-
-	m_db			= QSqlDatabase::addDatabase("QSQLITE", "VideoLibrary");
-	m_szFileName	= szFileName;
-	m_db.setDatabaseName(m_szFileName);
-	if(!m_db.open())
-	{
-		m_szFileName = "";
-		return(-1);
-	}
 
 	QSqlQuery	query(m_db);
 	if(!query.exec("SELECT idVersion FROM version;"))
@@ -40,6 +31,7 @@ qint16 cKodiVideoLibrary::init(const QString& szFileName)
 		m_db.close();
 		return(-1);
 	}
+
 	if(!query.first())
 	{
 		m_db.close();
@@ -48,6 +40,7 @@ qint16 cKodiVideoLibrary::init(const QString& szFileName)
 
 	m_iVersion		= query.value("idVersion").toInt();
 	m_bConnected	= true;
+
 	return(m_iVersion);
 }
 
@@ -56,4 +49,19 @@ qint16 cKodiVideoLibrary::version()
 	if(!m_bConnected)
 		return(-1);
 	return(m_iVersion);
+}
+
+qint32 cKodiVideoLibrary::load()
+{
+	QStringList	movies;
+
+	QSqlQuery	query(m_db);
+
+	query.exec("SELECT idMovie, idFile, c00 FROM movie_view ORDER BY c00;");
+	while(query.next())
+	{
+		movies.append(query.value("c00").toString());
+	}
+
+	return(movies.count());
 }

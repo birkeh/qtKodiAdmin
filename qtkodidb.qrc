@@ -8,5 +8,6 @@
         <file>icons/TV Shows.png</file>
         <file>icons/Videos.ico</file>
         <file>icons/Videos.png</file>
+        <file>icons/empty.ico</file>
     </qresource>
 </RCC>
