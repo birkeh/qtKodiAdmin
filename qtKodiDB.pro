@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     cmaintabbar.cpp \
     cmaintabwidget.cpp \
     cmusicwidget.cpp \
-    cmusicvideoswidget.cpp
+    cmusicvideoswidget.cpp \
+    cmyvideos.cpp
 
 HEADERS  += cmainwindow.h \
     ckodivideolibrary.h \
@@ -31,7 +32,8 @@ HEADERS  += cmainwindow.h \
     cmaintabbar.h \
     cmaintabwidget.h \
     cmusicwidget.h \
-    cmusicvideoswidget.h
+    cmusicvideoswidget.h \
+    cmyvideos.h
 
 FORMS    += cmainwindow.ui \
     cmoviewidget.ui \

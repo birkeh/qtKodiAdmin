@@ -1,6 +1,9 @@
 #ifndef CKODIVIDEOLIBRARY_H
 #define CKODIVIDEOLIBRARY_H
 
+
+#include "cmyvideos.h"
+
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QStatusBar>
@@ -21,6 +24,8 @@ private:
 	QString			m_szFileName;
 	bool			m_bConnected;
 	qint16			m_iVersion;
+
+	cMyVideosList	m_videosList;
 };
 
 #endif // CKODIVIDEOLIBRARY_H
