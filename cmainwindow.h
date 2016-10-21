@@ -27,7 +27,6 @@ public:
 	~cMainWindow();
 
 private slots:
-	void				onInitDone(qint32 iMovieCount);
 
 private:
 	Ui::cMainWindow*	ui;
@@ -37,19 +36,6 @@ private:
 	cMusicVideosWidget*	m_lpMusicVideoWidget;
 	cKodiLibrary*		m_lpKodiLibrary;
 
-	QString				m_szPath;
-	QString				m_szAddons;
-	QString				m_szADSP;
-	QString				m_szEpg;
-	QString				m_szMyMusic;
-	QString				m_szMyVideos;
-	QString				m_szTextures;
-	QString				m_szTV;
-	QString				m_szViewModes;
-
-	QSqlDatabase		m_dbVideos;
-
-	QString				findFile(const QString& szPath, const QString& szFile);
 	void				initUI();
 	void				initDB();
 };

@@ -9,7 +9,7 @@
 class cKodiVideoLibrary
 {
 public:
-	cKodiVideoLibrary(QSqlDatabase& db);
+	cKodiVideoLibrary(const QString& szFileName);
 	~cKodiVideoLibrary();
 
 	qint16			init();
@@ -18,6 +18,7 @@ public:
 	qint32			load();
 private:
 	QSqlDatabase	m_db;
+	QString			m_szFileName;
 	bool			m_bConnected;
 	qint16			m_iVersion;
 };

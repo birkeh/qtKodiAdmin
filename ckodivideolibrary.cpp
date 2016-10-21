@@ -7,8 +7,8 @@
 #include <QSqlQuery>
 
 
-cKodiVideoLibrary::cKodiVideoLibrary(QSqlDatabase& db) :
-	m_db(db),
+cKodiVideoLibrary::cKodiVideoLibrary(const QString& szFileName) :
+	m_szFileName(szFileName),
 	m_bConnected(false),
 	m_iVersion(-1)
 {
@@ -24,6 +24,11 @@ qint16 cKodiVideoLibrary::init()
 {
 	if(m_bConnected)
 		return(m_iVersion);
+
+	m_db	= QSqlDatabase::addDatabase("QSQLITE", "VideoLibrary");
+	m_db.setDatabaseName(m_szFileName);
+	if(!m_db.open())
+		return(-1);
 
 	QSqlQuery	query(m_db);
 	if(!query.exec("SELECT idVersion FROM version;"))

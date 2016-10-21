@@ -7,78 +7,60 @@
 #include <QStringList>
 
 
-cKodiLibrary::cKodiLibrary(QStatusBar* lpMainWindowStatusBar, QSqlDatabase& dbVideos) :
-	m_command(command_none),
+cKodiLibrary::cKodiLibrary(QStatusBar* lpMainWindowStatusBar, const QString& szPath) :
 	m_lpMainWindowStatusBar(lpMainWindowStatusBar),
-	m_dbVideos(dbVideos)
+	m_szPath(szPath)
 {
 }
 
-void cKodiLibrary::stop()
+cKodiLibrary::~cKodiLibrary()
 {
-	QMutexLocker	locker(&m_mutex);
-
-	while(m_command != command_none)
-		msleep(100);
-
-	m_command	= command_stop;
 }
 
-void cKodiLibrary::run()
+QString cKodiLibrary::findFile(const QString& szPath, const QString& szFile)
 {
-	bool	bStop	= false;
-	QTime	timer;
-	timer.restart();
+	QDir		fileList(szPath + QDir::separator() + QString("Userdata") + QDir::separator() + QString("Database"), szFile + QString("*.*"));
+	QString		fileName("");
+	QStringList	files		= fileList.entryList(QDir::Files);
+	qint16		iVersion	= -1;
 
-	for(;;)
+	for(int x = 0;x < files.count();x++)
 	{
-		switch(m_command)
+		QString	tmp	= files.at(x);
+		tmp			= tmp.left(tmp.lastIndexOf("."));
+		tmp			= tmp.mid(szFile.length());
+		if(iVersion < tmp.toInt())
 		{
-		case command_none:
-			break;
-		case command_init:
-			doInit();
-			m_command	= command_none;
-			break;
-		case command_stop:
-			bStop		= true;
-			break;
-		default:
-			break;
+			fileName	= files.at(x);
+			iVersion	= tmp.toInt();
 		}
-
-		if(bStop)
-			break;
-		msleep(10);
 	}
+	if(fileName.length())
+		return(fileList.cleanPath(fileList.absoluteFilePath(fileName)));
+	return(fileName);
 }
 
-void cKodiLibrary::init()
+bool cKodiLibrary::init()
 {
-	QMutexLocker	locker(&m_mutex);
+	qint32	iVideoCount;
 
-	while(m_command != command_none)
-		msleep(100);
+	m_lpMainWindowStatusBar->showMessage("Initializing ...");
 
-	m_command	= command_init;
-}
-
-bool cKodiLibrary::doInit()
-{
-	QMutexLocker	locker(&m_mutex);
-	qint32			iVideoCount	= 0;
+	m_szAddons		= findFile(m_szPath, "Addons");
+	m_szADSP		= findFile(m_szPath, "ADSP");
+	m_szEpg			= findFile(m_szPath, "Epg");
+	m_szMyMusic		= findFile(m_szPath, "MyMusic");
+	m_szMyVideos	= findFile(m_szPath, "MyVideos");
+	m_szTextures	= findFile(m_szPath, "Textures");
+	m_szTV			= findFile(m_szPath, "TV");
+	m_szViewModes	= findFile(m_szPath, "ViewModes");
 
 	m_lpMainWindowStatusBar->showMessage("Initializing Videos ...");
 
-	if(!m_dbVideos.open())
-		return(false);
-
-	m_lpKodiVideoLibrary	= new cKodiVideoLibrary(m_dbVideos);
+	m_lpKodiVideoLibrary	= new cKodiVideoLibrary(m_szMyVideos);
 	if(m_lpKodiVideoLibrary->init() != -1)
 		iVideoCount	= m_lpKodiVideoLibrary->load();
-	emit initDone(iVideoCount);
 
-	m_command	= command_none;
 	m_lpMainWindowStatusBar->showMessage("Done.", 3000);
 
 	return(iVideoCount != 0);
