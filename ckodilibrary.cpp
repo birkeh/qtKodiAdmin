@@ -65,3 +65,14 @@ bool cKodiLibrary::init()
 
 	return(iVideoCount != 0);
 }
+
+cKodiVideoLibrary* cKodiLibrary::videoLibrary()
+{
+	return(m_lpKodiVideoLibrary);
+}
+
+void cKodiLibrary::fillVideoList(QStandardItemModel* lpModel)
+{
+	if(m_lpKodiVideoLibrary)
+		m_lpKodiVideoLibrary->fillVideoList(lpModel);
+}

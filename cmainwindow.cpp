@@ -61,4 +61,5 @@ void cMainWindow::initDB()
 {
 	m_lpKodiLibrary	= new cKodiLibrary(ui->m_lpStatusBar, QDir::homePath() + QDir::separator() + QString(".kodi"));
 	m_lpKodiLibrary->init();
+	m_lpMovieWidget->setLibrary(m_lpKodiLibrary->videoLibrary());
 }

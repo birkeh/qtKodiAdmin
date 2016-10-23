@@ -5,6 +5,7 @@
 #include "ckodivideolibrary.h"
 
 #include <QStatusBar>
+#include <QStandardItemModel>
 
 
 class cKodiLibrary
@@ -14,6 +15,9 @@ public:
 	~cKodiLibrary();
 
 	bool				init();
+
+	cKodiVideoLibrary*	videoLibrary();
+	void				fillVideoList(QStandardItemModel* lpModel);
 private:
 	QStatusBar*			m_lpMainWindowStatusBar;
 	cKodiVideoLibrary*	m_lpKodiVideoLibrary;

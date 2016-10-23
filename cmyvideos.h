@@ -20,6 +20,9 @@ public:
 			  const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 idSet, qint32 iUserrating, const QString& szSet, const QString& szSetOverview,
 			  const QString& szFileName, const QString& szPathURL, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
 			  qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds);
+
+	QString		localMovieTitle();
+	qint32		yearReleased();
 private:
 	qint32		m_idMovie;
 	qint32		m_idFile;

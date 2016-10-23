@@ -8,6 +8,8 @@
 #include <QSqlQuery>
 #include <QStatusBar>
 
+#include <QStandardItemModel>
+
 
 class cKodiVideoLibrary
 {
@@ -19,6 +21,8 @@ public:
 	qint16			version();
 
 	qint32			load();
+
+	void			fillVideoList(QStandardItemModel* lpModel);
 private:
 	QSqlDatabase	m_db;
 	QString			m_szFileName;

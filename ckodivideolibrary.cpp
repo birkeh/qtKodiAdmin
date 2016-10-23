@@ -108,3 +108,17 @@ qint32 cKodiVideoLibrary::load()
 	}
 	return(m_videosList.count());
 }
+
+void cKodiVideoLibrary::fillVideoList(QStandardItemModel* lpModel)
+{
+	for(int z = 0;z < m_videosList.count();z++)
+	{
+		cMyVideos*	lpVideos	= m_videosList.at(z);
+
+		QStandardItem*	lpItem	= new QStandardItem(lpVideos->localMovieTitle());
+//		QVariant	v	= qVariantFromValue(lpMovie);
+//		lpItem->setData(v, Qt::UserRole);
+		lpModel->appendRow(lpItem);
+	}
+//	ui->m_lpMovies->sortByColumn(0, Qt::AscendingOrder);
+}

@@ -39,3 +39,13 @@ cMyVideos* cMyVideosList::add(qint32 idMovie, qint32 idFile, const QString& szLo
 	append(lpNew);
 	return(lpNew);
 }
+
+QString cMyVideos::localMovieTitle()
+{
+	return(m_szLocalMovieTitle);
+}
+
+qint32 cMyVideos::yearReleased()
+{
+	return(m_iYearReleased);
+}
