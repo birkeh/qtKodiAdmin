@@ -21,6 +21,7 @@ public:
 	qint16			version();
 
 	qint32			load();
+	bool			art(const QString& szMediaType, const QString& szType, qint32 idMovie, qint32& artID, QString& szURL);
 
 	void			fillVideoList(QStandardItemModel* lpModel);
 private:

@@ -40,12 +40,47 @@ cMyVideos* cMyVideosList::add(qint32 idMovie, qint32 idFile, const QString& szLo
 	return(lpNew);
 }
 
+qint32 cMyVideos::idMovie()
+{
+	return(m_idMovie);
+}
+
+qint32 cMyVideos::idFile()
+{
+	return(m_idFile);
+}
+
 QString cMyVideos::localMovieTitle()
 {
 	return(m_szLocalMovieTitle);
 }
 
+QString cMyVideos::moviePlot()
+{
+	return(m_szMoviePlot);
+}
+
+QString cMyVideos::moviePlotOutline()
+{
+	return(m_szMoviePlotOutline);
+}
+
+QString cMyVideos::movieTagline()
+{
+	return(m_szMovieTagline);
+}
+
 qint32 cMyVideos::yearReleased()
 {
 	return(m_iYearReleased);
+}
+
+qint32 cMyVideos::idSet()
+{
+	return(m_idSet);
+}
+
+QString cMyVideos::set()
+{
+	return(m_szSet);
 }

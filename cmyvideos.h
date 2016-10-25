@@ -21,8 +21,15 @@ public:
 			  const QString& szFileName, const QString& szPathURL, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
 			  qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds);
 
+	qint32		idMovie();
+	qint32		idFile();
 	QString		localMovieTitle();
+	QString		moviePlot();
+	QString		moviePlotOutline();
+	QString		movieTagline();
 	qint32		yearReleased();
+	qint32		idSet();
+	QString		set();
 private:
 	qint32		m_idMovie;
 	qint32		m_idFile;
@@ -34,7 +41,7 @@ private:
 	qreal		m_dRating;								// c05
 	QString		m_szWriters;							// c06
 	qint32		m_iYearReleased;						// c07
-	QString		m_szThumbnails;							// c08
+	QString		m_szThumbnails;							// c08 (Selection List)
 	QString		m_szIMDBID;								// c09
 	QString		m_szTitleFormattedForSorting;			// c10
 	qint32		m_iRuntime;								// c11
@@ -45,7 +52,7 @@ private:
 	QString		m_szOriginalMovieTitle;					// c16
 	QString		m_szStudio;								// c18
 	QString		m_szTrailerURL;							// c19
-	QString		m_szFanartURLs;							// c20
+	QString		m_szFanartURLs;							// c20 (Selection List)
 	QString		m_szCountry;							// c21
 	QString		m_szFilePath;							// c22
 	qint32		m_idPath;								// c23

@@ -8,7 +8,7 @@
 cMainWindow::cMainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::cMainWindow),
-	m_lpMovieWidget(0),
+	m_lpVideoWidget(0),
 	m_lpTVShowWidget(0),
 	m_lpMusicWidget(0),
 	m_lpMusicVideoWidget(0),
@@ -20,8 +20,8 @@ cMainWindow::cMainWindow(QWidget *parent) :
 
 cMainWindow::~cMainWindow()
 {
-	if(m_lpMovieWidget)
-		delete m_lpMovieWidget;
+	if(m_lpVideoWidget)
+		delete m_lpVideoWidget;
 
 	if(m_lpTVShowWidget)
 		delete m_lpTVShowWidget;
@@ -42,15 +42,19 @@ void cMainWindow::initUI()
 {
 	ui->setupUi(this);
 
-	m_lpMovieWidget			= new cMovieWidget(this);
+	m_lpVideoWidget			= new cVideoWidget(this);
 	m_lpTVShowWidget		= new cTVShowWidget(this);
 	m_lpMusicWidget			= new cMusicWidget(this);
 	m_lpMusicVideoWidget	= new cMusicVideosWidget(this);
 
-	ui->m_lpMainTab->addTab(m_lpMovieWidget, QIcon(":/icons/Videos.ico"), "Movies");
-	ui->m_lpMainTab->addTab(m_lpTVShowWidget, QIcon(":/icons/TV Shows.ico"), "TV Shows");
-	ui->m_lpMainTab->addTab(m_lpMusicWidget, QIcon(":/icons/Musics.ico"), "Music");
-	ui->m_lpMainTab->addTab(m_lpMusicVideoWidget, QIcon(":/icons/Videos.ico"), "Music Videos");
+//	ui->m_lpMainTab->addTab(m_lpVideoWidget, QIcon(":/icons/Videos.ico"), "Movies");
+//	ui->m_lpMainTab->addTab(m_lpTVShowWidget, QIcon(":/icons/TV Shows.ico"), "TV Shows");
+//	ui->m_lpMainTab->addTab(m_lpMusicWidget, QIcon(":/icons/Musics.ico"), "Music");
+//	ui->m_lpMainTab->addTab(m_lpMusicVideoWidget, QIcon(":/icons/Videos.ico"), "Music Videos");
+	ui->m_lpMainTab->addTab(m_lpVideoWidget, QIcon(":/icons/empty.ico"), "Movies");
+	ui->m_lpMainTab->addTab(m_lpTVShowWidget, QIcon(":/icons/empty.ico"), "TV Shows");
+	ui->m_lpMainTab->addTab(m_lpMusicWidget, QIcon(":/icons/empty.ico"), "Music");
+	ui->m_lpMainTab->addTab(m_lpMusicVideoWidget, QIcon(":/icons/empty.ico"), "Music Videos");
 
 	ui->m_lpMainTab->setCurrentIndex(0);
 
@@ -61,5 +65,5 @@ void cMainWindow::initDB()
 {
 	m_lpKodiLibrary	= new cKodiLibrary(ui->m_lpStatusBar, QDir::homePath() + QDir::separator() + QString(".kodi"));
 	m_lpKodiLibrary->init();
-	m_lpMovieWidget->setLibrary(m_lpKodiLibrary->videoLibrary());
+	m_lpVideoWidget->setLibrary(m_lpKodiLibrary->videoLibrary(), m_lpKodiLibrary->imageList());
 }

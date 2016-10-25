@@ -1,5 +1,5 @@
 #include "ckodilibrary.h"
-
+#include "cimage.h"
 
 #include <QTime>
 #include <QDir>
@@ -9,12 +9,23 @@
 
 cKodiLibrary::cKodiLibrary(QStatusBar* lpMainWindowStatusBar, const QString& szPath) :
 	m_lpMainWindowStatusBar(lpMainWindowStatusBar),
+	m_lpKodiVideoLibrary(0),
+	m_lpKodiTexturesLibrary(0),
+	m_lpImageList(0),
 	m_szPath(szPath)
 {
 }
 
 cKodiLibrary::~cKodiLibrary()
 {
+	if(m_lpKodiVideoLibrary)
+		delete m_lpKodiVideoLibrary;
+
+	if(m_lpKodiTexturesLibrary)
+		delete m_lpKodiTexturesLibrary;
+
+	if(m_lpImageList)
+		delete m_lpImageList;
 }
 
 QString cKodiLibrary::findFile(const QString& szPath, const QString& szFile)
@@ -61,6 +72,14 @@ bool cKodiLibrary::init()
 	if(m_lpKodiVideoLibrary->init() != -1)
 		iVideoCount	= m_lpKodiVideoLibrary->load();
 
+	m_lpMainWindowStatusBar->showMessage("Initializing Textures ...");
+
+	m_lpKodiTexturesLibrary	= new cKodiTexturesLibrary(m_szTextures);
+	if(m_lpKodiTexturesLibrary->init() != -1)
+		;
+
+	m_lpImageList			= new cImageList(m_lpKodiVideoLibrary, m_lpKodiTexturesLibrary, m_szPath);
+
 	m_lpMainWindowStatusBar->showMessage("Done.", 3000);
 
 	return(iVideoCount != 0);
@@ -71,8 +90,12 @@ cKodiVideoLibrary* cKodiLibrary::videoLibrary()
 	return(m_lpKodiVideoLibrary);
 }
 
-void cKodiLibrary::fillVideoList(QStandardItemModel* lpModel)
+cKodiTexturesLibrary* cKodiLibrary::texturesLibrary()
 {
-	if(m_lpKodiVideoLibrary)
-		m_lpKodiVideoLibrary->fillVideoList(lpModel);
+	return(m_lpKodiTexturesLibrary);
+}
+
+cImageList* cKodiLibrary::imageList()
+{
+	return(m_lpImageList);
 }

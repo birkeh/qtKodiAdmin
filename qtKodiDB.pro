@@ -16,30 +16,36 @@ SOURCES += main.cpp\
         cmainwindow.cpp \
     ckodivideolibrary.cpp \
     ckodilibrary.cpp \
-    cmoviewidget.cpp \
     ctvshowwidget.cpp \
     cmaintabbar.cpp \
     cmaintabwidget.cpp \
     cmusicwidget.cpp \
     cmusicvideoswidget.cpp \
-    cmyvideos.cpp
+    cmyvideos.cpp \
+    cvideowidget.cpp \
+    cvideoviewitemdelegate.cpp \
+    ckoditextureslibrary.cpp \
+    cimage.cpp
 
 HEADERS  += cmainwindow.h \
     ckodivideolibrary.h \
     ckodilibrary.h \
-    cmoviewidget.h \
     ctvshowwidget.h \
     cmaintabbar.h \
     cmaintabwidget.h \
     cmusicwidget.h \
     cmusicvideoswidget.h \
-    cmyvideos.h
+    cmyvideos.h \
+    cvideowidget.h \
+    cvideoviewitemdelegate.h \
+    ckoditextureslibrary.h \
+    cimage.h
 
 FORMS    += cmainwindow.ui \
-    cmoviewidget.ui \
     ctvshowwidget.ui \
     cmusicwidget.ui \
-    cmusicvideoswidget.ui
+    cmusicvideoswidget.ui \
+    cvideowidget.ui
 
 RESOURCES += \
     qtkodidb.qrc

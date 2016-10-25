@@ -2,7 +2,7 @@
 #define CMAINWINDOW_H
 
 
-#include "cmoviewidget.h"
+#include "cvideowidget.h"
 #include "ctvshowwidget.h"
 #include "cmusicwidget.h"
 #include "cmusicvideoswidget.h"
@@ -30,7 +30,7 @@ private slots:
 
 private:
 	Ui::cMainWindow*	ui;
-	cMovieWidget*		m_lpMovieWidget;
+	cVideoWidget*		m_lpVideoWidget;
 	cTVShowWidget*		m_lpTVShowWidget;
 	cMusicWidget*		m_lpMusicWidget;
 	cMusicVideosWidget*	m_lpMusicVideoWidget;
