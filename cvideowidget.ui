@@ -67,33 +67,69 @@
          <height>485</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QLabel" name="m_lpBanner">
-          <property name="text">
-           <string>TextLabel</string>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="m_lpFanartBox">
+          <property name="title">
+           <string>Fanart</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="0">
+            <widget class="QLabel" name="m_lpFanart">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
-        <item>
-         <widget class="QLabel" name="m_lpFanart">
-          <property name="text">
-           <string>TextLabel</string>
+        <item row="1" column="0">
+         <widget class="QGroupBox" name="m_lpPosterBox">
+          <property name="title">
+           <string>Poster</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="QLabel" name="m_lpPoster">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
-        <item>
-         <widget class="QLabel" name="m_lpThumb">
-          <property name="text">
-           <string>TextLabel</string>
+        <item row="2" column="0">
+         <widget class="QGroupBox" name="m_lpThumbBox">
+          <property name="title">
+           <string>Thumb</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="0">
+            <widget class="QLabel" name="m_lpThumb">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
-        <item>
-         <widget class="QLabel" name="m_lpPoster">
-          <property name="text">
-           <string>TextLabel</string>
+        <item row="3" column="0">
+         <widget class="QGroupBox" name="m_lpBannerBox">
+          <property name="title">
+           <string>Banner</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="0" column="0">
+            <widget class="QLabel" name="m_lpBanner">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>

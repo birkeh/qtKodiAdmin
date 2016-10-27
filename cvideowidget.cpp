@@ -68,6 +68,7 @@ void cVideoWidget::selectionChanged(const QItemSelection& /*newSelection*/, cons
 
 	const QModelIndex	index		= ui->m_lpVideoView->selectionModel()->currentIndex();
 	cMyVideos*			lpVideos	= index.data(Qt::UserRole).value<cMyVideos*>();
+
 	if(m_lpVideoModel->itemFromIndex(index)->hasChildren())
 	{
 		thumb		= m_lpImageList->get(cImage::MEDIATYPE_set, cImage::TYPE_thumb, lpVideos->idSet());
@@ -82,12 +83,48 @@ void cVideoWidget::selectionChanged(const QItemSelection& /*newSelection*/, cons
 		poster		= m_lpImageList->get(cImage::MEDIATYPE_movie, cImage::TYPE_poster, lpVideos->idMovie());
 		banner		= m_lpImageList->get(cImage::MEDIATYPE_movie, cImage::TYPE_banner, lpVideos->idMovie());
 	}
+
 	if(thumb.width())
-		ui->m_lpThumb->setPixmap(thumb.scaled(thumb.size()/4));
+	{
+		ui->m_lpThumb->setPixmap(thumb.scaled(480, 270, Qt::KeepAspectRatio));
+		ui->m_lpThumbBox->setTitle(QString(tr("Thumb (%1 x %2)")).arg(thumb.width()).arg(thumb.height()));
+	}
+	else
+	{
+		ui->m_lpThumb->clear();
+		ui->m_lpThumbBox->setTitle("Thumb");
+	}
+
 	if(fanart.width())
-		ui->m_lpFanart->setPixmap(fanart.scaled(fanart.size()/4));
+	{
+		ui->m_lpFanart->setPixmap(fanart.scaled(480, 270, Qt::KeepAspectRatio));
+		ui->m_lpFanartBox->setTitle(QString(tr("Fanart (%1 x %2)")).arg(fanart.width()).arg(fanart.height()));
+	}
+	else
+	{
+		ui->m_lpFanart->clear();
+		ui->m_lpFanartBox->setTitle(tr("Fanart"));
+	}
+
 	if(poster.width())
-		ui->m_lpPoster->setPixmap(poster.scaled(poster.size()/4));
+	{
+		ui->m_lpPoster->setPixmap(poster.scaled(480, 270, Qt::KeepAspectRatio));
+		ui->m_lpPosterBox->setTitle(QString(tr("Poster (%1 x %2)")).arg(poster.width()).arg(poster.height()));
+	}
+	else
+	{
+		ui->m_lpPoster->clear();
+		ui->m_lpPosterBox->setTitle(tr("Poster"));
+	}
+
 	if(banner.width())
-		ui->m_lpBanner->setPixmap(thumb.scaled(thumb.size()/4));
+	{
+		ui->m_lpBanner->setPixmap(banner.scaled(480, 270, Qt::KeepAspectRatio));
+		ui->m_lpBannerBox->setTitle(QString(tr("Banner (%1 x %2)")).arg(banner.width()).arg(banner.height()));
+	}
+	else
+	{
+		ui->m_lpBanner->clear();
+		ui->m_lpBannerBox->setTitle(tr("Banner"));
+	}
 }

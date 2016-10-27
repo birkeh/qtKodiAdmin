@@ -71,15 +71,6 @@ qint32 cImage::idMovie()
 
 QPixmap cImage::image()
 {
-/*
-	QPixmap	pixmap;
-	QString	str	= m_szPath + QDir::separator() + "Userdata" + QDir::separator() + "Thumbnails" + QDir::separator() + m_szCachedURL;
-
-	if(m_szCachedURL.length())
-		pixmap.load(str);
-
-	return(pixmap);
-*/
 	return(m_image);
 }
 
