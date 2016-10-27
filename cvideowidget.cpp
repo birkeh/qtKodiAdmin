@@ -70,6 +70,36 @@ void cVideoWidget::selectionChanged(const QItemSelection& /*newSelection*/, cons
 	const QModelIndex	index		= ui->m_lpVideoView->selectionModel()->currentIndex();
 	cMyVideos*			lpVideos	= index.data(Qt::UserRole).value<cMyVideos*>();
 
+	ui->m_lpDirector->clear();
+	ui->m_lpWriter->clear();
+
+	// Basic Tab
+	ui->m_lpTitle->setText(lpVideos->localMovieTitle());
+	ui->m_lpOriginalTitle->setText(lpVideos->originalMovieTitle());
+	ui->m_lpTitleForSorting->setText(lpVideos->titleFormattedForSorting());
+	ui->m_lpSet->setText(lpVideos->set());
+	ui->m_lpTagline->setText(lpVideos->movieTagline());
+	ui->m_lpRating->setValue(lpVideos->rating());
+	ui->m_lpRatingVotes->setValue(lpVideos->ratingVotes());
+	ui->m_lpTop250->setValue(lpVideos->imdbTop250Ranking());
+	ui->m_lpReleased->setValue(lpVideos->yearReleased());
+	ui->m_lpRuntime->setValue(lpVideos->runtime());
+	ui->m_lpCertification->setText(lpVideos->mpaaRating());
+	ui->m_lpTrailer->setText(lpVideos->trailerURL());
+	ui->m_lpPlayCount->setValue(lpVideos->playCount());
+	ui->m_lpLastPlayed->setDateTime(lpVideos->lastPlayed());
+	ui->m_lpPlot->setText(lpVideos->moviePlot());
+	ui->m_lpOutline->setText(lpVideos->moviePlotOutline());
+
+	// Extended Tab
+	ui->m_lpGenres->addItems(lpVideos->genre());
+	ui->m_lpCountries->addItems(lpVideos->country());
+	ui->m_lpStudios->addItems(lpVideos->studio());
+
+	// Crew Tab
+	ui->m_lpDirector->addItems(lpVideos->director());
+	ui->m_lpWriter->addItems(lpVideos->writers());
+
 	if(m_lpVideoModel->itemFromIndex(index)->hasChildren())
 	{
 		thumb		= m_lpImageList->get(cImage::MEDIATYPE_set, cImage::TYPE_thumb, lpVideos->idSet());

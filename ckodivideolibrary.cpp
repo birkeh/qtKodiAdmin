@@ -129,7 +129,7 @@ qint32 cKodiVideoLibrary::load()
 			query.value("c10").toString(),
 			query.value("c11").toInt(),
 			query.value("c12").toString(),
-			query.value("c13").toString(),
+			query.value("c13").toInt(),
 			query.value("c14").toString(),
 			query.value("c15").toString(),
 			query.value("c16").toString(),
