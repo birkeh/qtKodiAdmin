@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = qtKodiDB
 TEMPLATE = app
 
+TRANSLATIONS    = qtKodiDB_de.ts
 
 SOURCES += main.cpp\
         cmainwindow.cpp \

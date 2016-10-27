@@ -25,6 +25,7 @@ cVideoWidget::~cVideoWidget()
 void cVideoWidget::initUI()
 {
 	ui->setupUi(this);
+	ui->m_lpInformationTab->setCurrentIndex(0);
 
 	m_lpVideoModel				= new QStandardItemModel(0, 1);
 	QStringList	headerLabels	= QStringList() << tr("Video");
