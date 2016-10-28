@@ -99,6 +99,7 @@ void cVideoWidget::selectionChanged(const QItemSelection& /*newSelection*/, cons
 	// Crew Tab
 	ui->m_lpDirector->addItems(lpVideos->director());
 	ui->m_lpWriter->addItems(lpVideos->writers());
+	m_lpVideoLibrary->fillActorList(ui->m_lpCast, lpVideos);
 
 	if(m_lpVideoModel->itemFromIndex(index)->hasChildren())
 	{

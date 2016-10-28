@@ -62,6 +62,28 @@ qint16 cKodiVideoLibrary::version()
 
 qint32 cKodiVideoLibrary::load()
 {
+	loadActors();
+	return(loadVideos());
+}
+
+qint32 cKodiVideoLibrary::loadActors()
+{
+	QSqlQuery	query(m_db);
+
+	query.exec("SELECT actor_id, name, art_urls FROM actor ORDER BY name;");
+	while(query.next())
+	{
+		m_videosActorList.add(
+			query.value("actor_id").toInt(),
+			query.value("name").toString(),
+			query.value("art_urls").toString());
+
+	}
+	return(m_videosActorList.count());
+}
+
+qint32 cKodiVideoLibrary::loadVideos()
+{
 	QSqlQuery	query(m_db);
 
 	//query.exec("SELECT idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07, c08, c09, c10, c11, c12, c13, c14, c15, c16, c17, c18, c19, c20, c21, c22, c23, idSet, userrating, strSet, strSetOverview, strFileName, strPath, playCount, lastPlayed, dateAdded, resumeTimeInSeconds, totalTimeInSeconds FROM movie_view ORDER BY c00;");
@@ -199,4 +221,12 @@ void cKodiVideoLibrary::fillVideoList(QStandardItemModel* lpModel)
 		else
 			lpModel->appendRow(lpItem);
 	}
+}
+
+void cKodiVideoLibrary::fillActorList(QTreeWidget* lpList, cMyVideos* lpVideos)
+{
+	lpList->clear();
+
+	lpVideos->loadActors(m_db, m_videosActorList);
+	lpVideos->fillActorsList(lpList);
 }

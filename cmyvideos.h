@@ -7,12 +7,107 @@
 #include <QList>
 #include <QMetaType>
 
+#include <QSqlDatabase>
+#include <QTreeWidget>
+
+
+enum STATE
+{
+	STATE_unknown	= 0,
+	STATE_original	= 1,
+	STATE_new		= 2,
+	STATE_deleted	= 3,
+};
 
 typedef struct tagSTRING2
 {
 	QString	_1;
 	QString	_2;
 }	STRING2;
+
+class cMyVideosActorValues
+{
+public:
+	cMyVideosActorValues();
+	cMyVideosActorValues(qint32 actorID, const QString& szName, const QString& szArtURLs);
+
+	void			set(qint32 actorID, const QString& szName, const QString& szArtURLs);
+
+	inline bool	operator==(const cMyVideosActorValues b) const;
+	inline bool	operator!=(const cMyVideosActorValues b) const;
+
+	qint32			m_actorID;
+	QString			m_szName;
+	QString			m_szArtURLs;
+};
+
+class cMyVideosActor
+{
+public:
+	cMyVideosActor(qint32 actorID, const QString& szName, const QString& szArtUrls);
+
+	qint32			actorID();
+	QString			name();
+	QString			szArtURLs();
+
+	bool			isNew();
+	bool			isChanged();
+private:
+	cMyVideosActorValues	m_values;
+	cMyVideosActorValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosActor*)
+
+class cMyVideosActorList : public QList<cMyVideosActor*>
+{
+public:
+	cMyVideosActorList();
+	cMyVideosActor*	add(qint32 actorID, const QString& szName, const QString& szArtURLs);
+	cMyVideosActor*	find(qint32 actorID);
+private:
+};
+
+class cMyVideosActorLinkValues
+{
+public:
+	cMyVideosActorLinkValues();
+	cMyVideosActorLinkValues(cMyVideosActor* lpActor, const QString& szRole, qint32 castOrder);
+
+	void			set(cMyVideosActor* lpActor, const QString& szRole, qint32 castOrder);
+
+	inline bool	operator==(const cMyVideosActorLinkValues b) const;
+	inline bool	operator!=(const cMyVideosActorLinkValues b) const;
+
+	cMyVideosActor*	m_lpActor;
+	QString			m_szRole;
+	qint32			m_castOrder;
+};
+
+class cMyVideosActorLink
+{
+public:
+	cMyVideosActorLink(cMyVideosActor* lpActor, const QString& szRole, qint32 cast_order);
+
+	cMyVideosActor*	actor();
+	QString			role();
+	qint32			castOrder();
+
+	bool			isNew();
+	bool			isChanged();
+private:
+	cMyVideosActorLinkValues	m_values;
+	cMyVideosActorLinkValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosActorLink*)
+
+class cMyVideosActorLinkList : public QList<cMyVideosActorLink*>
+{
+public:
+	cMyVideosActorLinkList();
+	cMyVideosActorLink *add(cMyVideosActor* lpActor, const QString& szRole, qint32 cast_order);
+};
 
 class cMyVideosValues
 {
@@ -75,6 +170,7 @@ public:
 	QDateTime	m_dateAdded;							// dateAdded
 	qreal		m_dResumeTimeInSeconds;					// resumeTimeInSeconds
 	qreal		m_dTotalTimeInSeconds;					// totalTimeInSeconds
+	cMyVideosActorLinkList	m_actors;
 };
 
 class cMyVideos
@@ -88,6 +184,9 @@ public:
 			  const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 idSet, qint32 iUserrating, const QString& szSet, const QString& szSetOverview,
 			  const QString& szFileName, const QString& szPathURL, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
 			  qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds);
+
+	void			loadActors(QSqlDatabase& m_db, cMyVideosActorList videosActorList);
+	void			fillActorsList(QTreeWidget* lpWidget);
 
 	qint32			idMovie();
 	qint32			idFile();

@@ -76,7 +76,9 @@ bool cKodiLibrary::init()
 
 	m_lpKodiTexturesLibrary	= new cKodiTexturesLibrary(m_szTextures);
 	if(m_lpKodiTexturesLibrary->init() != -1)
+	{
 		;
+	}
 
 	m_lpImageList			= new cImageList(m_lpKodiVideoLibrary, m_lpKodiTexturesLibrary, m_szPath);
 

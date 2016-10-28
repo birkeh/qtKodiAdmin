@@ -73,7 +73,7 @@
           <item>
            <widget class="QTabWidget" name="m_lpInformationTab">
             <property name="currentIndex">
-             <number>1</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="m_lpInformationTabBasic">
              <attribute name="title">
@@ -571,7 +571,7 @@
              <layout class="QGridLayout" name="gridLayout_10">
               <item row="0" column="0">
                <layout class="QGridLayout" name="gridLayout_9">
-                <item row="0" column="0">
+                <item row="1" column="0">
                  <widget class="QLabel" name="label_19">
                   <property name="text">
                    <string>Director</string>
@@ -581,10 +581,14 @@
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="1">
-                 <widget class="QListWidget" name="m_lpDirector"/>
+                <item row="1" column="1">
+                 <widget class="QListWidget" name="m_lpDirector">
+                  <property name="alternatingRowColors">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
                 </item>
-                <item row="1" column="0">
+                <item row="2" column="0">
                  <widget class="QLabel" name="label_20">
                   <property name="text">
                    <string>Writer</string>
@@ -594,8 +598,51 @@
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="1">
-                 <widget class="QListWidget" name="m_lpWriter"/>
+                <item row="2" column="1">
+                 <widget class="QListWidget" name="m_lpWriter">
+                  <property name="alternatingRowColors">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_11">
+                  <property name="text">
+                   <string>Cast</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QTreeWidget" name="m_lpCast">
+                  <property name="editTriggers">
+                   <set>QAbstractItemView::NoEditTriggers</set>
+                  </property>
+                  <property name="alternatingRowColors">
+                   <bool>true</bool>
+                  </property>
+                  <property name="rootIsDecorated">
+                   <bool>false</bool>
+                  </property>
+                  <property name="columnCount">
+                   <number>2</number>
+                  </property>
+                  <attribute name="headerVisible">
+                   <bool>false</bool>
+                  </attribute>
+                  <column>
+                   <property name="text">
+                    <string notr="true">1</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string notr="true">2</string>
+                   </property>
+                  </column>
+                 </widget>
                 </item>
                </layout>
               </item>

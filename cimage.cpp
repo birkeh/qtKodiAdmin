@@ -103,7 +103,7 @@ QPixmap	cImageList::get(cImage::MEDIATYPE mediaType, cImage::TYPE type, qint32 i
 	return(QPixmap());
 }
 
-QPixmap cImage::downloadFile(const QString& szFileName)
+QPixmap cImage::downloadFile(const QString& /*szFileName*/)
 {
 	QPixmap					pixmap;
 

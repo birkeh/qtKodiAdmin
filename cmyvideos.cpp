@@ -1,5 +1,172 @@
 #include "cmyvideos.h"
 
+#include <QSqlQuery>
+#include <QTreeWidgetItem>
+
+
+cMyVideosActorValues::cMyVideosActorValues() :
+	m_actorID(-1),
+	m_szName("UNSET"),
+	m_szArtURLs("UNSET")
+{
+}
+
+cMyVideosActorValues::cMyVideosActorValues(qint32 actorID, const QString& szName, const QString& szArtURLs) :
+	m_actorID(actorID),
+	m_szName(szName),
+	m_szArtURLs(szArtURLs)
+{
+}
+
+void cMyVideosActorValues::set(qint32 actorID, const QString& szName, const QString& szArtURLs)
+{
+	m_actorID	= actorID;
+	m_szName	= szName;
+	m_szArtURLs	= szArtURLs;
+}
+
+inline bool	cMyVideosActorValues::operator==(const cMyVideosActorValues b) const
+{
+	if(m_actorID != b.m_actorID) return(false);
+	if(m_szName != b.m_szName) return(false);
+	if(m_szArtURLs != b.m_szArtURLs) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosActorValues::operator!=(const cMyVideosActorValues b) const
+{
+	if(m_actorID != b.m_actorID
+		|| m_szName != b.m_szName
+		|| m_szArtURLs != b.m_szArtURLs)
+		return(true);
+	return(false);
+}
+
+cMyVideosActor::cMyVideosActor(qint32 actorID, const QString& szName, const QString& szArtUrls) :
+	m_values(actorID, szName, szArtUrls)
+{
+	m_oValues	= m_values;
+}
+
+qint32 cMyVideosActor::actorID()
+{
+	return(m_values.m_actorID);
+}
+
+QString cMyVideosActor::name()
+{
+	return(m_values.m_szName);
+}
+
+QString cMyVideosActor::szArtURLs()
+{
+	return(m_values.m_szArtURLs);
+}
+
+bool cMyVideosActor::isNew()
+{
+	if(m_values.m_actorID == -1)
+		return(true);
+	return(false);
+}
+
+bool cMyVideosActor::isChanged()
+{
+	if(m_values != m_oValues)
+		return(true);
+	return(false);
+}
+
+cMyVideosActorList::cMyVideosActorList()
+{
+}
+
+cMyVideosActor* cMyVideosActorList::add(qint32 actorID, const QString& szName, const QString& szArtURLs)
+{
+	cMyVideosActor*	lpNew	= new cMyVideosActor(actorID, szName, szArtURLs);
+	append(lpNew);
+	return(lpNew);
+}
+
+cMyVideosActor* cMyVideosActorList::find(qint32 actorID)
+{
+	for(int z = 0;z < count();z++)
+	{
+		if(at(z)->actorID() == actorID)
+			return(at(z));
+	}
+	return(0);
+}
+
+cMyVideosActorLinkValues::cMyVideosActorLinkValues() :
+	m_lpActor(0),
+	m_szRole("UNSET"),
+	m_castOrder(-1)
+{
+}
+
+cMyVideosActorLinkValues::cMyVideosActorLinkValues(cMyVideosActor* lpActor, const QString& szRole, qint32 castOrder) :
+	m_lpActor(lpActor),
+	m_szRole(szRole),
+	m_castOrder(castOrder)
+{
+}
+
+void cMyVideosActorLinkValues::set(cMyVideosActor* lpActor, const QString& szRole, qint32 castOrder)
+{
+	m_lpActor	= lpActor;
+	m_szRole	= szRole;
+	m_castOrder	= castOrder;
+}
+
+inline bool cMyVideosActorLinkValues::operator==(const cMyVideosActorLinkValues b) const
+{
+	if(m_lpActor != b.m_lpActor) return(false);
+	if(m_szRole != b.m_szRole) return(false);
+	if(m_castOrder != b.m_castOrder) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosActorLinkValues::operator!=(const cMyVideosActorLinkValues b) const
+{
+	if(m_lpActor != b.m_lpActor
+		|| m_szRole != b.m_szRole
+		|| m_castOrder != b.m_castOrder)
+		return(true);
+	return(false);
+}
+
+cMyVideosActorLink::cMyVideosActorLink(cMyVideosActor *lpActor, const QString& szRole, qint32 cast_order) :
+	m_values(lpActor, szRole, cast_order)
+{
+	m_oValues	= m_values;
+}
+
+cMyVideosActor* cMyVideosActorLink::actor()
+{
+	return(m_values.m_lpActor);
+}
+
+QString cMyVideosActorLink::role()
+{
+	return(m_values.m_szRole);
+}
+
+qint32 cMyVideosActorLink::castOrder()
+{
+	return(m_values.m_castOrder);
+}
+
+cMyVideosActorLinkList::cMyVideosActorLinkList()
+{
+}
+
+cMyVideosActorLink*	cMyVideosActorLinkList::add(cMyVideosActor *lpActor, const QString& szRole, qint32 cast_order)
+{
+	cMyVideosActorLink*	lpNew	= new cMyVideosActorLink(lpActor, szRole, cast_order);
+	append(lpNew);
+	return(lpNew);
+}
 
 cMyVideosValues::cMyVideosValues() :
 	m_idMovie(-1), m_idFile(-1), m_szLocalMovieTitle("UNSET"), m_szMoviePlot("UNSET"), m_szMoviePlotOutline("UNSET"),
@@ -196,6 +363,35 @@ cMyVideos* cMyVideosList::add(qint32 idMovie, qint32 idFile, const QString& szLo
 										lastPlayed, dateAdded, dResumeTimeInSeconds, dTotalTimeInSeconds);
 	append(lpNew);
 	return(lpNew);
+}
+
+void cMyVideos::loadActors(QSqlDatabase& m_db, cMyVideosActorList videosActorList)
+{
+	if(m_values.m_actors.count())
+		return;
+
+	QSqlQuery	query(m_db);
+	query.exec(QString("SELECT actor_id, role, cast_order FROM actor_link WHERE media_id=%1 AND media_type='movie' ORDER BY cast_order;").arg(m_values.m_idMovie));
+	while(query.next())
+	{
+		cMyVideosActor*	lpActor	= videosActorList.find(query.value("actor_id").toInt());
+		if(lpActor)
+			m_values.m_actors.add(lpActor, query.value("role").toString(), query.value("cast_order").toInt());
+	}
+	m_oValues.m_actors	= m_values.m_actors;
+}
+
+void cMyVideos::fillActorsList(QTreeWidget* lpWidget)
+{
+	for(int z = 0;z < m_values.m_actors.count();z++)
+	{
+		QTreeWidgetItem*	lpItem	= new QTreeWidgetItem(lpWidget);
+		lpItem->setText(0, m_values.m_actors.at(z)->actor()->name());
+		lpItem->setText(1, m_values.m_actors.at(z)->role());
+		lpWidget->addTopLevelItem(lpItem);
+	}
+	lpWidget->resizeColumnToContents(0);
+	lpWidget->resizeColumnToContents(1);
 }
 
 qint32 cMyVideos::idMovie()
