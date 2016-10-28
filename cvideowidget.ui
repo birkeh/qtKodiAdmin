@@ -571,23 +571,6 @@
              <layout class="QGridLayout" name="gridLayout_10">
               <item row="0" column="0">
                <layout class="QGridLayout" name="gridLayout_9">
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_19">
-                  <property name="text">
-                   <string>Director</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QListWidget" name="m_lpDirector">
-                  <property name="alternatingRowColors">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
                 <item row="2" column="0">
                  <widget class="QLabel" name="label_20">
                   <property name="text">
@@ -598,10 +581,13 @@
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="1">
-                 <widget class="QListWidget" name="m_lpWriter">
-                  <property name="alternatingRowColors">
-                   <bool>true</bool>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_19">
+                  <property name="text">
+                   <string>Director</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                   </property>
                  </widget>
                 </item>
@@ -615,8 +601,29 @@
                   </property>
                  </widget>
                 </item>
+                <item row="0" column="2">
+                 <widget class="QLabel" name="m_lpCastPicture">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QLabel" name="m_lpDirectorPicture">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QLabel" name="m_lpWriterPicture">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
                 <item row="0" column="1">
-                 <widget class="QTreeWidget" name="m_lpCast">
+                 <widget class="QTreeView" name="m_lpCastView">
                   <property name="editTriggers">
                    <set>QAbstractItemView::NoEditTriggers</set>
                   </property>
@@ -626,22 +633,23 @@
                   <property name="rootIsDecorated">
                    <bool>false</bool>
                   </property>
-                  <property name="columnCount">
-                   <number>2</number>
-                  </property>
                   <attribute name="headerVisible">
                    <bool>false</bool>
                   </attribute>
-                  <column>
-                   <property name="text">
-                    <string notr="true">1</string>
-                   </property>
-                  </column>
-                  <column>
-                   <property name="text">
-                    <string notr="true">2</string>
-                   </property>
-                  </column>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QListView" name="m_lpDirectorView">
+                  <property name="alternatingRowColors">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QListView" name="m_lpWriterView">
+                  <property name="alternatingRowColors">
+                   <bool>true</bool>
+                  </property>
                  </widget>
                 </item>
                </layout>

@@ -8,16 +8,8 @@
 #include <QMetaType>
 
 #include <QSqlDatabase>
-#include <QTreeWidget>
+#include <QStandardItemModel>
 
-
-enum STATE
-{
-	STATE_unknown	= 0,
-	STATE_original	= 1,
-	STATE_new		= 2,
-	STATE_deleted	= 3,
-};
 
 typedef struct tagSTRING2
 {
@@ -95,7 +87,7 @@ public:
 
 	bool			isNew();
 	bool			isChanged();
-private:
+
 	cMyVideosActorLinkValues	m_values;
 	cMyVideosActorLinkValues	m_oValues;
 };
@@ -107,6 +99,80 @@ class cMyVideosActorLinkList : public QList<cMyVideosActorLink*>
 public:
 	cMyVideosActorLinkList();
 	cMyVideosActorLink *add(cMyVideosActor* lpActor, const QString& szRole, qint32 cast_order);
+};
+
+class cMyVideosWriterLinkValues
+{
+public:
+	cMyVideosWriterLinkValues();
+	cMyVideosWriterLinkValues(cMyVideosActor* lpActor);
+
+	void			set(cMyVideosActor* lpActor);
+
+	inline bool	operator==(const cMyVideosWriterLinkValues b) const;
+	inline bool	operator!=(const cMyVideosWriterLinkValues b) const;
+
+	cMyVideosActor*	m_lpActor;
+};
+
+class cMyVideosWriterLink
+{
+public:
+	cMyVideosWriterLink(cMyVideosActor* lpActor);
+
+	cMyVideosActor*	actor();
+
+	bool			isNew();
+	bool			isChanged();
+
+	cMyVideosWriterLinkValues	m_values;
+	cMyVideosWriterLinkValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosWriterLink*)
+
+class cMyVideosWriterLinkList : public QList<cMyVideosWriterLink*>
+{
+public:
+	cMyVideosWriterLinkList();
+	cMyVideosWriterLink *add(cMyVideosActor* lpActor);
+};
+
+class cMyVideosDirectorLinkValues
+{
+public:
+	cMyVideosDirectorLinkValues();
+	cMyVideosDirectorLinkValues(cMyVideosActor* lpActor);
+
+	void			set(cMyVideosActor* lpActor);
+
+	inline bool	operator==(const cMyVideosDirectorLinkValues b) const;
+	inline bool	operator!=(const cMyVideosDirectorLinkValues b) const;
+
+	cMyVideosActor*	m_lpActor;
+};
+
+class cMyVideosDirectorLink
+{
+public:
+	cMyVideosDirectorLink(cMyVideosActor* lpActor);
+
+	cMyVideosActor*	actor();
+
+	bool			isNew();
+	bool			isChanged();
+
+	cMyVideosDirectorLinkValues	m_values;
+	cMyVideosDirectorLinkValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosDirectorLink*)
+
+class cMyVideosDirectorLinkList : public QList<cMyVideosDirectorLink*>
+{
+public:
+	cMyVideosDirectorLinkList();
+	cMyVideosDirectorLink *add(cMyVideosActor* lpActor);
 };
 
 class cMyVideosValues
@@ -170,7 +236,9 @@ public:
 	QDateTime	m_dateAdded;							// dateAdded
 	qreal		m_dResumeTimeInSeconds;					// resumeTimeInSeconds
 	qreal		m_dTotalTimeInSeconds;					// totalTimeInSeconds
-	cMyVideosActorLinkList	m_actors;
+	cMyVideosActorLinkList		m_actors;
+	cMyVideosDirectorLinkList	m_directors;
+	cMyVideosWriterLinkList		m_writers;
 };
 
 class cMyVideos
@@ -186,7 +254,12 @@ public:
 			  qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds);
 
 	void			loadActors(QSqlDatabase& m_db, cMyVideosActorList videosActorList);
-	void			fillActorsList(QTreeWidget* lpWidget);
+	void			loadDirectors(QSqlDatabase& m_db, cMyVideosActorList videosActorList);
+	void			loadWriters(QSqlDatabase& m_db, cMyVideosActorList videosActorList);
+
+	void			fillActorsList(QStandardItemModel *lpView);
+	void			fillDirectorsList(QStandardItemModel *lpView);
+	void			fillWritersList(QStandardItemModel *lpView);
 
 	qint32			idMovie();
 	qint32			idFile();

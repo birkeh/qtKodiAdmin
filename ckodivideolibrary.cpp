@@ -223,10 +223,26 @@ void cKodiVideoLibrary::fillVideoList(QStandardItemModel* lpModel)
 	}
 }
 
-void cKodiVideoLibrary::fillActorList(QTreeWidget* lpList, cMyVideos* lpVideos)
+void cKodiVideoLibrary::fillActorList(QStandardItemModel *lpList, cMyVideos* lpVideos)
 {
 	lpList->clear();
 
 	lpVideos->loadActors(m_db, m_videosActorList);
 	lpVideos->fillActorsList(lpList);
+}
+
+void cKodiVideoLibrary::fillDirectorsList(QStandardItemModel *lpList, cMyVideos* lpVideos)
+{
+	lpList->clear();
+
+	lpVideos->loadDirectors(m_db, m_videosActorList);
+	lpVideos->fillDirectorsList(lpList);
+}
+
+void cKodiVideoLibrary::fillWritersList(QStandardItemModel *lpList, cMyVideos* lpVideos)
+{
+	lpList->clear();
+
+	lpVideos->loadWriters(m_db, m_videosActorList);
+	lpVideos->fillWritersList(lpList);
 }

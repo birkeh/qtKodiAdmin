@@ -29,13 +29,19 @@ public:
 private:
 	Ui::cVideoWidget*		ui;
 	QStandardItemModel*		m_lpVideoModel;
+	QStandardItemModel*		m_lpCastModel;
+	QStandardItemModel*		m_lpDirectorModel;
+	QStandardItemModel*		m_lpWriterModel;
 	cKodiVideoLibrary*		m_lpVideoLibrary;
 	cImageList*				m_lpImageList;
 
 	void					initUI();
 	void					showList();
 private slots:
-	void					selectionChanged(const QItemSelection& newSelection, const QItemSelection& oldSelection);
+	void					videoSelectionChanged(const QItemSelection& newSelection, const QItemSelection& oldSelection);
+	void					castSelectionChanged(const QItemSelection& newSelection, const QItemSelection& oldSelection);
+	void					directorSelectionChanged(const QItemSelection& newSelection, const QItemSelection& oldSelection);
+	void					writerSelectionChanged(const QItemSelection& newSelection, const QItemSelection& oldSelection);
 };
 
 #endif // CMOVIEWIDGET_H

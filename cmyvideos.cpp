@@ -1,7 +1,7 @@
 #include "cmyvideos.h"
 
 #include <QSqlQuery>
-#include <QTreeWidgetItem>
+#include <QStandardItem>
 
 
 cMyVideosActorValues::cMyVideosActorValues() :
@@ -164,6 +164,106 @@ cMyVideosActorLinkList::cMyVideosActorLinkList()
 cMyVideosActorLink*	cMyVideosActorLinkList::add(cMyVideosActor *lpActor, const QString& szRole, qint32 cast_order)
 {
 	cMyVideosActorLink*	lpNew	= new cMyVideosActorLink(lpActor, szRole, cast_order);
+	append(lpNew);
+	return(lpNew);
+}
+
+cMyVideosDirectorLinkValues::cMyVideosDirectorLinkValues() :
+	m_lpActor(0)
+{
+}
+
+cMyVideosDirectorLinkValues::cMyVideosDirectorLinkValues(cMyVideosActor* lpActor) :
+	m_lpActor(lpActor)
+{
+}
+
+void cMyVideosDirectorLinkValues::set(cMyVideosActor* lpActor)
+{
+	m_lpActor	= lpActor;
+}
+
+inline bool cMyVideosDirectorLinkValues::operator==(const cMyVideosDirectorLinkValues b) const
+{
+	if(m_lpActor != b.m_lpActor) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosDirectorLinkValues::operator!=(const cMyVideosDirectorLinkValues b) const
+{
+	if(m_lpActor != b.m_lpActor)
+		return(true);
+	return(false);
+}
+
+cMyVideosDirectorLink::cMyVideosDirectorLink(cMyVideosActor *lpActor) :
+	m_values(lpActor)
+{
+	m_oValues	= m_values;
+}
+
+cMyVideosActor* cMyVideosDirectorLink::actor()
+{
+	return(m_values.m_lpActor);
+}
+
+cMyVideosDirectorLinkList::cMyVideosDirectorLinkList()
+{
+}
+
+cMyVideosDirectorLink*	cMyVideosDirectorLinkList::add(cMyVideosActor *lpActor)
+{
+	cMyVideosDirectorLink*	lpNew	= new cMyVideosDirectorLink(lpActor);
+	append(lpNew);
+	return(lpNew);
+}
+
+cMyVideosWriterLinkValues::cMyVideosWriterLinkValues() :
+	m_lpActor(0)
+{
+}
+
+cMyVideosWriterLinkValues::cMyVideosWriterLinkValues(cMyVideosActor* lpActor) :
+	m_lpActor(lpActor)
+{
+}
+
+void cMyVideosWriterLinkValues::set(cMyVideosActor* lpActor)
+{
+	m_lpActor	= lpActor;
+}
+
+inline bool cMyVideosWriterLinkValues::operator==(const cMyVideosWriterLinkValues b) const
+{
+	if(m_lpActor != b.m_lpActor) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosWriterLinkValues::operator!=(const cMyVideosWriterLinkValues b) const
+{
+	if(m_lpActor != b.m_lpActor)
+		return(true);
+	return(false);
+}
+
+cMyVideosWriterLink::cMyVideosWriterLink(cMyVideosActor *lpActor) :
+	m_values(lpActor)
+{
+	m_oValues	= m_values;
+}
+
+cMyVideosActor* cMyVideosWriterLink::actor()
+{
+	return(m_values.m_lpActor);
+}
+
+cMyVideosWriterLinkList::cMyVideosWriterLinkList()
+{
+}
+
+cMyVideosWriterLink*	cMyVideosWriterLinkList::add(cMyVideosActor *lpActor)
+{
+	cMyVideosWriterLink*	lpNew	= new cMyVideosWriterLink(lpActor);
 	append(lpNew);
 	return(lpNew);
 }
@@ -381,17 +481,80 @@ void cMyVideos::loadActors(QSqlDatabase& m_db, cMyVideosActorList videosActorLis
 	m_oValues.m_actors	= m_values.m_actors;
 }
 
-void cMyVideos::fillActorsList(QTreeWidget* lpWidget)
+void cMyVideos::loadDirectors(QSqlDatabase& m_db, cMyVideosActorList videosActorList)
+{
+	if(m_values.m_directors.count())
+		return;
+
+	QSqlQuery	query(m_db);
+	query.exec(QString("SELECT actor_id FROM director_link WHERE media_id=%1 AND media_type='movie';").arg(m_values.m_idMovie));
+	while(query.next())
+	{
+		cMyVideosActor*	lpActor	= videosActorList.find(query.value("actor_id").toInt());
+		if(lpActor)
+			m_values.m_directors.add(lpActor);
+	}
+	m_oValues.m_directors	= m_values.m_directors;
+}
+
+void cMyVideos::loadWriters(QSqlDatabase& m_db, cMyVideosActorList videosActorList)
+{
+	if(m_values.m_writers.count())
+		return;
+
+	QSqlQuery	query(m_db);
+	query.exec(QString("SELECT actor_id FROM writer_link WHERE media_id=%1 AND media_type='movie';").arg(m_values.m_idMovie));
+	while(query.next())
+	{
+		cMyVideosActor*	lpActor	= videosActorList.find(query.value("actor_id").toInt());
+		if(lpActor)
+			m_values.m_writers.add(lpActor);
+	}
+	m_oValues.m_writers	= m_values.m_writers;
+}
+
+void cMyVideos::fillActorsList(QStandardItemModel *lpView)
 {
 	for(int z = 0;z < m_values.m_actors.count();z++)
 	{
-		QTreeWidgetItem*	lpItem	= new QTreeWidgetItem(lpWidget);
-		lpItem->setText(0, m_values.m_actors.at(z)->actor()->name());
-		lpItem->setText(1, m_values.m_actors.at(z)->role());
-		lpWidget->addTopLevelItem(lpItem);
+		QList<QStandardItem*> items;
+		items.append(new QStandardItem(m_values.m_actors.at(z)->actor()->name()));
+		items.append(new QStandardItem(m_values.m_actors.at(z)->role()));
+		QVariant	v	= qVariantFromValue(m_values.m_actors.at(z));
+		items[0]->setData(v, Qt::UserRole);
+		items[1]->setData(v, Qt::UserRole);
+		lpView->appendRow(items);
 	}
-	lpWidget->resizeColumnToContents(0);
-	lpWidget->resizeColumnToContents(1);
+}
+
+void cMyVideos::fillDirectorsList(QStandardItemModel *lpView)
+{
+	for(int z = 0;z < m_values.m_directors.count();z++)
+	{
+		QStringList		list	= m_values.m_directors.at(z)->m_values.m_lpActor->name().split(", ");
+		for(int x = 0;x < list.count();x++)
+		{
+			QStandardItem*	lpItem	= new QStandardItem(list.at(x));
+			QVariant		v		= qVariantFromValue(m_values.m_directors.at(z));
+			lpItem->setData(v, Qt::UserRole);
+			lpView->appendRow(lpItem);
+		}
+	}
+}
+
+void cMyVideos::fillWritersList(QStandardItemModel *lpView)
+{
+	for(int z = 0;z < m_values.m_writers.count();z++)
+	{
+		QStringList		list	= m_values.m_writers.at(z)->m_values.m_lpActor->name().split(", ");
+		for(int x = 0;x < list.count();x++)
+		{
+			QStandardItem*	lpItem	= new QStandardItem(list.at(x));
+			QVariant		v		= qVariantFromValue(m_values.m_writers.at(z));
+			lpItem->setData(v, Qt::UserRole);
+			lpView->appendRow(lpItem);
+		}
+	}
 }
 
 qint32 cMyVideos::idMovie()

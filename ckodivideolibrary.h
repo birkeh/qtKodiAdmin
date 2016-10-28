@@ -9,7 +9,7 @@
 #include <QStatusBar>
 
 #include <QStandardItemModel>
-#include <QTreeWidget>
+#include <QTreeView>
 
 
 class cKodiVideoLibrary
@@ -25,7 +25,9 @@ public:
 	bool				art(const QString& szMediaType, const QString& szType, qint32 idMovie, qint32& artID, QString& szURL);
 
 	void				fillVideoList(QStandardItemModel* lpModel);
-	void				fillActorList(QTreeWidget* lpList, cMyVideos* lpVideos);
+	void				fillActorList(QStandardItemModel* lpList, cMyVideos* lpVideos);
+	void				fillDirectorsList(QStandardItemModel* lpList, cMyVideos* lpVideos);
+	void				fillWritersList(QStandardItemModel* lpList, cMyVideos* lpVideos);
 private:
 	QSqlDatabase		m_db;
 	QString				m_szFileName;

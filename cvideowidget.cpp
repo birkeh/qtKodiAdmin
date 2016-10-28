@@ -19,6 +19,15 @@ cVideoWidget::~cVideoWidget()
 	if(m_lpVideoModel)
 		delete m_lpVideoModel;
 
+	if(m_lpCastModel)
+		delete m_lpCastModel;
+
+	if(m_lpDirectorModel)
+		delete m_lpDirectorModel;
+
+	if(m_lpWriterModel)
+		delete m_lpWriterModel;
+
 	delete ui;
 }
 
@@ -33,11 +42,36 @@ void cVideoWidget::initUI()
 	ui->m_lpVideoView->setModel(m_lpVideoModel);
 	ui->m_lpVideoView->setItemDelegate(new cVideoViewItemDelegate());
 
+	m_lpCastModel				= new QStandardItemModel(0, 2);
+	headerLabels				= QStringList() << tr("Name") << tr("Role");
+	m_lpCastModel->setHorizontalHeaderLabels(headerLabels);
+	ui->m_lpCastView->setModel(m_lpCastModel);
+
+	m_lpDirectorModel			= new QStandardItemModel(0, 1);
+	headerLabels				= QStringList() << tr("Name");
+	m_lpDirectorModel->setHorizontalHeaderLabels(headerLabels);
+	ui->m_lpDirectorView->setModel(m_lpDirectorModel);
+
+	m_lpWriterModel			= new QStandardItemModel(0, 1);
+	headerLabels				= QStringList() << tr("Name");
+	m_lpWriterModel->setHorizontalHeaderLabels(headerLabels);
+	ui->m_lpWriterView->setModel(m_lpWriterModel);
+
 	QList<int>	sizes;
 	sizes << 500 << 1000;
 	ui->m_lpSplitter->setSizes(sizes);
+
 	QItemSelectionModel*	selectionModel	= ui->m_lpVideoView->selectionModel();
-	connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection,QItemSelection)));
+	connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(videoSelectionChanged(QItemSelection,QItemSelection)));
+
+	selectionModel	= ui->m_lpCastView->selectionModel();
+	connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(castSelectionChanged(QItemSelection,QItemSelection)));
+
+	selectionModel	= ui->m_lpDirectorView->selectionModel();
+	connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(directorSelectionChanged(QItemSelection,QItemSelection)));
+
+	selectionModel	= ui->m_lpWriterView->selectionModel();
+	connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(writerSelectionChanged(QItemSelection,QItemSelection)));
 }
 
 void cVideoWidget::setLibrary(cKodiVideoLibrary* lpVideoLibrary, cImageList* lpImageList)
@@ -55,7 +89,7 @@ void cVideoWidget::showList()
 	ui->m_lpVideoView->resizeColumnToContents(0);
 }
 
-void cVideoWidget::selectionChanged(const QItemSelection& /*newSelection*/, const QItemSelection& /*oldSelection*/)
+void cVideoWidget::videoSelectionChanged(const QItemSelection& /*newSelection*/, const QItemSelection& /*oldSelection*/)
 {
 	QPixmap				thumb;
 	QPixmap				fanart;
@@ -70,8 +104,9 @@ void cVideoWidget::selectionChanged(const QItemSelection& /*newSelection*/, cons
 	const QModelIndex	index		= ui->m_lpVideoView->selectionModel()->currentIndex();
 	cMyVideos*			lpVideos	= index.data(Qt::UserRole).value<cMyVideos*>();
 
-	ui->m_lpDirector->clear();
-	ui->m_lpWriter->clear();
+	m_lpCastModel->clear();
+	m_lpDirectorModel->clear();
+	m_lpWriterModel->clear();
 
 	// Basic Tab
 	ui->m_lpTitle->setText(lpVideos->localMovieTitle());
@@ -97,9 +132,17 @@ void cVideoWidget::selectionChanged(const QItemSelection& /*newSelection*/, cons
 	ui->m_lpStudios->addItems(lpVideos->studio());
 
 	// Crew Tab
-	ui->m_lpDirector->addItems(lpVideos->director());
-	ui->m_lpWriter->addItems(lpVideos->writers());
-	m_lpVideoLibrary->fillActorList(ui->m_lpCast, lpVideos);
+	ui->m_lpCastPicture->clear();
+	ui->m_lpDirectorPicture->clear();
+	ui->m_lpWriterPicture->clear();
+
+	m_lpVideoLibrary->fillActorList(m_lpCastModel, lpVideos);
+	ui->m_lpCastView->resizeColumnToContents(0);
+	ui->m_lpCastView->resizeColumnToContents(1);
+
+	m_lpVideoLibrary->fillDirectorsList(m_lpDirectorModel, lpVideos);
+
+	m_lpVideoLibrary->fillWritersList(m_lpWriterModel, lpVideos);
 
 	if(m_lpVideoModel->itemFromIndex(index)->hasChildren())
 	{
@@ -159,4 +202,52 @@ void cVideoWidget::selectionChanged(const QItemSelection& /*newSelection*/, cons
 		ui->m_lpBanner->clear();
 		ui->m_lpBannerBox->setTitle(tr("Banner"));
 	}
+}
+
+void cVideoWidget::castSelectionChanged(const QItemSelection& /*newSelection*/, const QItemSelection& /*oldSelection*/)
+{
+	ui->m_lpCastPicture->clear();
+
+	const QModelIndex	index	= ui->m_lpCastView->selectionModel()->currentIndex();
+	cMyVideosActorLink*	lpActor	= index.data(Qt::UserRole).value<cMyVideosActorLink*>();
+
+	if(!lpActor)
+		return;
+
+	QPixmap	picture = m_lpImageList->get(cImage::MEDIATYPE_actor, cImage::TYPE_thumb, lpActor->m_values.m_lpActor->actorID());
+	if(picture.isNull())
+		return;
+	ui->m_lpCastPicture->setPixmap(picture.scaled(191, 191, Qt::KeepAspectRatio));
+}
+
+void cVideoWidget::directorSelectionChanged(const QItemSelection& /*newSelection*/, const QItemSelection& /*oldSelection*/)
+{
+	ui->m_lpDirectorPicture->clear();
+
+	const QModelIndex		index		= ui->m_lpDirectorView->selectionModel()->currentIndex();
+	cMyVideosDirectorLink*	lpDirector	= index.data(Qt::UserRole).value<cMyVideosDirectorLink*>();
+
+	if(!lpDirector)
+		return;
+
+	QPixmap	picture = m_lpImageList->get(cImage::MEDIATYPE_actor, cImage::TYPE_thumb, lpDirector->m_values.m_lpActor->actorID());
+	if(picture.isNull())
+		return;
+	ui->m_lpDirectorPicture->setPixmap(picture.scaled(191, 191, Qt::KeepAspectRatio));
+}
+
+void cVideoWidget::writerSelectionChanged(const QItemSelection& /*newSelection*/, const QItemSelection& /*oldSelection*/)
+{
+	ui->m_lpWriterPicture->clear();
+
+	const QModelIndex		index		= ui->m_lpWriterView->selectionModel()->currentIndex();
+	cMyVideosWriterLink*	lpWriter	= index.data(Qt::UserRole).value<cMyVideosWriterLink*>();
+
+	if(!lpWriter)
+		return;
+
+	QPixmap	picture = m_lpImageList->get(cImage::MEDIATYPE_actor, cImage::TYPE_thumb, lpWriter->m_values.m_lpActor->actorID());
+	if(picture.isNull())
+		return;
+	ui->m_lpWriterPicture->setPixmap(picture.scaled(191, 191, Qt::KeepAspectRatio));
 }
