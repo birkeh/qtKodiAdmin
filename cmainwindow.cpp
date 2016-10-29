@@ -47,14 +47,14 @@ void cMainWindow::initUI()
 	m_lpMusicWidget			= new cMusicWidget(this);
 	m_lpMusicVideoWidget	= new cMusicVideosWidget(this);
 
-//	ui->m_lpMainTab->addTab(m_lpVideoWidget, QIcon(":/icons/Videos.ico"), "Movies");
-//	ui->m_lpMainTab->addTab(m_lpTVShowWidget, QIcon(":/icons/TV Shows.ico"), "TV Shows");
-//	ui->m_lpMainTab->addTab(m_lpMusicWidget, QIcon(":/icons/Musics.ico"), "Music");
-//	ui->m_lpMainTab->addTab(m_lpMusicVideoWidget, QIcon(":/icons/Videos.ico"), "Music Videos");
-	ui->m_lpMainTab->addTab(m_lpVideoWidget, QIcon(":/icons/empty.ico"), tr("Movies"));
-	ui->m_lpMainTab->addTab(m_lpTVShowWidget, QIcon(":/icons/empty.ico"), tr("TV Shows"));
-	ui->m_lpMainTab->addTab(m_lpMusicWidget, QIcon(":/icons/empty.ico"), tr("Music"));
-	ui->m_lpMainTab->addTab(m_lpMusicVideoWidget, QIcon(":/icons/empty.ico"), tr("Music Videos"));
+	ui->m_lpMainTab->addTab(m_lpVideoWidget, QIcon(":/icons/Videos.ico"), "Movies");
+	ui->m_lpMainTab->addTab(m_lpTVShowWidget, QIcon(":/icons/TV Shows.ico"), "TV Shows");
+	ui->m_lpMainTab->addTab(m_lpMusicWidget, QIcon(":/icons/Musics.ico"), "Music");
+	ui->m_lpMainTab->addTab(m_lpMusicVideoWidget, QIcon(":/icons/Videos.ico"), "Music Videos");
+//	ui->m_lpMainTab->addTab(m_lpVideoWidget, QIcon(":/icons/empty.ico"), tr("Movies"));
+//	ui->m_lpMainTab->addTab(m_lpTVShowWidget, QIcon(":/icons/empty.ico"), tr("TV Shows"));
+//	ui->m_lpMainTab->addTab(m_lpMusicWidget, QIcon(":/icons/empty.ico"), tr("Music"));
+//	ui->m_lpMainTab->addTab(m_lpMusicVideoWidget, QIcon(":/icons/empty.ico"), tr("Music Videos"));
 
 	ui->m_lpMainTab->setCurrentIndex(0);
 
@@ -64,6 +64,7 @@ void cMainWindow::initUI()
 void cMainWindow::initDB()
 {
 	m_lpKodiLibrary	= new cKodiLibrary(ui->m_lpStatusBar, QDir::homePath() + QDir::separator() + QString(".kodi"));
+//	m_lpKodiLibrary	= new cKodiLibrary(ui->m_lpStatusBar, "\\\\MEDIAPC\\system");
 	m_lpKodiLibrary->init();
 	m_lpVideoWidget->setLibrary(m_lpKodiLibrary->videoLibrary(), m_lpKodiLibrary->imageList());
 }

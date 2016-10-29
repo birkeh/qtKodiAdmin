@@ -95,11 +95,10 @@ void cVideoWidget::videoSelectionChanged(const QItemSelection& /*newSelection*/,
 	QPixmap				fanart;
 	QPixmap				poster;
 	QPixmap				banner;
-
-	ui->m_lpThumb->clear();
-	ui->m_lpFanart->clear();
-	ui->m_lpPoster->clear();
-	ui->m_lpBanner->clear();
+	QString				szThumb;
+	QString				szFanart;
+	QString				szPoster;
+	QString				szBanner;
 
 	const QModelIndex	index		= ui->m_lpVideoView->selectionModel()->currentIndex();
 	cMyVideos*			lpVideos	= index.data(Qt::UserRole).value<cMyVideos*>();
@@ -150,6 +149,11 @@ void cVideoWidget::videoSelectionChanged(const QItemSelection& /*newSelection*/,
 		fanart		= m_lpImageList->get(cImage::MEDIATYPE_set, cImage::TYPE_fanart, lpVideos->idSet());
 		poster		= m_lpImageList->get(cImage::MEDIATYPE_set, cImage::TYPE_poster, lpVideos->idSet());
 		banner		= m_lpImageList->get(cImage::MEDIATYPE_set, cImage::TYPE_banner, lpVideos->idSet());
+
+		szThumb		= m_lpImageList->fileName(cImage::MEDIATYPE_set, cImage::TYPE_thumb, lpVideos->idSet());
+		szFanart	= m_lpImageList->fileName(cImage::MEDIATYPE_set, cImage::TYPE_fanart, lpVideos->idSet());
+		szPoster	= m_lpImageList->fileName(cImage::MEDIATYPE_set, cImage::TYPE_poster, lpVideos->idSet());
+		szBanner	= m_lpImageList->fileName(cImage::MEDIATYPE_set, cImage::TYPE_banner, lpVideos->idSet());
 	}
 	else
 	{
@@ -157,56 +161,70 @@ void cVideoWidget::videoSelectionChanged(const QItemSelection& /*newSelection*/,
 		fanart		= m_lpImageList->get(cImage::MEDIATYPE_movie, cImage::TYPE_fanart, lpVideos->idMovie());
 		poster		= m_lpImageList->get(cImage::MEDIATYPE_movie, cImage::TYPE_poster, lpVideos->idMovie());
 		banner		= m_lpImageList->get(cImage::MEDIATYPE_movie, cImage::TYPE_banner, lpVideos->idMovie());
+
+		szThumb		= m_lpImageList->fileName(cImage::MEDIATYPE_movie, cImage::TYPE_thumb, lpVideos->idMovie());
+		szFanart	= m_lpImageList->fileName(cImage::MEDIATYPE_movie, cImage::TYPE_fanart, lpVideos->idMovie());
+		szPoster	= m_lpImageList->fileName(cImage::MEDIATYPE_movie, cImage::TYPE_poster, lpVideos->idMovie());
+		szBanner	= m_lpImageList->fileName(cImage::MEDIATYPE_movie, cImage::TYPE_banner, lpVideos->idMovie());
 	}
 
 	if(thumb.width())
 	{
-		ui->m_lpThumb->setPixmap(thumb.scaled(480, 270, Qt::KeepAspectRatio));
+		ui->m_lpThumb->setPixmap(thumb.scaled(480, 270, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 		ui->m_lpThumbBox->setTitle(QString(tr("Thumb (%1 x %2)")).arg(thumb.width()).arg(thumb.height()));
+		ui->m_lpThumb->setToolTip(szThumb);
 	}
 	else
 	{
 		ui->m_lpThumb->clear();
 		ui->m_lpThumbBox->setTitle("Thumb");
+		ui->m_lpThumb->setToolTip("");
 	}
 
 	if(fanart.width())
 	{
-		ui->m_lpFanart->setPixmap(fanart.scaled(480, 270, Qt::KeepAspectRatio));
+		ui->m_lpFanart->setPixmap(fanart.scaled(480, 270, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 		ui->m_lpFanartBox->setTitle(QString(tr("Fanart (%1 x %2)")).arg(fanart.width()).arg(fanart.height()));
+		ui->m_lpFanart->setToolTip(szFanart);
 	}
 	else
 	{
 		ui->m_lpFanart->clear();
 		ui->m_lpFanartBox->setTitle(tr("Fanart"));
+		ui->m_lpFanart->setToolTip("");
 	}
 
 	if(poster.width())
 	{
-		ui->m_lpPoster->setPixmap(poster.scaled(480, 270, Qt::KeepAspectRatio));
+		ui->m_lpPoster->setPixmap(poster.scaled(480, 270, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 		ui->m_lpPosterBox->setTitle(QString(tr("Poster (%1 x %2)")).arg(poster.width()).arg(poster.height()));
+		ui->m_lpPoster->setToolTip(szPoster);
 	}
 	else
 	{
 		ui->m_lpPoster->clear();
 		ui->m_lpPosterBox->setTitle(tr("Poster"));
+		ui->m_lpPoster->setToolTip("");
 	}
 
 	if(banner.width())
 	{
-		ui->m_lpBanner->setPixmap(banner.scaled(480, 270, Qt::KeepAspectRatio));
+		ui->m_lpBanner->setPixmap(banner.scaled(480, 270, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 		ui->m_lpBannerBox->setTitle(QString(tr("Banner (%1 x %2)")).arg(banner.width()).arg(banner.height()));
+		ui->m_lpBanner->setToolTip(szBanner);
 	}
 	else
 	{
 		ui->m_lpBanner->clear();
 		ui->m_lpBannerBox->setTitle(tr("Banner"));
+		ui->m_lpBanner->setToolTip("");
 	}
 }
 
 void cVideoWidget::castSelectionChanged(const QItemSelection& /*newSelection*/, const QItemSelection& /*oldSelection*/)
 {
 	ui->m_lpCastPicture->clear();
+	ui->m_lpCastPicture->setToolTip("");
 
 	const QModelIndex	index	= ui->m_lpCastView->selectionModel()->currentIndex();
 	cMyVideosActorLink*	lpActor	= index.data(Qt::UserRole).value<cMyVideosActorLink*>();
@@ -217,12 +235,14 @@ void cVideoWidget::castSelectionChanged(const QItemSelection& /*newSelection*/, 
 	QPixmap	picture = m_lpImageList->get(cImage::MEDIATYPE_actor, cImage::TYPE_thumb, lpActor->m_values.m_lpActor->actorID());
 	if(picture.isNull())
 		return;
-	ui->m_lpCastPicture->setPixmap(picture.scaled(191, 191, Qt::KeepAspectRatio));
+	ui->m_lpCastPicture->setPixmap(picture.scaled(191, 191, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	ui->m_lpCastPicture->setToolTip(m_lpImageList->fileName(cImage::MEDIATYPE_actor, cImage::TYPE_thumb, lpActor->m_values.m_lpActor->actorID()));
 }
 
 void cVideoWidget::directorSelectionChanged(const QItemSelection& /*newSelection*/, const QItemSelection& /*oldSelection*/)
 {
 	ui->m_lpDirectorPicture->clear();
+	ui->m_lpDirectorPicture->setToolTip("");
 
 	const QModelIndex		index		= ui->m_lpDirectorView->selectionModel()->currentIndex();
 	cMyVideosDirectorLink*	lpDirector	= index.data(Qt::UserRole).value<cMyVideosDirectorLink*>();
@@ -233,12 +253,14 @@ void cVideoWidget::directorSelectionChanged(const QItemSelection& /*newSelection
 	QPixmap	picture = m_lpImageList->get(cImage::MEDIATYPE_actor, cImage::TYPE_thumb, lpDirector->m_values.m_lpActor->actorID());
 	if(picture.isNull())
 		return;
-	ui->m_lpDirectorPicture->setPixmap(picture.scaled(191, 191, Qt::KeepAspectRatio));
+	ui->m_lpDirectorPicture->setPixmap(picture.scaled(191, 191, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	ui->m_lpDirectorPicture->setToolTip(m_lpImageList->fileName(cImage::MEDIATYPE_actor, cImage::TYPE_thumb, lpDirector->m_values.m_lpActor->actorID()));
 }
 
 void cVideoWidget::writerSelectionChanged(const QItemSelection& /*newSelection*/, const QItemSelection& /*oldSelection*/)
 {
 	ui->m_lpWriterPicture->clear();
+	ui->m_lpWriterPicture->setToolTip("");
 
 	const QModelIndex		index		= ui->m_lpWriterView->selectionModel()->currentIndex();
 	cMyVideosWriterLink*	lpWriter	= index.data(Qt::UserRole).value<cMyVideosWriterLink*>();
@@ -249,5 +271,6 @@ void cVideoWidget::writerSelectionChanged(const QItemSelection& /*newSelection*/
 	QPixmap	picture = m_lpImageList->get(cImage::MEDIATYPE_actor, cImage::TYPE_thumb, lpWriter->m_values.m_lpActor->actorID());
 	if(picture.isNull())
 		return;
-	ui->m_lpWriterPicture->setPixmap(picture.scaled(191, 191, Qt::KeepAspectRatio));
+	ui->m_lpWriterPicture->setPixmap(picture.scaled(191, 191, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	ui->m_lpWriterPicture->setToolTip(m_lpImageList->fileName(cImage::MEDIATYPE_actor, cImage::TYPE_thumb, lpWriter->m_values.m_lpActor->actorID()));
 }

@@ -175,6 +175,240 @@ public:
 	cMyVideosDirectorLink *add(cMyVideosActor* lpActor);
 };
 
+class cMyVideosCountryValues
+{
+public:
+	cMyVideosCountryValues();
+	cMyVideosCountryValues(qint32 countryID, const QString& szName);
+
+	void			set(qint32 countryID, const QString& szName);
+
+	inline bool	operator==(const cMyVideosCountryValues b) const;
+	inline bool	operator!=(const cMyVideosCountryValues b) const;
+
+	qint32			m_countryID;
+	QString			m_szName;
+};
+
+class cMyVideosCountry
+{
+public:
+	cMyVideosCountry(qint32 countryID, const QString& szName);
+
+	qint32			countryID();
+	QString			name();
+
+	bool			isNew();
+	bool			isChanged();
+private:
+	cMyVideosCountryValues	m_values;
+	cMyVideosCountryValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosCountry*)
+
+class cMyVideosCountryList : public QList<cMyVideosCountry*>
+{
+public:
+	cMyVideosCountryList();
+	cMyVideosCountry*	add(qint32 countryID, const QString& szName);
+	cMyVideosCountry*	find(qint32 countryID);
+private:
+};
+
+class cMyVideosCountryLinkValues
+{
+public:
+	cMyVideosCountryLinkValues();
+	cMyVideosCountryLinkValues(cMyVideosCountry* lpCountry);
+
+	void			set(cMyVideosCountry* lpCountry);
+
+	inline bool	operator==(const cMyVideosCountryLinkValues b) const;
+	inline bool	operator!=(const cMyVideosCountryLinkValues b) const;
+
+	cMyVideosCountry*	m_lpCountry;
+};
+
+class cMyVideosCountryLink
+{
+public:
+	cMyVideosCountryLink(cMyVideosCountry* lpCountry);
+
+	cMyVideosCountry*	country();
+
+	bool			isNew();
+	bool			isChanged();
+
+	cMyVideosCountryLinkValues	m_values;
+	cMyVideosCountryLinkValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosCountryLink*)
+
+class cMyVideosCountryLinkList : public QList<cMyVideosCountryLink*>
+{
+public:
+	cMyVideosCountryLinkList();
+	cMyVideosCountryLink *add(cMyVideosCountry* lpCountry);
+};
+
+class cMyVideosGenreValues
+{
+public:
+	cMyVideosGenreValues();
+	cMyVideosGenreValues(qint32 genreID, const QString& szName);
+
+	void			set(qint32 genreID, const QString& szName);
+
+	inline bool	operator==(const cMyVideosGenreValues b) const;
+	inline bool	operator!=(const cMyVideosGenreValues b) const;
+
+	qint32			m_genreID;
+	QString			m_szName;
+};
+
+class cMyVideosGenre
+{
+public:
+	cMyVideosGenre(qint32 genreID, const QString& szName);
+
+	qint32			genreID();
+	QString			name();
+
+	bool			isNew();
+	bool			isChanged();
+private:
+	cMyVideosGenreValues	m_values;
+	cMyVideosGenreValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosGenre*)
+
+class cMyVideosGenreList : public QList<cMyVideosGenre*>
+{
+public:
+	cMyVideosGenreList();
+	cMyVideosGenre*	add(qint32 genreID, const QString& szName);
+	cMyVideosGenre*	find(qint32 genreID);
+private:
+};
+
+class cMyVideosGenreLinkValues
+{
+public:
+	cMyVideosGenreLinkValues();
+	cMyVideosGenreLinkValues(cMyVideosGenre* lpGenre);
+
+	void			set(cMyVideosGenre* lpGenre);
+
+	inline bool	operator==(const cMyVideosGenreLinkValues b) const;
+	inline bool	operator!=(const cMyVideosGenreLinkValues b) const;
+
+	cMyVideosGenre*	m_lpGenre;
+};
+
+class cMyVideosGenreLink
+{
+public:
+	cMyVideosGenreLink(cMyVideosGenre* lpGenre);
+
+	cMyVideosGenre*	genre();
+
+	bool			isNew();
+	bool			isChanged();
+
+	cMyVideosGenreLinkValues	m_values;
+	cMyVideosGenreLinkValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosGenreLink*)
+
+class cMyVideosGenreLinkList : public QList<cMyVideosGenreLink*>
+{
+public:
+	cMyVideosGenreLinkList();
+	cMyVideosGenreLink *add(cMyVideosGenre* lpGenre);
+};
+
+class cMyVideosStudioValues
+{
+public:
+	cMyVideosStudioValues();
+	cMyVideosStudioValues(qint32 studioID, const QString& szName);
+
+	void			set(qint32 studioID, const QString& szName);
+
+	inline bool	operator==(const cMyVideosStudioValues b) const;
+	inline bool	operator!=(const cMyVideosStudioValues b) const;
+
+	qint32			m_studioID;
+	QString			m_szName;
+};
+
+class cMyVideosStudio
+{
+public:
+	cMyVideosStudio(qint32 actorID, const QString& szName);
+
+	qint32			studioID();
+	QString			name();
+
+	bool			isNew();
+	bool			isChanged();
+private:
+	cMyVideosStudioValues	m_values;
+	cMyVideosStudioValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosStudio*)
+
+class cMyVideosStudioList : public QList<cMyVideosStudio*>
+{
+public:
+	cMyVideosStudioList();
+	cMyVideosStudio*	add(qint32 studioID, const QString& szName);
+	cMyVideosStudio*	find(qint32 studioID);
+private:
+};
+
+class cMyVideosStudioLinkValues
+{
+public:
+	cMyVideosStudioLinkValues();
+	cMyVideosStudioLinkValues(cMyVideosStudio* lpStudio);
+
+	void			set(cMyVideosStudio* lpStudio);
+
+	inline bool	operator==(const cMyVideosStudioLinkValues b) const;
+	inline bool	operator!=(const cMyVideosStudioLinkValues b) const;
+
+	cMyVideosStudio*	m_lpStudio;
+};
+
+class cMyVideosStudioLink
+{
+public:
+	cMyVideosStudioLink(cMyVideosStudio* lpStudio);
+
+	cMyVideosStudio*	studio();
+
+	bool			isNew();
+	bool			isChanged();
+
+	cMyVideosStudioLinkValues	m_values;
+	cMyVideosStudioLinkValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosStudioLink*)
+
+class cMyVideosStudioLinkList : public QList<cMyVideosStudioLink*>
+{
+public:
+	cMyVideosStudioLinkList();
+	cMyVideosStudioLink *add(cMyVideosStudio* lpStudio);
+};
+
 class cMyVideosValues
 {
 public:
@@ -239,6 +473,9 @@ public:
 	cMyVideosActorLinkList		m_actors;
 	cMyVideosDirectorLinkList	m_directors;
 	cMyVideosWriterLinkList		m_writers;
+	cMyVideosCountryLinkList	m_countries;
+	cMyVideosGenreLinkList		m_genres;
+	cMyVideosStudioLinkList		m_studios;
 };
 
 class cMyVideos
@@ -256,6 +493,9 @@ public:
 	void			loadActors(QSqlDatabase& m_db, cMyVideosActorList videosActorList);
 	void			loadDirectors(QSqlDatabase& m_db, cMyVideosActorList videosActorList);
 	void			loadWriters(QSqlDatabase& m_db, cMyVideosActorList videosActorList);
+	void			loadCountries(QSqlDatabase& m_db, cMyVideosCountryList videosCountryList);
+	void			loadGenres(QSqlDatabase& m_db, cMyVideosGenreList videosGenreList);
+	void			loadStudios(QSqlDatabase& m_db, cMyVideosStudioList videosStudioList);
 
 	void			fillActorsList(QStandardItemModel *lpView);
 	void			fillDirectorsList(QStandardItemModel *lpView);

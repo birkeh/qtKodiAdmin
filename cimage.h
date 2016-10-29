@@ -40,6 +40,7 @@ public:
 	cImage::MEDIATYPE		mediaType();
 	cImage::TYPE			type();
 	qint32					idMovie();
+	QString					fileName();
 
 	QPixmap					image();
 private:
@@ -57,8 +58,6 @@ private:
 	QString					m_szPath;
 
 	QPixmap					m_image;
-
-	QPixmap					downloadFile(const QString& szFileName);
 };
 
 Q_DECLARE_METATYPE (cImage*)
@@ -68,11 +67,13 @@ class cImageList : public QList<cImage*>
 public:
 	cImageList(cKodiVideoLibrary* lpKodiVideoLibrary, cKodiTexturesLibrary* lpKodiTexturesLibrary, const QString& szPath);
 	QPixmap					get(cImage::MEDIATYPE mediaType, cImage::TYPE type, qint32 idMovie);
-
+	QString					fileName(cImage::MEDIATYPE mediaType, cImage::TYPE type, qint32 idMovie);
 private:
 	cKodiVideoLibrary*		m_lpKodiVideoLibrary;
 	cKodiTexturesLibrary*	m_lpKodiTexturesLibrary;
 	QString					m_szPath;
+
+	cImage*					find(cImage::MEDIATYPE mediaType, cImage::TYPE type, qint32 idMovie);
 };
 
 #endif // CIMAGE_H

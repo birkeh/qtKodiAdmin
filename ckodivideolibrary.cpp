@@ -63,6 +63,10 @@ qint16 cKodiVideoLibrary::version()
 qint32 cKodiVideoLibrary::load()
 {
 	loadActors();
+	loadCountries();
+	loadGenres();
+	loadStudios();
+
 	return(loadVideos());
 }
 
@@ -80,6 +84,51 @@ qint32 cKodiVideoLibrary::loadActors()
 
 	}
 	return(m_videosActorList.count());
+}
+
+qint32 cKodiVideoLibrary::loadCountries()
+{
+	QSqlQuery	query(m_db);
+
+	query.exec("SELECT country_id, name FROM country ORDER BY name;");
+	while(query.next())
+	{
+		m_videosCountryList.add(
+			query.value("country_id").toInt(),
+			query.value("name").toString());
+
+	}
+	return(m_videosCountryList.count());
+}
+
+qint32 cKodiVideoLibrary::loadGenres()
+{
+	QSqlQuery	query(m_db);
+
+	query.exec("SELECT genre_id, name FROM genre ORDER BY name;");
+	while(query.next())
+	{
+		m_videosGenreList.add(
+			query.value("genre_id").toInt(),
+			query.value("name").toString());
+
+	}
+	return(m_videosGenreList.count());
+}
+
+qint32 cKodiVideoLibrary::loadStudios()
+{
+	QSqlQuery	query(m_db);
+
+	query.exec("SELECT studio_id, name FROM studio ORDER BY name;");
+	while(query.next())
+	{
+		m_videosStudioList.add(
+			query.value("studio_id").toInt(),
+			query.value("name").toString());
+
+	}
+	return(m_videosStudioList.count());
 }
 
 qint32 cKodiVideoLibrary::loadVideos()

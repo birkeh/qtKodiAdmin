@@ -268,6 +268,408 @@ cMyVideosWriterLink*	cMyVideosWriterLinkList::add(cMyVideosActor *lpActor)
 	return(lpNew);
 }
 
+cMyVideosCountryValues::cMyVideosCountryValues() :
+	m_countryID(-1),
+	m_szName("UNSET")
+{
+}
+
+cMyVideosCountryValues::cMyVideosCountryValues(qint32 countryID, const QString& szName) :
+	m_countryID(countryID),
+	m_szName(szName)
+{
+}
+
+void cMyVideosCountryValues::set(qint32 countryID, const QString& szName)
+{
+	m_countryID	= countryID;
+	m_szName	= szName;
+}
+
+inline bool	cMyVideosCountryValues::operator==(const cMyVideosCountryValues b) const
+{
+	if(m_countryID != b.m_countryID) return(false);
+	if(m_szName != b.m_szName) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosCountryValues::operator!=(const cMyVideosCountryValues b) const
+{
+	if(m_countryID != b.m_countryID
+		|| m_szName != b.m_szName)
+		return(true);
+	return(false);
+}
+
+cMyVideosCountry::cMyVideosCountry(qint32 countryID, const QString& szName) :
+	m_values(countryID, szName)
+{
+	m_oValues	= m_values;
+}
+
+qint32 cMyVideosCountry::countryID()
+{
+	return(m_values.m_countryID);
+}
+
+QString cMyVideosCountry::name()
+{
+	return(m_values.m_szName);
+}
+
+bool cMyVideosCountry::isNew()
+{
+	if(m_values.m_countryID == -1)
+		return(true);
+	return(false);
+}
+
+bool cMyVideosCountry::isChanged()
+{
+	if(m_values != m_oValues)
+		return(true);
+	return(false);
+}
+
+cMyVideosCountryList::cMyVideosCountryList()
+{
+}
+
+cMyVideosCountry* cMyVideosCountryList::add(qint32 countryID, const QString& szName)
+{
+	cMyVideosCountry*	lpNew	= new cMyVideosCountry(countryID, szName);
+	append(lpNew);
+	return(lpNew);
+}
+
+cMyVideosCountry* cMyVideosCountryList::find(qint32 countryID)
+{
+	for(int z = 0;z < count();z++)
+	{
+		if(at(z)->countryID() == countryID)
+			return(at(z));
+	}
+	return(0);
+}
+
+cMyVideosCountryLinkValues::cMyVideosCountryLinkValues() :
+	m_lpCountry(0)
+{
+}
+
+cMyVideosCountryLinkValues::cMyVideosCountryLinkValues(cMyVideosCountry* lpCountry) :
+	m_lpCountry(lpCountry)
+{
+}
+
+void cMyVideosCountryLinkValues::set(cMyVideosCountry* lpCountry)
+{
+	m_lpCountry	= lpCountry;
+}
+
+inline bool cMyVideosCountryLinkValues::operator==(const cMyVideosCountryLinkValues b) const
+{
+	if(m_lpCountry!= b.m_lpCountry) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosCountryLinkValues::operator!=(const cMyVideosCountryLinkValues b) const
+{
+	if(m_lpCountry!= b.m_lpCountry)
+		return(true);
+	return(false);
+}
+
+cMyVideosCountryLink::cMyVideosCountryLink(cMyVideosCountry* lpCountry) :
+	m_values(lpCountry)
+{
+	m_oValues	= m_values;
+}
+
+cMyVideosCountry* cMyVideosCountryLink::country()
+{
+	return(m_values.m_lpCountry);
+}
+
+cMyVideosCountryLinkList::cMyVideosCountryLinkList()
+{
+}
+
+cMyVideosCountryLink*	cMyVideosCountryLinkList::add(cMyVideosCountry *lpCountry)
+{
+	cMyVideosCountryLink*	lpNew	= new cMyVideosCountryLink(lpCountry);
+	append(lpNew);
+	return(lpNew);
+}
+
+cMyVideosGenreValues::cMyVideosGenreValues() :
+	m_genreID(-1),
+	m_szName("UNSET")
+{
+}
+
+cMyVideosGenreValues::cMyVideosGenreValues(qint32 genreID, const QString& szName) :
+	m_genreID(genreID),
+	m_szName(szName)
+{
+}
+
+void cMyVideosGenreValues::set(qint32 genreID, const QString& szName)
+{
+	m_genreID	= genreID;
+	m_szName	= szName;
+}
+
+inline bool	cMyVideosGenreValues::operator==(const cMyVideosGenreValues b) const
+{
+	if(m_genreID != b.m_genreID) return(false);
+	if(m_szName != b.m_szName) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosGenreValues::operator!=(const cMyVideosGenreValues b) const
+{
+	if(m_genreID != b.m_genreID
+		|| m_szName != b.m_szName)
+		return(true);
+	return(false);
+}
+
+cMyVideosGenre::cMyVideosGenre(qint32 genreID, const QString& szName) :
+	m_values(genreID, szName)
+{
+	m_oValues	= m_values;
+}
+
+qint32 cMyVideosGenre::genreID()
+{
+	return(m_values.m_genreID);
+}
+
+QString cMyVideosGenre::name()
+{
+	return(m_values.m_szName);
+}
+
+bool cMyVideosGenre::isNew()
+{
+	if(m_values.m_genreID == -1)
+		return(true);
+	return(false);
+}
+
+bool cMyVideosGenre::isChanged()
+{
+	if(m_values != m_oValues)
+		return(true);
+	return(false);
+}
+
+cMyVideosGenreList::cMyVideosGenreList()
+{
+}
+
+cMyVideosGenre* cMyVideosGenreList::add(qint32 genreID, const QString& szName)
+{
+	cMyVideosGenre*	lpNew	= new cMyVideosGenre(genreID, szName);
+	append(lpNew);
+	return(lpNew);
+}
+
+cMyVideosGenre* cMyVideosGenreList::find(qint32 genreID)
+{
+	for(int z = 0;z < count();z++)
+	{
+		if(at(z)->genreID() == genreID)
+			return(at(z));
+	}
+	return(0);
+}
+
+cMyVideosGenreLinkValues::cMyVideosGenreLinkValues() :
+	m_lpGenre(0)
+{
+}
+
+cMyVideosGenreLinkValues::cMyVideosGenreLinkValues(cMyVideosGenre* lpGenre) :
+	m_lpGenre(lpGenre)
+{
+}
+
+void cMyVideosGenreLinkValues::set(cMyVideosGenre* lpGenre)
+{
+	m_lpGenre	= lpGenre;
+}
+
+inline bool cMyVideosGenreLinkValues::operator==(const cMyVideosGenreLinkValues b) const
+{
+	if(m_lpGenre!= b.m_lpGenre) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosGenreLinkValues::operator!=(const cMyVideosGenreLinkValues b) const
+{
+	if(m_lpGenre!= b.m_lpGenre)
+		return(true);
+	return(false);
+}
+
+cMyVideosGenreLink::cMyVideosGenreLink(cMyVideosGenre* lpGenre) :
+	m_values(lpGenre)
+{
+	m_oValues	= m_values;
+}
+
+cMyVideosGenre* cMyVideosGenreLink::genre()
+{
+	return(m_values.m_lpGenre);
+}
+
+cMyVideosGenreLinkList::cMyVideosGenreLinkList()
+{
+}
+
+cMyVideosGenreLink*	cMyVideosGenreLinkList::add(cMyVideosGenre *lpGenre)
+{
+	cMyVideosGenreLink*	lpNew	= new cMyVideosGenreLink(lpGenre);
+	append(lpNew);
+	return(lpNew);
+}
+
+cMyVideosStudioValues::cMyVideosStudioValues() :
+	m_studioID(-1),
+	m_szName("UNSET")
+{
+}
+
+cMyVideosStudioValues::cMyVideosStudioValues(qint32 studioID, const QString& szName) :
+	m_studioID(studioID),
+	m_szName(szName)
+{
+}
+
+void cMyVideosStudioValues::set(qint32 studioID, const QString& szName)
+{
+	m_studioID	= studioID;
+	m_szName	= szName;
+}
+
+inline bool	cMyVideosStudioValues::operator==(const cMyVideosStudioValues b) const
+{
+	if(m_studioID != b.m_studioID) return(false);
+	if(m_szName != b.m_szName) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosStudioValues::operator!=(const cMyVideosStudioValues b) const
+{
+	if(m_studioID != b.m_studioID
+		|| m_szName != b.m_szName)
+		return(true);
+	return(false);
+}
+
+cMyVideosStudio::cMyVideosStudio(qint32 studioID, const QString& szName) :
+	m_values(studioID, szName)
+{
+	m_oValues	= m_values;
+}
+
+qint32 cMyVideosStudio::studioID()
+{
+	return(m_values.m_studioID);
+}
+
+QString cMyVideosStudio::name()
+{
+	return(m_values.m_szName);
+}
+
+bool cMyVideosStudio::isNew()
+{
+	if(m_values.m_studioID == -1)
+		return(true);
+	return(false);
+}
+
+bool cMyVideosStudio::isChanged()
+{
+	if(m_values != m_oValues)
+		return(true);
+	return(false);
+}
+
+cMyVideosStudioList::cMyVideosStudioList()
+{
+}
+
+cMyVideosStudio* cMyVideosStudioList::add(qint32 studioID, const QString& szName)
+{
+	cMyVideosStudio*	lpNew	= new cMyVideosStudio(studioID, szName);
+	append(lpNew);
+	return(lpNew);
+}
+
+cMyVideosStudio* cMyVideosStudioList::find(qint32 studioID)
+{
+	for(int z = 0;z < count();z++)
+	{
+		if(at(z)->studioID() == studioID)
+			return(at(z));
+	}
+	return(0);
+}
+
+cMyVideosStudioLinkValues::cMyVideosStudioLinkValues() :
+	m_lpStudio(0)
+{
+}
+
+cMyVideosStudioLinkValues::cMyVideosStudioLinkValues(cMyVideosStudio* lpStudio) :
+	m_lpStudio(lpStudio)
+{
+}
+
+void cMyVideosStudioLinkValues::set(cMyVideosStudio* lpStudio)
+{
+	m_lpStudio	= lpStudio;
+}
+
+inline bool cMyVideosStudioLinkValues::operator==(const cMyVideosStudioLinkValues b) const
+{
+	if(m_lpStudio!= b.m_lpStudio) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosStudioLinkValues::operator!=(const cMyVideosStudioLinkValues b) const
+{
+	if(m_lpStudio!= b.m_lpStudio)
+		return(true);
+	return(false);
+}
+
+cMyVideosStudioLink::cMyVideosStudioLink(cMyVideosStudio* lpStudio) :
+	m_values(lpStudio)
+{
+	m_oValues	= m_values;
+}
+
+cMyVideosStudio* cMyVideosStudioLink::studio()
+{
+	return(m_values.m_lpStudio);
+}
+
+cMyVideosStudioLinkList::cMyVideosStudioLinkList()
+{
+}
+
+cMyVideosStudioLink*	cMyVideosStudioLinkList::add(cMyVideosStudio *lpStudio)
+{
+	cMyVideosStudioLink*	lpNew	= new cMyVideosStudioLink(lpStudio);
+	append(lpNew);
+	return(lpNew);
+}
+
 cMyVideosValues::cMyVideosValues() :
 	m_idMovie(-1), m_idFile(-1), m_szLocalMovieTitle("UNSET"), m_szMoviePlot("UNSET"), m_szMoviePlotOutline("UNSET"),
 	m_szMovieTagline("UNSET"), m_iRatingVotes(-1), m_dRating(-1), m_szWriters("UNSET"), m_iYearReleased(-1),
@@ -511,6 +913,54 @@ void cMyVideos::loadWriters(QSqlDatabase& m_db, cMyVideosActorList videosActorLi
 			m_values.m_writers.add(lpActor);
 	}
 	m_oValues.m_writers	= m_values.m_writers;
+}
+
+void cMyVideos::loadCountries(QSqlDatabase& m_db, cMyVideosCountryList videosCountryList)
+{
+	if(m_values.m_countries.count())
+		return;
+
+	QSqlQuery	query(m_db);
+	query.exec(QString("SELECT country_id FROM country_link WHERE media_id=%1 AND media_type='movie';").arg(m_values.m_idMovie));
+	while(query.next())
+	{
+		cMyVideosCountry*	lpCountry	= videosCountryList.find(query.value("country_id").toInt());
+		if(lpCountry)
+			m_values.m_countries.add(lpCountry);
+	}
+	m_oValues.m_countries	= m_values.m_countries;
+}
+
+void cMyVideos::loadGenres(QSqlDatabase& m_db, cMyVideosGenreList videosGenreList)
+{
+	if(m_values.m_genres.count())
+		return;
+
+	QSqlQuery	query(m_db);
+	query.exec(QString("SELECT genre_id FROM genre_link WHERE media_id=%1 AND media_type='movie';").arg(m_values.m_idMovie));
+	while(query.next())
+	{
+		cMyVideosGenre*	lpGenre	= videosGenreList.find(query.value("genre_id").toInt());
+		if(lpGenre)
+			m_values.m_genres.add(lpGenre);
+	}
+	m_oValues.m_genres	= m_values.m_genres;
+}
+
+void cMyVideos::loadStudios(QSqlDatabase& m_db, cMyVideosStudioList videosStudioList)
+{
+	if(m_values.m_studios.count())
+		return;
+
+	QSqlQuery	query(m_db);
+	query.exec(QString("SELECT studio_id FROM studio_link WHERE media_id=%1 AND media_type='movie';").arg(m_values.m_idMovie));
+	while(query.next())
+	{
+		cMyVideosStudio*	lpStudio	= videosStudioList.find(query.value("studio_id").toInt());
+		if(lpStudio)
+			m_values.m_studios.add(lpStudio);
+	}
+	m_oValues.m_studios	= m_values.m_studios;
 }
 
 void cMyVideos::fillActorsList(QStandardItemModel *lpView)

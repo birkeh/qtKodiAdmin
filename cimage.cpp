@@ -42,10 +42,11 @@ cImage::cImage(cKodiVideoLibrary* lpKodiVideoLibrary, cKodiTexturesLibrary* lpKo
 	{
 		if(m_lpKodiTexturesLibrary->texture(m_szURL, m_textureID, m_szCachedURL))
 		{
-			QString	str	= m_szPath + QDir::separator() + "Userdata" + QDir::separator() + "Thumbnails" + QDir::separator() + m_szCachedURL;
-
 			if(m_szCachedURL.length())
-				m_image.load(str);
+			{
+				m_szFileName	= m_szPath + QDir::separator() + "Userdata" + QDir::separator() + "Thumbnails" + QDir::separator() + m_szCachedURL;
+				m_image.load(m_szFileName);
+			}
 
 			return;
 		}
@@ -69,6 +70,11 @@ qint32 cImage::idMovie()
 	return(m_idMovie);
 }
 
+QString cImage::fileName()
+{
+	return(m_szFileName);
+}
+
 QPixmap cImage::image()
 {
 	return(m_image);
@@ -81,7 +87,7 @@ cImageList::cImageList(cKodiVideoLibrary *lpKodiVideoLibrary, cKodiTexturesLibra
 {
 }
 
-QPixmap	cImageList::get(cImage::MEDIATYPE mediaType, cImage::TYPE type, qint32 idMovie)
+cImage* cImageList::find(cImage::MEDIATYPE mediaType, cImage::TYPE type, qint32 idMovie)
 {
 	cImage*	lpImage	= 0;
 	for(int z = 0;z < count();z++)
@@ -89,8 +95,7 @@ QPixmap	cImageList::get(cImage::MEDIATYPE mediaType, cImage::TYPE type, qint32 i
 		if(mediaType == at(z)->mediaType() && type == at(z)->type() && idMovie == at(z)->idMovie())
 		{
 			lpImage	= at(z);
-			return(lpImage->image());
-			break;
+			return(lpImage);
 		}
 	}
 
@@ -98,38 +103,20 @@ QPixmap	cImageList::get(cImage::MEDIATYPE mediaType, cImage::TYPE type, qint32 i
 	{
 		lpImage	= new cImage(m_lpKodiVideoLibrary, m_lpKodiTexturesLibrary, mediaType, type, idMovie, m_szPath);
 		append(lpImage);
-		return(lpImage->image());
+		return(lpImage);
 	}
-	return(QPixmap());
+
+	return(0);
 }
 
-QPixmap cImage::downloadFile(const QString& /*szFileName*/)
+QPixmap	cImageList::get(cImage::MEDIATYPE mediaType, cImage::TYPE type, qint32 idMovie)
 {
-	QPixmap					pixmap;
+	cImage*	lpImage	= find(mediaType, type, idMovie);
+	return(lpImage->image());
+}
 
-//	QString	szPath	= QDir::homePath() + QDir::separator() + "qtseries" + QDir::separator() + szFileName;
-//	QString	szURL	= "http://thetvdb.com/banners/" + szFileName;
-
-//	QNetworkAccessManager	networkManager;
-//	QUrl					url(szURL);
-//	QNetworkRequest			request(url);
-//	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/xml");
-
-//	QNetworkReply*			reply   = networkManager.get(request);
-//	QEventLoop				loop;
-
-//	QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-//	loop.exec();
-
-//	QByteArray				szData  = reply->readAll();
-//	delete reply;
-
-//	pixmap.loadFromData(szData);
-
-//	QDir		dir(szPath);
-//	QFileInfo	fileInfo(szPath);
-//	dir.mkpath(dir.filePath(fileInfo.absolutePath()));
-//	pixmap.save(szPath);
-
-	return(pixmap);
+QString	cImageList::fileName(cImage::MEDIATYPE mediaType, cImage::TYPE type, qint32 idMovie)
+{
+	cImage*	lpImage	= find(mediaType, type, idMovie);
+	return(lpImage->fileName());
 }
