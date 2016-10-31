@@ -3,6 +3,19 @@
 #include "cimage.h"
 
 #include "cvideoviewitemdelegate.h"
+#include "ccheckboxitemdelegate.h"
+
+
+#define DELETE(x) { if(x) delete x, x=0; }
+
+#define THUMB_WIDTH		220
+#define THUMB_HEIGHT	390
+#define FANART_WIDTH	480
+#define FANART_HEIGHT	270
+#define POSTER_WIDTH	220
+#define POSTER_HEIGHT	390
+#define BANNER_WIDTH	480
+#define BANNER_HEIGHT	 90
 
 
 cVideoWidget::cVideoWidget(QWidget *parent) :
@@ -16,17 +29,16 @@ cVideoWidget::cVideoWidget(QWidget *parent) :
 
 cVideoWidget::~cVideoWidget()
 {
-	if(m_lpVideoModel)
-		delete m_lpVideoModel;
-
-	if(m_lpCastModel)
-		delete m_lpCastModel;
-
-	if(m_lpDirectorModel)
-		delete m_lpDirectorModel;
-
-	if(m_lpWriterModel)
-		delete m_lpWriterModel;
+	DELETE(m_lpVideoModel);
+	DELETE(m_lpCastModel);
+	DELETE(m_lpDirectorModel);
+	DELETE(m_lpWriterModel);
+	DELETE(m_lpCountryModel);
+	DELETE(m_lpGenreModel);
+	DELETE(m_lpStudioModel);
+	DELETE(m_lpVideoStreamModel);
+	DELETE(m_lpAudioStreamModel);
+	DELETE(m_lpSubtitleStreamModel);
 
 	delete ui;
 }
@@ -34,6 +46,11 @@ cVideoWidget::~cVideoWidget()
 void cVideoWidget::initUI()
 {
 	ui->setupUi(this);
+	ui->m_lpBanner->setMinimumSize(BANNER_WIDTH, BANNER_HEIGHT);
+	ui->m_lpFanart->setMinimumSize(FANART_WIDTH, FANART_HEIGHT);
+	ui->m_lpPoster->setMinimumSize(POSTER_WIDTH, POSTER_HEIGHT);
+	ui->m_lpThumb->setMinimumSize(THUMB_WIDTH, THUMB_HEIGHT);
+
 	ui->m_lpInformationTab->setCurrentIndex(0);
 
 	m_lpVideoModel				= new QStandardItemModel(0, 1);
@@ -52,10 +69,41 @@ void cVideoWidget::initUI()
 	m_lpDirectorModel->setHorizontalHeaderLabels(headerLabels);
 	ui->m_lpDirectorView->setModel(m_lpDirectorModel);
 
-	m_lpWriterModel			= new QStandardItemModel(0, 1);
+	m_lpWriterModel				= new QStandardItemModel(0, 1);
 	headerLabels				= QStringList() << tr("Name");
 	m_lpWriterModel->setHorizontalHeaderLabels(headerLabels);
 	ui->m_lpWriterView->setModel(m_lpWriterModel);
+
+	m_lpCountryModel			= new QStandardItemModel(0, 1);
+	headerLabels				= QStringList() << tr("Name");
+	m_lpCountryModel->setHorizontalHeaderLabels(headerLabels);
+	ui->m_lpCountryView->setModel(m_lpCountryModel);
+	ui->m_lpCountryView->setItemDelegate(new cCheckBoxItemDelegate());
+
+	m_lpGenreModel				= new QStandardItemModel(0, 1);
+	headerLabels				= QStringList() << tr("Name");
+	m_lpGenreModel->setHorizontalHeaderLabels(headerLabels);
+	ui->m_lpGenreView->setModel(m_lpGenreModel);
+	ui->m_lpGenreView->setItemDelegate(new cCheckBoxItemDelegate());
+
+	m_lpStudioModel				= new QStandardItemModel(0, 1);
+	headerLabels				= QStringList() << tr("Name");
+	m_lpStudioModel->setHorizontalHeaderLabels(headerLabels);
+	ui->m_lpStudioView->setModel(m_lpStudioModel);
+	ui->m_lpStudioView->setItemDelegate(new cCheckBoxItemDelegate());
+
+	m_lpVideoStreamModel		= new QStandardItemModel(0, 4);
+	ui->m_lpVideoStreamView->setModel(m_lpVideoStreamModel);
+
+	m_lpAudioStreamModel		= new QStandardItemModel(0, 4);
+	ui->m_lpAudioStreamView->setModel(m_lpAudioStreamModel);
+
+	m_lpSubtitleStreamModel		= new QStandardItemModel(0, 1);
+	ui->m_lpSubtitleStreamView->setModel(m_lpSubtitleStreamModel);
+
+	ui->m_lpCountryView->setWrapping(true);
+	ui->m_lpGenreView->setWrapping(true);
+	ui->m_lpStudioView->setWrapping(true);
 
 	QList<int>	sizes;
 	sizes << 500 << 1000;
@@ -84,9 +132,17 @@ void cVideoWidget::setLibrary(cKodiVideoLibrary* lpVideoLibrary, cImageList* lpI
 void cVideoWidget::showList()
 {
 	m_lpVideoModel->clear();
-
 	m_lpVideoLibrary->fillVideoList(m_lpVideoModel);
 	ui->m_lpVideoView->resizeColumnToContents(0);
+
+	m_lpCountryModel->clear();
+	m_lpVideoLibrary->fillCountriesList(m_lpCountryModel);
+
+	m_lpGenreModel->clear();
+	m_lpVideoLibrary->fillGenresList(m_lpGenreModel);
+
+	m_lpStudioModel->clear();
+	m_lpVideoLibrary->fillStudiosList(m_lpStudioModel);
 }
 
 void cVideoWidget::videoSelectionChanged(const QItemSelection& /*newSelection*/, const QItemSelection& /*oldSelection*/)
@@ -126,9 +182,9 @@ void cVideoWidget::videoSelectionChanged(const QItemSelection& /*newSelection*/,
 	ui->m_lpOutline->setText(lpVideos->moviePlotOutline());
 
 	// Extended Tab
-	ui->m_lpGenres->addItems(lpVideos->genre());
-	ui->m_lpCountries->addItems(lpVideos->country());
-	ui->m_lpStudios->addItems(lpVideos->studio());
+	m_lpVideoLibrary->fillCountriesList(m_lpCountryModel, lpVideos);
+	m_lpVideoLibrary->fillGenresList(m_lpGenreModel, lpVideos);
+	m_lpVideoLibrary->fillStudiosList(m_lpStudioModel, lpVideos);
 
 	// Crew Tab
 	ui->m_lpCastPicture->clear();
@@ -142,6 +198,26 @@ void cVideoWidget::videoSelectionChanged(const QItemSelection& /*newSelection*/,
 	m_lpVideoLibrary->fillDirectorsList(m_lpDirectorModel, lpVideos);
 
 	m_lpVideoLibrary->fillWritersList(m_lpWriterModel, lpVideos);
+
+	// Stream Tab
+	m_lpVideoLibrary->fillVideoStreamList(m_lpVideoStreamModel, lpVideos);
+	ui->m_lpVideoStreamView->resizeColumnToContents(0);
+	ui->m_lpVideoStreamView->resizeColumnToContents(1);
+	ui->m_lpVideoStreamView->resizeColumnToContents(2);
+	ui->m_lpVideoStreamView->resizeColumnToContents(3);
+
+	m_lpVideoLibrary->fillAudioStreamList(m_lpAudioStreamModel, lpVideos);
+	ui->m_lpAudioStreamView->resizeColumnToContents(0);
+	ui->m_lpAudioStreamView->resizeColumnToContents(1);
+	ui->m_lpAudioStreamView->resizeColumnToContents(2);
+	ui->m_lpAudioStreamView->resizeColumnToContents(3);
+
+	m_lpVideoLibrary->fillSubtitleStreamList(m_lpSubtitleStreamModel, lpVideos);
+
+	if(lpVideos->m_values.m_iVideoDuration != -1)
+		ui->m_lpVideoDuration->setTime(QTime::fromMSecsSinceStartOfDay(lpVideos->m_values.m_iVideoDuration*1000));
+	else
+		ui->m_lpVideoDuration->setTime(QTime::fromMSecsSinceStartOfDay(0));
 
 	if(m_lpVideoModel->itemFromIndex(index)->hasChildren())
 	{
@@ -170,7 +246,7 @@ void cVideoWidget::videoSelectionChanged(const QItemSelection& /*newSelection*/,
 
 	if(thumb.width())
 	{
-		ui->m_lpThumb->setPixmap(thumb.scaled(480, 270, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+		ui->m_lpThumb->setPixmap(thumb.scaled(THUMB_WIDTH, THUMB_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 		ui->m_lpThumbBox->setTitle(QString(tr("Thumb (%1 x %2)")).arg(thumb.width()).arg(thumb.height()));
 		ui->m_lpThumb->setToolTip(szThumb);
 	}
@@ -183,7 +259,7 @@ void cVideoWidget::videoSelectionChanged(const QItemSelection& /*newSelection*/,
 
 	if(fanart.width())
 	{
-		ui->m_lpFanart->setPixmap(fanart.scaled(480, 270, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+		ui->m_lpFanart->setPixmap(fanart.scaled(FANART_WIDTH, FANART_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 		ui->m_lpFanartBox->setTitle(QString(tr("Fanart (%1 x %2)")).arg(fanart.width()).arg(fanart.height()));
 		ui->m_lpFanart->setToolTip(szFanart);
 	}
@@ -196,7 +272,7 @@ void cVideoWidget::videoSelectionChanged(const QItemSelection& /*newSelection*/,
 
 	if(poster.width())
 	{
-		ui->m_lpPoster->setPixmap(poster.scaled(480, 270, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+		ui->m_lpPoster->setPixmap(poster.scaled(POSTER_WIDTH, POSTER_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 		ui->m_lpPosterBox->setTitle(QString(tr("Poster (%1 x %2)")).arg(poster.width()).arg(poster.height()));
 		ui->m_lpPoster->setToolTip(szPoster);
 	}
@@ -209,7 +285,7 @@ void cVideoWidget::videoSelectionChanged(const QItemSelection& /*newSelection*/,
 
 	if(banner.width())
 	{
-		ui->m_lpBanner->setPixmap(banner.scaled(480, 270, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+		ui->m_lpBanner->setPixmap(banner.scaled(BANNER_WIDTH, BANNER_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 		ui->m_lpBannerBox->setTitle(QString(tr("Banner (%1 x %2)")).arg(banner.width()).arg(banner.height()));
 		ui->m_lpBanner->setToolTip(szBanner);
 	}

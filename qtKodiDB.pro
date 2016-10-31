@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     cvideowidget.cpp \
     cvideoviewitemdelegate.cpp \
     ckoditextureslibrary.cpp \
-    cimage.cpp
+    cimage.cpp \
+    ccheckboxitemdelegate.cpp
 
 HEADERS  += cmainwindow.h \
     ckodivideolibrary.h \
@@ -40,7 +41,8 @@ HEADERS  += cmainwindow.h \
     cvideowidget.h \
     cvideoviewitemdelegate.h \
     ckoditextureslibrary.h \
-    cimage.h
+    cimage.h \
+    ccheckboxitemdelegate.h
 
 FORMS    += cmainwindow.ui \
     ctvshowwidget.ui \

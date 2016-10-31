@@ -4,6 +4,252 @@
 #include <QStandardItem>
 
 
+cMyVideosStreamDetailsVideoValues::cMyVideosStreamDetailsVideoValues() :
+	m_szVideoCodec("UNSET"),
+	m_dAspectRatio(-1),
+	m_iWidth(-1),
+	m_iHeight(-1)
+{
+}
+
+cMyVideosStreamDetailsVideoValues::cMyVideosStreamDetailsVideoValues(const QString& szVideoCodec, qreal dAspectRatio, qint32 iWidth, qint32 iHeight) :
+	m_szVideoCodec(szVideoCodec),
+	m_dAspectRatio(dAspectRatio),
+	m_iWidth(iWidth),
+	m_iHeight(iHeight)
+{
+}
+
+void cMyVideosStreamDetailsVideoValues::set(const QString& szVideoCodec, qreal dAspectRatio, qint32 iWidth, qint32 iHeight)
+{
+	m_szVideoCodec	= szVideoCodec;
+	m_dAspectRatio	= dAspectRatio;
+	m_iWidth		= iWidth;
+	m_iHeight		= iHeight;
+}
+
+inline bool	cMyVideosStreamDetailsVideoValues::operator==(const cMyVideosStreamDetailsVideoValues b) const
+{
+	if(m_szVideoCodec != b.m_szVideoCodec) return(false);
+	if(m_dAspectRatio != b.m_dAspectRatio) return(false);
+	if(m_iWidth != b.m_iWidth) return(false);
+	if(m_iHeight != b.m_iHeight) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosStreamDetailsVideoValues::operator!=(const cMyVideosStreamDetailsVideoValues b) const
+{
+	if(m_szVideoCodec != b.m_szVideoCodec
+		|| m_dAspectRatio != b.m_dAspectRatio
+		|| m_iWidth != b.m_iWidth
+		|| m_iHeight != b.m_iHeight)
+		return(true);
+	return(false);
+}
+
+cMyVideosStreamDetailsVideo::cMyVideosStreamDetailsVideo(const QString& szVideoCodec, qreal dAspectRatio, qint32 iWidth, qint32 iHeight) :
+	m_values(szVideoCodec, dAspectRatio, iWidth, iHeight)
+{
+	m_oValues	= m_values;
+}
+
+QString cMyVideosStreamDetailsVideo::videoCodec()
+{
+	return(m_values.m_szVideoCodec);
+}
+
+qreal cMyVideosStreamDetailsVideo::aspectRatio()
+{
+	return(m_values.m_dAspectRatio);
+}
+
+qint32 cMyVideosStreamDetailsVideo::width()
+{
+	return(m_values.m_iWidth);
+}
+
+qint32 cMyVideosStreamDetailsVideo::height()
+{
+	return(m_values.m_iHeight);
+}
+
+bool cMyVideosStreamDetailsVideo::isNew()
+{
+	return(false);
+}
+
+bool cMyVideosStreamDetailsVideo::isChanged()
+{
+	if(m_values != m_oValues)
+		return(true);
+	return(false);
+}
+
+cMyVideosStreamDetailsVideoList::cMyVideosStreamDetailsVideoList()
+{
+}
+
+cMyVideosStreamDetailsVideo* cMyVideosStreamDetailsVideoList::add(const QString& szVideoCodec, qreal dAspectRatio, qint32 iWidth, qint32 iHeight)
+{
+	cMyVideosStreamDetailsVideo*	lpNew	= new cMyVideosStreamDetailsVideo(szVideoCodec, dAspectRatio, iWidth, iHeight);
+	append(lpNew);
+	return(lpNew);
+}
+
+cMyVideosStreamDetailsAudioValues::cMyVideosStreamDetailsAudioValues() :
+	m_szAudioCodec("UNSET"),
+	m_iAudioChannels(-1),
+	m_szAudioLanguage("UNSET"),
+	m_szStereoMode("UNSET")
+{
+}
+
+cMyVideosStreamDetailsAudioValues::cMyVideosStreamDetailsAudioValues(const QString& szAudioCodec, qint32 iAudioChannels, const QString& szAudioLanguage, const QString& szStereoMode) :
+	m_szAudioCodec(szAudioCodec),
+	m_iAudioChannels(iAudioChannels),
+	m_szAudioLanguage(szAudioLanguage),
+	m_szStereoMode(szStereoMode)
+{
+}
+
+void cMyVideosStreamDetailsAudioValues::set(const QString& szAudioCodec, qint32 iAudioChannels, const QString& szAudioLanguage, const QString& szStereoMode)
+{
+	m_szAudioCodec		= szAudioCodec;
+	m_iAudioChannels	= iAudioChannels;
+	m_szAudioLanguage	= szAudioLanguage;
+	m_szStereoMode		= szStereoMode;
+}
+
+inline bool	cMyVideosStreamDetailsAudioValues::operator==(const cMyVideosStreamDetailsAudioValues b) const
+{
+	if(m_szAudioCodec != b.m_szAudioCodec) return(false);
+	if(m_iAudioChannels != b.m_iAudioChannels) return(false);
+	if(m_szAudioLanguage != b.m_szAudioLanguage) return(false);
+	if(m_szStereoMode != b.m_szStereoMode) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosStreamDetailsAudioValues::operator!=(const cMyVideosStreamDetailsAudioValues b) const
+{
+	if(m_szAudioCodec != b.m_szAudioCodec
+		|| m_iAudioChannels != b.m_iAudioChannels
+		|| m_szAudioLanguage != b.m_szAudioLanguage
+		|| m_szStereoMode != b.m_szStereoMode)
+		return(true);
+	return(false);
+}
+
+cMyVideosStreamDetailsAudio::cMyVideosStreamDetailsAudio(const QString& szAudioCodec, qint32 iAudioChannels, const QString& szAudioLanguage, const QString& szStereoMode) :
+	m_values(szAudioCodec, iAudioChannels, szAudioLanguage, szStereoMode)
+{
+	m_oValues	= m_values;
+}
+
+QString cMyVideosStreamDetailsAudio::audioCodec()
+{
+	return(m_values.m_szAudioCodec);
+}
+
+qint32 cMyVideosStreamDetailsAudio::audioChannels()
+{
+	return(m_values.m_iAudioChannels);
+}
+
+QString cMyVideosStreamDetailsAudio::audioLanguage()
+{
+	return(m_values.m_szAudioLanguage);
+}
+
+QString cMyVideosStreamDetailsAudio::stereoMode()
+{
+	return(m_values.m_szStereoMode);
+}
+
+bool cMyVideosStreamDetailsAudio::isNew()
+{
+	return(false);
+}
+
+bool cMyVideosStreamDetailsAudio::isChanged()
+{
+	if(m_values != m_oValues)
+		return(true);
+	return(false);
+}
+
+cMyVideosStreamDetailsAudioList::cMyVideosStreamDetailsAudioList()
+{
+}
+
+cMyVideosStreamDetailsAudio* cMyVideosStreamDetailsAudioList::add(const QString& szAudioCodec, qint32 iAudioChannels, const QString& szAudioLanguage, const QString& szStereoMode)
+{
+	cMyVideosStreamDetailsAudio*	lpNew	= new cMyVideosStreamDetailsAudio(szAudioCodec, iAudioChannels, szAudioLanguage, szStereoMode);
+	append(lpNew);
+	return(lpNew);
+}
+
+cMyVideosStreamDetailsSubtitleValues::cMyVideosStreamDetailsSubtitleValues() :
+	m_szSubtitleLanguage("UNSET")
+{
+}
+
+cMyVideosStreamDetailsSubtitleValues::cMyVideosStreamDetailsSubtitleValues(const QString& szSubtitleLanguage) :
+	m_szSubtitleLanguage(szSubtitleLanguage)
+{
+}
+
+void cMyVideosStreamDetailsSubtitleValues::set(const QString& szSubtitleLanguage)
+{
+	m_szSubtitleLanguage	= szSubtitleLanguage;
+}
+
+inline bool	cMyVideosStreamDetailsSubtitleValues::operator==(const cMyVideosStreamDetailsSubtitleValues b) const
+{
+	if(m_szSubtitleLanguage != b.m_szSubtitleLanguage) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosStreamDetailsSubtitleValues::operator!=(const cMyVideosStreamDetailsSubtitleValues b) const
+{
+	if(m_szSubtitleLanguage != b.m_szSubtitleLanguage)
+		return(true);
+	return(false);
+}
+
+cMyVideosStreamDetailsSubtitle::cMyVideosStreamDetailsSubtitle(const QString& szSubtitleLanguage) :
+	m_values(szSubtitleLanguage)
+{
+	m_oValues	= m_values;
+}
+
+QString cMyVideosStreamDetailsSubtitle::subtitleLanguage()
+{
+	return(m_values.m_szSubtitleLanguage);
+}
+
+bool cMyVideosStreamDetailsSubtitle::isNew()
+{
+	return(false);
+}
+
+bool cMyVideosStreamDetailsSubtitle::isChanged()
+{
+	if(m_values != m_oValues)
+		return(true);
+	return(false);
+}
+
+cMyVideosStreamDetailsSubtitleList::cMyVideosStreamDetailsSubtitleList()
+{
+}
+
+cMyVideosStreamDetailsSubtitle* cMyVideosStreamDetailsSubtitleList::add(const QString& szSubtitleLanguage)
+{
+	cMyVideosStreamDetailsSubtitle*	lpNew	= new cMyVideosStreamDetailsSubtitle(szSubtitleLanguage);
+	append(lpNew);
+	return(lpNew);
+}
+
 cMyVideosActorValues::cMyVideosActorValues() :
 	m_actorID(-1),
 	m_szName("UNSET"),
@@ -677,7 +923,7 @@ cMyVideosValues::cMyVideosValues() :
 	m_szMPAARating("UNSET"), m_iIMDBTop250Ranking(-1), m_szGenre("UNSET"), m_szDirector("UNSET"), m_szOriginalMovieTitle("UNSET"),
 	m_szStudio("UNSET"), m_szTrailerURL("UNSET"), m_szFanartURLs("UNSET"), m_szCountry("UNSET"), m_szFilePath("UNSET"), m_idPath(-1), m_idSet(-1),
 	m_iUserrating(-1), m_szSet("UNSET"), m_szSetOverview("UNSET"), m_szFileName("UNSET"), m_szPathURL("UNSET"), m_iPlayCount(-1),
-	m_dResumeTimeInSeconds(-1), m_dTotalTimeInSeconds(-1)
+	m_dResumeTimeInSeconds(-1), m_dTotalTimeInSeconds(-1), m_iVideoDuration(-1)
 {
 }
 
@@ -695,7 +941,7 @@ cMyVideosValues::cMyVideosValues(qint32 idMovie, qint32 idFile, const QString& s
 	m_szMPAARating(szMPAARating), m_iIMDBTop250Ranking(iIMDBTop250Ranking), m_szGenre(szGenre), m_szDirector(szDirector), m_szOriginalMovieTitle(szOriginalMovieTitle),
 	m_szStudio(szStudio), m_szTrailerURL(szTrailerURL), m_szFanartURLs(szFanartURLs), m_szCountry(szCountry), m_szFilePath(szFilePath), m_idPath(idPath), m_idSet(idSet),
 	m_iUserrating(iUserrating), m_szSet(szSet), m_szSetOverview(szSetOverview), m_szFileName(szFileName), m_szPathURL(szPathURL), m_iPlayCount(iPlayCount),
-	m_lastPlayed(lastPlayed), m_dateAdded(dateAdded), m_dResumeTimeInSeconds(dResumeTimeInSeconds), m_dTotalTimeInSeconds(dTotalTimeInSeconds)
+	m_lastPlayed(lastPlayed), m_dateAdded(dateAdded), m_dResumeTimeInSeconds(dResumeTimeInSeconds), m_dTotalTimeInSeconds(dTotalTimeInSeconds), m_iVideoDuration(-1)
 {
 }
 
@@ -784,6 +1030,7 @@ inline bool cMyVideosValues::operator==(const cMyVideosValues b) const
 	if(m_dateAdded != b.m_dateAdded) return(false);
 	if(m_dResumeTimeInSeconds != b.m_dResumeTimeInSeconds) return(false);
 	if(m_dTotalTimeInSeconds != b.m_dTotalTimeInSeconds) return(false);
+	if(m_iVideoDuration != b.m_iVideoDuration) return(false);
 	return(true);
 }
 
@@ -824,7 +1071,8 @@ inline bool cMyVideosValues::operator!=(const cMyVideosValues b) const
 			|| m_lastPlayed != b.m_lastPlayed
 			|| m_dateAdded != b.m_dateAdded
 			|| m_dResumeTimeInSeconds != b.m_dResumeTimeInSeconds
-			|| m_dTotalTimeInSeconds != b.m_dTotalTimeInSeconds)
+			|| m_dTotalTimeInSeconds != b.m_dTotalTimeInSeconds
+			|| m_iVideoDuration != b.m_iVideoDuration)
 		return(true);
 	return(false);
 }
@@ -963,6 +1211,49 @@ void cMyVideos::loadStudios(QSqlDatabase& m_db, cMyVideosStudioList videosStudio
 	m_oValues.m_studios	= m_values.m_studios;
 }
 
+void cMyVideos::loadVideoStream(QSqlDatabase& m_db)
+{
+	if(m_values.m_streamVideo.count())
+		return;
+
+	QSqlQuery	query(m_db);
+	query.exec(QString("SELECT strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, iVideoDuration FROM streamdetails WHERE idFile=%1 AND iStreamType=0;").arg(m_values.m_idFile));
+	while(query.next())
+	{
+		m_values.m_streamVideo.add(query.value("strVideoCodec").toString(), query.value("fVideoAspect").toDouble(), query.value("iVideoWidth").toInt(), query.value("iVideoHeight").toInt());
+		this->m_values.m_iVideoDuration		= query.value("iVideoDuration").toInt();
+		this->m_oValues.m_iVideoDuration	= query.value("iVideoDuration").toInt();
+	}
+
+	m_oValues.m_streamVideo	= m_values.m_streamVideo;
+}
+
+void cMyVideos::loadAudioStream(QSqlDatabase& m_db)
+{
+	if(m_values.m_streamAudio.count())
+		return;
+
+	QSqlQuery	query(m_db);
+	query.exec(QString("SELECT strAudioCodec, iAudioChannels, strAudioLanguage, strStereoMode FROM streamdetails WHERE idFile=%1 AND iStreamType=1;").arg(m_values.m_idFile));
+	while(query.next())
+		m_values.m_streamAudio.add(query.value("strAudioCodec").toString(), query.value("iAudioChannels").toInt(), query.value("strAudioLanguage").toString(), query.value("strStereoMode").toString());
+
+	m_oValues.m_streamAudio	= m_values.m_streamAudio;
+}
+
+void cMyVideos::loadSubtitleStream(QSqlDatabase& m_db)
+{
+	if(m_values.m_streamSubtitle.count())
+		return;
+
+	QSqlQuery	query(m_db);
+	query.exec(QString("SELECT strSubtitleLanguage FROM streamdetails WHERE idFile=%1 AND iStreamType=2;").arg(m_values.m_idFile));
+	while(query.next())
+		m_values.m_streamSubtitle.add(query.value("strSubtitleLanguage").toString());
+
+	m_oValues.m_streamSubtitle	= m_values.m_streamSubtitle;
+}
+
 void cMyVideos::fillActorsList(QStandardItemModel *lpView)
 {
 	for(int z = 0;z < m_values.m_actors.count();z++)
@@ -1004,6 +1295,101 @@ void cMyVideos::fillWritersList(QStandardItemModel *lpView)
 			lpItem->setData(v, Qt::UserRole);
 			lpView->appendRow(lpItem);
 		}
+	}
+}
+
+void cMyVideos::fillCountriesList(QStandardItemModel* lpView)
+{
+	for(int z = 0;z < m_values.m_countries.count();z++)
+	{
+		QStringList		list	= m_values.m_countries.at(z)->m_values.m_lpCountry->name().split(", ");
+		for(int x = 0;x < list.count();x++)
+		{
+			QStandardItem*	lpItem	= new QStandardItem(list.at(x));
+			QVariant		v		= qVariantFromValue(m_values.m_countries.at(z));
+			lpItem->setData(v, Qt::UserRole);
+			lpView->appendRow(lpItem);
+		}
+	}
+}
+
+void cMyVideos::fillGenresList(QStandardItemModel* lpView)
+{
+	for(int z = 0;z < m_values.m_genres.count();z++)
+	{
+		QStringList		list	= m_values.m_genres.at(z)->m_values.m_lpGenre->name().split(", ");
+		for(int x = 0;x < list.count();x++)
+		{
+			QStandardItem*	lpItem	= new QStandardItem(list.at(x));
+			QVariant		v		= qVariantFromValue(m_values.m_genres.at(z));
+			lpItem->setData(v, Qt::UserRole);
+			lpView->appendRow(lpItem);
+		}
+	}
+}
+
+void cMyVideos::fillStudiosList(QStandardItemModel* lpView)
+{
+	for(int z = 0;z < m_values.m_studios.count();z++)
+	{
+		QStringList		list	= m_values.m_studios.at(z)->m_values.m_lpStudio->name().split(", ");
+		for(int x = 0;x < list.count();x++)
+		{
+			QStandardItem*	lpItem	= new QStandardItem(list.at(x));
+			QVariant		v		= qVariantFromValue(m_values.m_studios.at(z));
+			lpItem->setData(v, Qt::UserRole);
+			lpView->appendRow(lpItem);
+		}
+	}
+}
+
+void cMyVideos::fillVideoStreamList(QStandardItemModel* lpView)
+{
+	for(int z = 0;z < m_values.m_streamVideo.count();z++)
+	{
+		cMyVideosStreamDetailsVideo*	lpVideo	= m_values.m_streamVideo.at(z);
+		QList<QStandardItem*>			items;
+		items.append(new QStandardItem(lpVideo->videoCodec()));
+		items.append(new QStandardItem(QString("%1").arg(lpVideo->aspectRatio())));
+		items.append(new QStandardItem(QString("%1").arg(lpVideo->width())));
+		items.append(new QStandardItem(QString("%1").arg(lpVideo->height())));
+		QVariant	v	= qVariantFromValue(lpVideo);
+		items[0]->setData(v, Qt::UserRole);
+		items[1]->setData(v, Qt::UserRole);
+		items[2]->setData(v, Qt::UserRole);
+		items[3]->setData(v, Qt::UserRole);
+		lpView->appendRow(items);
+	}
+}
+
+void cMyVideos::fillAudioStreamList(QStandardItemModel* lpView)
+{
+	for(int z = 0;z < m_values.m_streamAudio.count();z++)
+	{
+		cMyVideosStreamDetailsAudio*	lpAudio	= m_values.m_streamAudio.at(z);
+		QList<QStandardItem*>			items;
+		items.append(new QStandardItem(lpAudio->audioCodec()));
+		items.append(new QStandardItem(QString("%1").arg(lpAudio->audioChannels())));
+		items.append(new QStandardItem(lpAudio->audioLanguage()));
+		items.append(new QStandardItem(lpAudio->stereoMode()));
+		QVariant	v	= qVariantFromValue(lpAudio);
+		items[0]->setData(v, Qt::UserRole);
+		items[1]->setData(v, Qt::UserRole);
+		items[2]->setData(v, Qt::UserRole);
+		items[3]->setData(v, Qt::UserRole);
+		lpView->appendRow(items);
+	}
+}
+
+void cMyVideos::fillSubtitleStreamList(QStandardItemModel* lpView)
+{
+	for(int z = 0;z < m_values.m_streamSubtitle.count();z++)
+	{
+		cMyVideosStreamDetailsSubtitle*	lpSubtitle	= m_values.m_streamSubtitle.at(z);
+		QStandardItem*					lpItem		= new QStandardItem(lpSubtitle->subtitleLanguage());
+		QVariant						v			= qVariantFromValue(lpSubtitle);
+		lpItem->setData(v, Qt::UserRole);
+		lpView->appendRow(lpItem);
 	}
 }
 

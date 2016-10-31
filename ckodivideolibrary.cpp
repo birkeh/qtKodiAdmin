@@ -241,6 +241,8 @@ bool cKodiVideoLibrary::art(const QString& szMediaType, const QString& szType, q
 
 void cKodiVideoLibrary::fillVideoList(QStandardItemModel* lpModel)
 {
+	lpModel->clear();
+
 	QStandardItem*	lpRoot	= 0;
 	QString			szOldSet("");
 
@@ -272,6 +274,54 @@ void cKodiVideoLibrary::fillVideoList(QStandardItemModel* lpModel)
 	}
 }
 
+void cKodiVideoLibrary::fillCountriesList(QStandardItemModel *lpModel)
+{
+	lpModel->clear();
+
+	for(int z = 0;z < m_videosCountryList.count();z++)
+	{
+		cMyVideosCountry*	lpCountry	= m_videosCountryList.at(z);
+
+		QStandardItem*	lpItem	= new QStandardItem(lpCountry->name());
+		QVariant	v	= qVariantFromValue(lpCountry);
+		lpItem->setData(v, Qt::UserRole);
+		lpItem->setCheckable(true);
+		lpModel->appendRow(lpItem);
+	}
+}
+
+void cKodiVideoLibrary::fillGenresList(QStandardItemModel *lpModel)
+{
+	lpModel->clear();
+
+	for(int z = 0;z < m_videosGenreList.count();z++)
+	{
+		cMyVideosGenre*	lpGenre	= m_videosGenreList.at(z);
+
+		QStandardItem*	lpItem	= new QStandardItem(lpGenre->name());
+		QVariant	v	= qVariantFromValue(lpGenre);
+		lpItem->setData(v, Qt::UserRole);
+		lpItem->setCheckable(true);
+		lpModel->appendRow(lpItem);
+	}
+}
+
+void cKodiVideoLibrary::fillStudiosList(QStandardItemModel *lpModel)
+{
+	lpModel->clear();
+
+	for(int z = 0;z < m_videosStudioList.count();z++)
+	{
+		cMyVideosStudio*	lpStudio	= m_videosStudioList.at(z);
+
+		QStandardItem*	lpItem	= new QStandardItem(lpStudio->name());
+		QVariant	v	= qVariantFromValue(lpStudio);
+		lpItem->setData(v, Qt::UserRole);
+		lpItem->setCheckable(true);
+		lpModel->appendRow(lpItem);
+	}
+}
+
 void cKodiVideoLibrary::fillActorList(QStandardItemModel *lpList, cMyVideos* lpVideos)
 {
 	lpList->clear();
@@ -294,4 +344,103 @@ void cKodiVideoLibrary::fillWritersList(QStandardItemModel *lpList, cMyVideos* l
 
 	lpVideos->loadWriters(m_db, m_videosActorList);
 	lpVideos->fillWritersList(lpList);
+}
+
+void cKodiVideoLibrary::fillCountriesList(QStandardItemModel *lpList, cMyVideos* lpVideos)
+{
+	lpVideos->loadCountries(m_db, m_videosCountryList);
+
+	for(int x = 0;x < lpList->rowCount();x++)
+		lpList->item(x, 0)->setCheckState(Qt::Unchecked);
+
+	for(int z = 0;z < lpVideos->m_values.m_countries.count();z++)
+	{
+		for(int x = 0;x < lpList->rowCount();x++)
+		{
+			QStandardItem*		lpItem		= lpList->item(x, 0);
+			cMyVideosCountry*	lpCountry	= lpItem->data(Qt::UserRole).value<cMyVideosCountry*>();
+
+			if(lpVideos->m_values.m_countries.at(z)->country()->countryID() == lpCountry->countryID())
+			{
+				lpItem->setCheckState(Qt::Checked);
+				break;
+			}
+		}
+	}
+}
+
+void cKodiVideoLibrary::fillGenresList(QStandardItemModel *lpList, cMyVideos* lpVideos)
+{
+	lpVideos->loadGenres(m_db, m_videosGenreList);
+
+	for(int x = 0;x < lpList->rowCount();x++)
+		lpList->item(x, 0)->setCheckState(Qt::Unchecked);
+
+	for(int z = 0;z < lpVideos->m_values.m_genres.count();z++)
+	{
+		for(int x = 0;x < lpList->rowCount();x++)
+		{
+			QStandardItem*		lpItem		= lpList->item(x, 0);
+			cMyVideosGenre*		lpGenre		= lpItem->data(Qt::UserRole).value<cMyVideosGenre*>();
+
+			if(lpVideos->m_values.m_genres.at(z)->genre()->genreID() == lpGenre->genreID())
+			{
+				lpItem->setCheckState(Qt::Checked);
+				break;
+			}
+		}
+	}
+}
+
+void cKodiVideoLibrary::fillStudiosList(QStandardItemModel *lpList, cMyVideos* lpVideos)
+{
+	lpVideos->loadStudios(m_db, m_videosStudioList);
+
+	for(int x = 0;x < lpList->rowCount();x++)
+		lpList->item(x, 0)->setCheckState(Qt::Unchecked);
+
+	for(int z = 0;z < lpVideos->m_values.m_studios.count();z++)
+	{
+		for(int x = 0;x < lpList->rowCount();x++)
+		{
+			QStandardItem*		lpItem		= lpList->item(x, 0);
+			cMyVideosStudio*	lpStudio	= lpItem->data(Qt::UserRole).value<cMyVideosStudio*>();
+
+			if(lpVideos->m_values.m_studios.at(z)->studio()->studioID() == lpStudio->studioID())
+			{
+				lpItem->setCheckState(Qt::Checked);
+				break;
+			}
+		}
+	}
+}
+
+void cKodiVideoLibrary::fillVideoStreamList(QStandardItemModel* lpModel, cMyVideos* lpVideos)
+{
+	lpModel->clear();
+	QStringList	headerLabels	= QStringList() << QObject::tr("Codec") << QObject::tr("Ratio") << QObject::tr("Width") << QObject::tr("Height");
+	lpModel->setHorizontalHeaderLabels(headerLabels);
+
+	lpVideos->loadVideoStream(m_db);
+	lpVideos->fillVideoStreamList(lpModel);
+}
+
+void cKodiVideoLibrary::fillAudioStreamList(QStandardItemModel* lpModel, cMyVideos* lpVideos)
+{
+	lpModel->clear();
+	QStringList	headerLabels	= QStringList() << QObject::tr("Codec") << QObject::tr("Channels") << QObject::tr("Language") << QObject::tr("Mode");
+	lpModel->setHorizontalHeaderLabels(headerLabels);
+
+	lpVideos->loadAudioStream(m_db);
+	lpVideos->fillAudioStreamList(lpModel);
+}
+
+void cKodiVideoLibrary::fillSubtitleStreamList(QStandardItemModel* lpModel, cMyVideos* lpVideos)
+{
+	lpModel->clear();
+	QStringList	headerLabels	= QStringList() << QObject::tr("Language");
+	lpModel->setHorizontalHeaderLabels(headerLabels);
+
+	lpVideos->loadSubtitleStream(m_db);
+	lpVideos->fillSubtitleStreamList(lpModel);
 }

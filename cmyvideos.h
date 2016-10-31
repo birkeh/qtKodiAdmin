@@ -17,6 +17,132 @@ typedef struct tagSTRING2
 	QString	_2;
 }	STRING2;
 
+class cMyVideosStreamDetailsVideoValues
+{
+public:
+	cMyVideosStreamDetailsVideoValues();
+	cMyVideosStreamDetailsVideoValues(const QString& szVideoCodec, qreal dAspectRatio, qint32 iWidth, qint32 iHeight);
+
+	void				set(const QString& szVideoCodec, qreal dAspectRatio, qint32 iWidth, qint32 iHeight);
+
+	inline bool	operator==(const cMyVideosStreamDetailsVideoValues b) const;
+	inline bool	operator!=(const cMyVideosStreamDetailsVideoValues b) const;
+
+	QString				m_szVideoCodec;
+	qreal				m_dAspectRatio;
+	qint32				m_iWidth;
+	qint32				m_iHeight;
+};
+
+class cMyVideosStreamDetailsAudioValues
+{
+public:
+	cMyVideosStreamDetailsAudioValues();
+	cMyVideosStreamDetailsAudioValues(const QString& szAudioCodec, qint32 iAudioChannels, const QString& szAudioLanguage, const QString& szStereoMode);
+
+	void				set(const QString& szAudioCodec, qint32 iAudioChannels, const QString& szAudioLanguage, const QString& szStereoMode);
+
+	inline bool	operator==(const cMyVideosStreamDetailsAudioValues b) const;
+	inline bool	operator!=(const cMyVideosStreamDetailsAudioValues b) const;
+
+	QString				m_szAudioCodec;
+	qint32				m_iAudioChannels;
+	QString				m_szAudioLanguage;
+	QString				m_szStereoMode;
+};
+
+class cMyVideosStreamDetailsSubtitleValues
+{
+public:
+	cMyVideosStreamDetailsSubtitleValues();
+	cMyVideosStreamDetailsSubtitleValues(const QString& szSubtitleLanguage);
+
+	void				set(const QString& szSubtitleLanguage);
+
+	inline bool	operator==(const cMyVideosStreamDetailsSubtitleValues b) const;
+	inline bool	operator!=(const cMyVideosStreamDetailsSubtitleValues b) const;
+
+	QString				m_szSubtitleLanguage;
+};
+
+class cMyVideosStreamDetailsVideo
+{
+public:
+	cMyVideosStreamDetailsVideo(const QString& szVideoCodec, qreal dAspectRatio, qint32 iWidth, qint32 iHeight);
+
+	QString			videoCodec();
+	qreal			aspectRatio();
+	qint32			width();
+	qint32			height();
+
+	bool			isNew();
+	bool			isChanged();
+
+	cMyVideosStreamDetailsVideoValues	m_values;
+	cMyVideosStreamDetailsVideoValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosStreamDetailsVideo*)
+
+class cMyVideosStreamDetailsVideoList : public QList<cMyVideosStreamDetailsVideo*>
+{
+public:
+	cMyVideosStreamDetailsVideoList();
+	cMyVideosStreamDetailsVideo*	add(const QString& szVideoCodec, qreal dAspectRatio, qint32 iWidth, qint32 iHeight);
+private:
+};
+
+class cMyVideosStreamDetailsAudio
+{
+public:
+	cMyVideosStreamDetailsAudio(const QString& szAudioCodec, qint32 iAudioChannels, const QString& szAudioLanguage, const QString& szStereoMode);
+
+	QString			audioCodec();
+	qint32			audioChannels();
+	QString			audioLanguage();
+	QString			stereoMode();
+
+	bool			isNew();
+	bool			isChanged();
+
+	cMyVideosStreamDetailsAudioValues	m_values;
+	cMyVideosStreamDetailsAudioValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosStreamDetailsAudio*)
+
+class cMyVideosStreamDetailsAudioList : public QList<cMyVideosStreamDetailsAudio*>
+{
+public:
+	cMyVideosStreamDetailsAudioList();
+	cMyVideosStreamDetailsAudio*	add(const QString& szAudioCodec, qint32 iAudioChannels, const QString& szAudioLanguage, const QString& szStereoMode);
+private:
+};
+
+class cMyVideosStreamDetailsSubtitle
+{
+public:
+	cMyVideosStreamDetailsSubtitle(const QString& szSubtitleLanguage);
+
+	QString			subtitleLanguage();
+
+	bool			isNew();
+	bool			isChanged();
+
+	cMyVideosStreamDetailsSubtitleValues	m_values;
+	cMyVideosStreamDetailsSubtitleValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosStreamDetailsSubtitle*)
+
+class cMyVideosStreamDetailsSubtitleList : public QList<cMyVideosStreamDetailsSubtitle*>
+{
+public:
+	cMyVideosStreamDetailsSubtitleList();
+	cMyVideosStreamDetailsSubtitle*	add(const QString& szSubtitleLanguage);
+private:
+};
+
 class cMyVideosActorValues
 {
 public:
@@ -200,7 +326,7 @@ public:
 
 	bool			isNew();
 	bool			isChanged();
-private:
+
 	cMyVideosCountryValues	m_values;
 	cMyVideosCountryValues	m_oValues;
 };
@@ -278,7 +404,7 @@ public:
 
 	bool			isNew();
 	bool			isChanged();
-private:
+
 	cMyVideosGenreValues	m_values;
 	cMyVideosGenreValues	m_oValues;
 };
@@ -356,7 +482,7 @@ public:
 
 	bool			isNew();
 	bool			isChanged();
-private:
+
 	cMyVideosStudioValues	m_values;
 	cMyVideosStudioValues	m_oValues;
 };
@@ -476,6 +602,10 @@ public:
 	cMyVideosCountryLinkList	m_countries;
 	cMyVideosGenreLinkList		m_genres;
 	cMyVideosStudioLinkList		m_studios;
+	cMyVideosStreamDetailsVideoList		m_streamVideo;
+	cMyVideosStreamDetailsAudioList		m_streamAudio;
+	cMyVideosStreamDetailsSubtitleList	m_streamSubtitle;
+	qint32		m_iVideoDuration;
 };
 
 class cMyVideos
@@ -484,7 +614,7 @@ public:
 	cMyVideos(qint32 idMovie, qint32 idFile, const QString& szLocalMovieTitle, const QString& szMoviePlot, const QString& szMoviePlotOutline,
 			  const QString& szMovieTagline, qint32 iRatingVotes, qreal dRating, const QString& szWriters, qint32 iYearReleased,
 			  const QString& szThumbnails, const QString& szIMDBID, const QString& szTitleFormattedForSorting, qint32 iRuntime,
-			  const QString& szMPAARating,qint32 iIMDBTop250Ranking, const QString& szGenre, const QString& szDirector,
+			  const QString& szMPAARating, qint32 iIMDBTop250Ranking, const QString& szGenre, const QString& szDirector,
 			  const QString& szOriginalMovieTitle, const QString& szStudio, const QString& szTrailerURL, const QString& szFanartURLs,
 			  const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 idSet, qint32 iUserrating, const QString& szSet, const QString& szSetOverview,
 			  const QString& szFileName, const QString& szPathURL, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
@@ -496,10 +626,19 @@ public:
 	void			loadCountries(QSqlDatabase& m_db, cMyVideosCountryList videosCountryList);
 	void			loadGenres(QSqlDatabase& m_db, cMyVideosGenreList videosGenreList);
 	void			loadStudios(QSqlDatabase& m_db, cMyVideosStudioList videosStudioList);
+	void			loadVideoStream(QSqlDatabase& m_db);
+	void			loadAudioStream(QSqlDatabase& m_db);
+	void			loadSubtitleStream(QSqlDatabase& m_db);
 
 	void			fillActorsList(QStandardItemModel *lpView);
 	void			fillDirectorsList(QStandardItemModel *lpView);
 	void			fillWritersList(QStandardItemModel *lpView);
+	void			fillCountriesList(QStandardItemModel* lpView);
+	void			fillGenresList(QStandardItemModel* lpView);
+	void			fillStudiosList(QStandardItemModel* lpView);
+	void			fillVideoStreamList(QStandardItemModel* lpView);
+	void			fillAudioStreamList(QStandardItemModel* lpView);
+	void			fillSubtitleStreamList(QStandardItemModel* lpView);
 
 	qint32			idMovie();
 	qint32			idFile();
@@ -539,7 +678,7 @@ public:
 
 	bool			isNew();
 	bool			isChanged();
-private:
+
 	cMyVideosValues	m_values;
 	cMyVideosValues	m_oValues;
 };

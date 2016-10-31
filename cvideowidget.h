@@ -32,6 +32,12 @@ private:
 	QStandardItemModel*		m_lpCastModel;
 	QStandardItemModel*		m_lpDirectorModel;
 	QStandardItemModel*		m_lpWriterModel;
+	QStandardItemModel*		m_lpCountryModel;
+	QStandardItemModel*		m_lpGenreModel;
+	QStandardItemModel*		m_lpStudioModel;
+	QStandardItemModel*		m_lpVideoStreamModel;
+	QStandardItemModel*		m_lpAudioStreamModel;
+	QStandardItemModel*		m_lpSubtitleStreamModel;
 	cKodiVideoLibrary*		m_lpVideoLibrary;
 	cImageList*				m_lpImageList;
 

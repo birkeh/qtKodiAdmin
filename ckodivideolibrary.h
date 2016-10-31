@@ -25,9 +25,19 @@ public:
 	bool					art(const QString& szMediaType, const QString& szType, qint32 idMovie, qint32& artID, QString& szURL);
 
 	void					fillVideoList(QStandardItemModel* lpModel);
+	void					fillCountriesList(QStandardItemModel* lpModel);
+	void					fillGenresList(QStandardItemModel* lpModel);
+	void					fillStudiosList(QStandardItemModel* lpModel);
 	void					fillActorList(QStandardItemModel* lpList, cMyVideos* lpVideos);
 	void					fillDirectorsList(QStandardItemModel* lpList, cMyVideos* lpVideos);
 	void					fillWritersList(QStandardItemModel* lpList, cMyVideos* lpVideos);
+	void					fillCountriesList(QStandardItemModel* lpList, cMyVideos* lpVideos);
+	void					fillGenresList(QStandardItemModel* lpList, cMyVideos* lpVideos);
+	void					fillStudiosList(QStandardItemModel* lpList, cMyVideos* lpVideos);
+	void					fillVideoStreamList(QStandardItemModel* lpModel, cMyVideos* lpVideos);
+	void					fillAudioStreamList(QStandardItemModel* lpModel, cMyVideos* lpVideos);
+	void					fillSubtitleStreamList(QStandardItemModel* lpModel, cMyVideos* lpVideos);
+
 private:
 	QSqlDatabase			m_db;
 	QString					m_szFileName;
