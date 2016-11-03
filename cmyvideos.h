@@ -17,6 +17,49 @@ typedef struct tagSTRING2
 	QString	_2;
 }	STRING2;
 
+class cMyVideosSetValues
+{
+public:
+	cMyVideosSetValues();
+	cMyVideosSetValues(qint32 idSet, const QString& strSet, const QString& strOverview);
+
+	void				set(qint32 idSet, const QString& strSet, const QString& strOverview);
+
+	inline bool	operator==(const cMyVideosSetValues b) const;
+	inline bool	operator!=(const cMyVideosSetValues b) const;
+
+	qint32				m_idSet;
+	QString				m_strSet;
+	QString				m_strOverview;
+};
+
+class cMyVideosSet
+{
+public:
+	cMyVideosSet(qint32 idSet, const QString& strSet, const QString& strOverview);
+
+	qint32			idSet();
+	QString			strSet();
+	QString			strOverview();
+
+	bool			isNew();
+	bool			isChanged();
+
+	cMyVideosSetValues	m_values;
+	cMyVideosSetValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyVideosSet*)
+
+class cMyVideosSetList : public QList<cMyVideosSet*>
+{
+public:
+	cMyVideosSetList();
+	cMyVideosSet*	add(qint32 idSet, const QString& strSet, const QString& strOverview);
+	cMyVideosSet*	get(qint32 idSet);
+private:
+};
+
 class cMyVideosStreamDetailsVideoValues
 {
 public:
@@ -544,18 +587,18 @@ public:
 				const QString& szThumbnails, const QString& szIMDBID, const QString& szTitleFormattedForSorting, qint32 iRuntime,
 				const QString& szMPAARating, qint32 iIMDBTop250Ranking, const QString& szGenre, const QString& szDirector,
 				const QString& szOriginalMovieTitle, const QString& szStudio, const QString& szTrailerURL, const QString& szFanartURLs,
-				const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 idSet, qint32 iUserrating, const QString& szSet, const QString& szSetOverview,
+				const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 iUserrating,
 				const QString& szFileName, const QString& szPathURL, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
-				qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds);
+				qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds, cMyVideosSet* lpSet);
 
 	void		set(qint32 idMovie, qint32 idFile, const QString& szLocalMovieTitle, const QString& szMoviePlot, const QString& szMoviePlotOutline,
 				const QString& szMovieTagline, qint32 iRatingVotes, qreal dRating, const QString& szWriters, qint32 iYearReleased,
 				const QString& szThumbnails, const QString& szIMDBID, const QString& szTitleFormattedForSorting, qint32 iRuntime,
 				const QString& szMPAARating, qint32 iIMDBTop250Ranking, const QString& szGenre, const QString& szDirector,
 				const QString& szOriginalMovieTitle, const QString& szStudio, const QString& szTrailerURL, const QString& szFanartURLs,
-				const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 idSet, qint32 iUserrating, const QString& szSet, const QString& szSetOverview,
+				const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 iUserrating,
 				const QString& szFileName, const QString& szPathURL, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
-				qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds);
+				qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds, cMyVideosSet* lpSet);
 
 	inline bool	operator==(const cMyVideosValues b) const;
 	inline bool	operator!=(const cMyVideosValues b) const;
@@ -585,10 +628,7 @@ public:
 	QString		m_szCountry;							// c21
 	QString		m_szFilePath;							// c22
 	qint32		m_idPath;								// c23
-	qint32		m_idSet;								// idSet
 	qint32		m_iUserrating;							// userrating
-	QString		m_szSet;								// strSet
-	QString		m_szSetOverview;						// Set overview
 	QString		m_szFileName;							// strFileName
 	QString		m_szPathURL;							// strPath
 	qint32		m_iPlayCount;							// playCount
@@ -596,6 +636,8 @@ public:
 	QDateTime	m_dateAdded;							// dateAdded
 	qreal		m_dResumeTimeInSeconds;					// resumeTimeInSeconds
 	qreal		m_dTotalTimeInSeconds;					// totalTimeInSeconds
+	cMyVideosSet*	m_lpSet;
+
 	cMyVideosActorLinkList		m_actors;
 	cMyVideosDirectorLinkList	m_directors;
 	cMyVideosWriterLinkList		m_writers;
@@ -616,9 +658,9 @@ public:
 			  const QString& szThumbnails, const QString& szIMDBID, const QString& szTitleFormattedForSorting, qint32 iRuntime,
 			  const QString& szMPAARating, qint32 iIMDBTop250Ranking, const QString& szGenre, const QString& szDirector,
 			  const QString& szOriginalMovieTitle, const QString& szStudio, const QString& szTrailerURL, const QString& szFanartURLs,
-			  const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 idSet, qint32 iUserrating, const QString& szSet, const QString& szSetOverview,
+			  const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 iUserrating,
 			  const QString& szFileName, const QString& szPathURL, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
-			  qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds);
+			  qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds, cMyVideosSet* lpSet);
 
 	void			loadActors(QSqlDatabase& m_db, cMyVideosActorList videosActorList);
 	void			loadDirectors(QSqlDatabase& m_db, cMyVideosActorList videosActorList);
@@ -664,10 +706,7 @@ public:
 	QList<STRING2>	fanartURL();
 	QStringList		country();
 	QString			filePath();
-	qint32			idSet();
 	qint32			userRating();
-	QString			set();
-	QString			setOverview();
 	QString			fileName();
 	QString			pathURL();
 	qint32			playCount();
@@ -675,6 +714,8 @@ public:
 	QDateTime		dateAdded();
 	qreal			resumeTimeInSeconds();
 	qreal			totalTimeInSeconds();
+	QString			strSet();
+	cMyVideosSet*	set();
 
 	bool			isNew();
 	bool			isChanged();
@@ -694,9 +735,9 @@ public:
 					const QString& szThumbnails, const QString& szIMDBID, const QString& szTitleFormattedForSorting, qint32 iRuntime,
 					const QString& szMPAARating, qint32 iIMDBTop250Ranking, const QString& szGenre, const QString& szDirector,
 					const QString& szOriginalMovieTitle, const QString& szStudio, const QString& szTrailerURL, const QString& szFanartURLs,
-					const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 idSet, qint32 iUserrating, const QString& szSet, const QString& szSetOverview,
+					const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 iUserrating,
 					const QString& szFileName, const QString& szPathURL, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
-					qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds);
+					qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds, cMyVideosSet* lpSet);
 
 private:
 };

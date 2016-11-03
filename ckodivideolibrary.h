@@ -10,6 +10,7 @@
 
 #include <QStandardItemModel>
 #include <QTreeView>
+#include <QComboBox>
 
 
 class cKodiVideoLibrary
@@ -28,6 +29,7 @@ public:
 	void					fillCountriesList(QStandardItemModel* lpModel);
 	void					fillGenresList(QStandardItemModel* lpModel);
 	void					fillStudiosList(QStandardItemModel* lpModel);
+	void					fillSetsList(QComboBox* lpComboBox);
 	void					fillActorList(QStandardItemModel* lpList, cMyVideos* lpVideos);
 	void					fillDirectorsList(QStandardItemModel* lpList, cMyVideos* lpVideos);
 	void					fillWritersList(QStandardItemModel* lpList, cMyVideos* lpVideos);
@@ -48,6 +50,7 @@ private:
 	cMyVideosCountryList	m_videosCountryList;
 	cMyVideosGenreList		m_videosGenreList;
 	cMyVideosStudioList		m_videosStudioList;
+	cMyVideosSetList		m_videosSetList;
 	cMyVideosList			m_videosList;
 
 	qint32					loadActors();
@@ -55,6 +58,7 @@ private:
 	qint32					loadGenres();
 	qint32					loadStudios();
 	qint32					loadVideos();
+	qint32					loadSets();
 };
 
 #endif // CKODIVIDEOLIBRARY_H

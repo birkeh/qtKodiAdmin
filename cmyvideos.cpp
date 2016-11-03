@@ -4,6 +4,98 @@
 #include <QStandardItem>
 
 
+cMyVideosSetValues::cMyVideosSetValues() :
+	m_idSet(-1),
+	m_strSet("UNSET"),
+	m_strOverview("UNSET")
+{
+}
+
+cMyVideosSetValues::cMyVideosSetValues(qint32 idSet, const QString& strSet, const QString& strOverview) :
+	m_idSet(idSet),
+	m_strSet(strSet),
+	m_strOverview(strOverview)
+{
+}
+
+void cMyVideosSetValues::set(qint32 idSet, const QString& strSet, const QString& strOverview)
+{
+	m_idSet			= idSet;
+	m_strSet		= strSet;
+	m_strOverview	= strOverview;
+}
+
+inline bool	cMyVideosSetValues::operator==(const cMyVideosSetValues b) const
+{
+	if(m_idSet != b.m_idSet) return(false);
+	if(m_strSet != b.m_strSet) return(false);
+	if(m_strOverview != b.m_strOverview) return(false);
+	return(true);
+}
+
+inline bool	cMyVideosSetValues::operator!=(const cMyVideosSetValues b) const
+{
+	if(m_idSet != b.m_idSet
+		|| m_strSet != b.m_strSet
+		|| m_strOverview != b.m_strOverview)
+		return(true);
+	return(false);
+}
+
+cMyVideosSet::cMyVideosSet(qint32 idSet, const QString& strSet, const QString& strOverview) :
+	m_values(idSet, strSet, strOverview)
+{
+	m_oValues	= m_values;
+}
+
+qint32 cMyVideosSet::idSet()
+{
+	return(m_values.m_idSet);
+}
+
+QString cMyVideosSet::strSet()
+{
+	return(m_values.m_strSet);
+}
+
+QString cMyVideosSet::strOverview()
+{
+	return(m_values.m_strOverview);
+}
+
+bool cMyVideosSet::isNew()
+{
+	return(false);
+}
+
+bool cMyVideosSet::isChanged()
+{
+	if(m_values != m_oValues)
+		return(true);
+	return(false);
+}
+
+cMyVideosSetList::cMyVideosSetList()
+{
+}
+
+cMyVideosSet* cMyVideosSetList::add(qint32 idSet, const QString& strSet, const QString& strOverview)
+{
+	cMyVideosSet*	lpNew	= new cMyVideosSet(idSet, strSet, strOverview);
+	append(lpNew);
+	return(lpNew);
+}
+
+cMyVideosSet* cMyVideosSetList::get(qint32 idSet)
+{
+	for(int z = 0;z < count();z++)
+	{
+		if(at(z)->idSet() == idSet)
+			return(at(z));
+	}
+	return(0);
+}
+
 cMyVideosStreamDetailsVideoValues::cMyVideosStreamDetailsVideoValues() :
 	m_szVideoCodec("UNSET"),
 	m_dAspectRatio(-1),
@@ -921,9 +1013,9 @@ cMyVideosValues::cMyVideosValues() :
 	m_szMovieTagline("UNSET"), m_iRatingVotes(-1), m_dRating(-1), m_szWriters("UNSET"), m_iYearReleased(-1),
 	m_szThumbnails("UNSET"), m_szIMDBID("UNSET"), m_szTitleFormattedForSorting("UNSET"), m_iRuntime(-1),
 	m_szMPAARating("UNSET"), m_iIMDBTop250Ranking(-1), m_szGenre("UNSET"), m_szDirector("UNSET"), m_szOriginalMovieTitle("UNSET"),
-	m_szStudio("UNSET"), m_szTrailerURL("UNSET"), m_szFanartURLs("UNSET"), m_szCountry("UNSET"), m_szFilePath("UNSET"), m_idPath(-1), m_idSet(-1),
-	m_iUserrating(-1), m_szSet("UNSET"), m_szSetOverview("UNSET"), m_szFileName("UNSET"), m_szPathURL("UNSET"), m_iPlayCount(-1),
-	m_dResumeTimeInSeconds(-1), m_dTotalTimeInSeconds(-1), m_iVideoDuration(-1)
+	m_szStudio("UNSET"), m_szTrailerURL("UNSET"), m_szFanartURLs("UNSET"), m_szCountry("UNSET"), m_szFilePath("UNSET"), m_idPath(-1),
+	m_iUserrating(-1), m_szFileName("UNSET"), m_szPathURL("UNSET"), m_iPlayCount(-1),
+	m_dResumeTimeInSeconds(-1), m_dTotalTimeInSeconds(-1), m_lpSet(0), m_iVideoDuration(-1)
 {
 }
 
@@ -932,16 +1024,16 @@ cMyVideosValues::cMyVideosValues(qint32 idMovie, qint32 idFile, const QString& s
 			const QString& szThumbnails, const QString& szIMDBID, const QString& szTitleFormattedForSorting, qint32 iRuntime,
 			const QString& szMPAARating, qint32 iIMDBTop250Ranking, const QString& szGenre, const QString& szDirector,
 			const QString& szOriginalMovieTitle, const QString& szStudio, const QString& szTrailerURL, const QString& szFanartURLs,
-			const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 idSet, qint32 iUserrating, const QString& szSet, const QString& szSetOverview,
+			const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 iUserrating,
 			const QString& szFileName, const QString& szPathURL, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
-			qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds) :
+			qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds, cMyVideosSet* lpSet) :
 	m_idMovie(idMovie), m_idFile(idFile), m_szLocalMovieTitle(szLocalMovieTitle), m_szMoviePlot(szMoviePlot), m_szMoviePlotOutline(szMoviePlotOutline),
 	m_szMovieTagline(szMovieTagline), m_iRatingVotes(iRatingVotes), m_dRating(dRating), m_szWriters(szWriters), m_iYearReleased(iYearReleased),
 	m_szThumbnails(szThumbnails), m_szIMDBID(szIMDBID), m_szTitleFormattedForSorting(szTitleFormattedForSorting), m_iRuntime(iRuntime),
 	m_szMPAARating(szMPAARating), m_iIMDBTop250Ranking(iIMDBTop250Ranking), m_szGenre(szGenre), m_szDirector(szDirector), m_szOriginalMovieTitle(szOriginalMovieTitle),
-	m_szStudio(szStudio), m_szTrailerURL(szTrailerURL), m_szFanartURLs(szFanartURLs), m_szCountry(szCountry), m_szFilePath(szFilePath), m_idPath(idPath), m_idSet(idSet),
-	m_iUserrating(iUserrating), m_szSet(szSet), m_szSetOverview(szSetOverview), m_szFileName(szFileName), m_szPathURL(szPathURL), m_iPlayCount(iPlayCount),
-	m_lastPlayed(lastPlayed), m_dateAdded(dateAdded), m_dResumeTimeInSeconds(dResumeTimeInSeconds), m_dTotalTimeInSeconds(dTotalTimeInSeconds), m_iVideoDuration(-1)
+	m_szStudio(szStudio), m_szTrailerURL(szTrailerURL), m_szFanartURLs(szFanartURLs), m_szCountry(szCountry), m_szFilePath(szFilePath), m_idPath(idPath),
+	m_iUserrating(iUserrating), m_szFileName(szFileName), m_szPathURL(szPathURL), m_iPlayCount(iPlayCount),
+	m_lastPlayed(lastPlayed), m_dateAdded(dateAdded), m_dResumeTimeInSeconds(dResumeTimeInSeconds), m_dTotalTimeInSeconds(dTotalTimeInSeconds), m_lpSet(lpSet), m_iVideoDuration(-1)
 {
 }
 
@@ -950,9 +1042,9 @@ void cMyVideosValues::set(qint32 idMovie, qint32 idFile, const QString& szLocalM
 			const QString& szThumbnails, const QString& szIMDBID, const QString& szTitleFormattedForSorting, qint32 iRuntime,
 			const QString& szMPAARating, qint32 iIMDBTop250Ranking, const QString& szGenre, const QString& szDirector,
 			const QString& szOriginalMovieTitle, const QString& szStudio, const QString& szTrailerURL, const QString& szFanartURLs,
-			const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 idSet, qint32 iUserrating, const QString& szSet, const QString& szSetOverview,
+			const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 iUserrating,
 			const QString& szFileName, const QString& szPathURL, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
-			qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds)
+			qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds, cMyVideosSet* lpSet)
 {
 	m_idMovie						= idMovie;
 	m_idFile						= idFile;
@@ -979,10 +1071,7 @@ void cMyVideosValues::set(qint32 idMovie, qint32 idFile, const QString& szLocalM
 	m_szCountry						= szCountry;
 	m_szFilePath					= szFilePath;
 	m_idPath						= idPath;
-	m_idSet							= idSet;
 	m_iUserrating					= iUserrating;
-	m_szSet							= szSet;
-	m_szSetOverview					= szSetOverview;
 	m_szFileName					= szFileName;
 	m_szPathURL						= szPathURL;
 	m_iPlayCount					= iPlayCount;
@@ -990,6 +1079,7 @@ void cMyVideosValues::set(qint32 idMovie, qint32 idFile, const QString& szLocalM
 	m_dateAdded						= dateAdded;
 	m_dResumeTimeInSeconds			= dResumeTimeInSeconds;
 	m_dTotalTimeInSeconds			= dTotalTimeInSeconds;
+	m_lpSet							= lpSet;
 }
 
 inline bool cMyVideosValues::operator==(const cMyVideosValues b) const
@@ -1019,10 +1109,7 @@ inline bool cMyVideosValues::operator==(const cMyVideosValues b) const
 	if(m_szCountry != b.m_szCountry) return(false);
 	if(m_szFilePath != b.m_szFilePath) return(false);
 	if(m_idPath != b.m_idPath) return(false);
-	if(m_idSet != b.m_idSet) return(false);
 	if(m_iUserrating != b.m_iUserrating) return(false);
-	if(m_szSet != b.m_szSet) return(false);
-	if(m_szSetOverview != b.m_szSetOverview) return(false);
 	if(m_szFileName != b.m_szFileName) return(false);
 	if(m_szPathURL != b.m_szPathURL) return(false);
 	if(m_iPlayCount != b.m_iPlayCount) return(false);
@@ -1031,6 +1118,7 @@ inline bool cMyVideosValues::operator==(const cMyVideosValues b) const
 	if(m_dResumeTimeInSeconds != b.m_dResumeTimeInSeconds) return(false);
 	if(m_dTotalTimeInSeconds != b.m_dTotalTimeInSeconds) return(false);
 	if(m_iVideoDuration != b.m_iVideoDuration) return(false);
+	if(m_lpSet != b.m_lpSet) return(false);
 	return(true);
 }
 
@@ -1061,10 +1149,7 @@ inline bool cMyVideosValues::operator!=(const cMyVideosValues b) const
 			|| m_szCountry != b.m_szCountry
 			|| m_szFilePath != b.m_szFilePath
 			|| m_idPath != b.m_idPath
-			|| m_idSet != b.m_idSet
 			|| m_iUserrating != b.m_iUserrating
-			|| m_szSet != b.m_szSet
-			|| m_szSetOverview != b.m_szSetOverview
 			|| m_szFileName != b.m_szFileName
 			|| m_szPathURL != b.m_szPathURL
 			|| m_iPlayCount != b.m_iPlayCount
@@ -1072,7 +1157,8 @@ inline bool cMyVideosValues::operator!=(const cMyVideosValues b) const
 			|| m_dateAdded != b.m_dateAdded
 			|| m_dResumeTimeInSeconds != b.m_dResumeTimeInSeconds
 			|| m_dTotalTimeInSeconds != b.m_dTotalTimeInSeconds
-			|| m_iVideoDuration != b.m_iVideoDuration)
+			|| m_iVideoDuration != b.m_iVideoDuration
+			|| m_lpSet != b.m_lpSet)
 		return(true);
 	return(false);
 }
@@ -1082,13 +1168,13 @@ cMyVideos::cMyVideos(qint32 idMovie, qint32 idFile, const QString& szLocalMovieT
 			const QString& szThumbnails, const QString& szIMDBID, const QString& szTitleFormattedForSorting, qint32 iRuntime,
 			const QString& szMPAARating, qint32 iIMDBTop250Ranking, const QString& szGenre, const QString& szDirector,
 			const QString& szOriginalMovieTitle, const QString& szStudio, const QString& szTrailerURL, const QString& szFanartURLs,
-			const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 idSet, qint32 iUserrating, const QString& szSet, const QString& szSetOverview,
+			const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 iUserrating,
 			const QString& szFileName, const QString& szPathURL, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
-			qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds) :
+			qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds, cMyVideosSet* lpSet) :
 	m_values(idMovie, idFile, szLocalMovieTitle, szMoviePlot, szMoviePlotOutline, szMovieTagline, iRatingVotes, dRating, szWriters, iYearReleased,
 			szThumbnails, szIMDBID, szTitleFormattedForSorting, iRuntime, szMPAARating, iIMDBTop250Ranking, szGenre, szDirector, szOriginalMovieTitle,
-			szStudio, szTrailerURL, szFanartURLs, szCountry, szFilePath, idPath, idSet, iUserrating, szSet, szSetOverview, szFileName, szPathURL, iPlayCount,
-			lastPlayed, dateAdded, dResumeTimeInSeconds, dTotalTimeInSeconds)
+			szStudio, szTrailerURL, szFanartURLs, szCountry, szFilePath, idPath, iUserrating, szFileName, szPathURL, iPlayCount,
+			lastPlayed, dateAdded, dResumeTimeInSeconds, dTotalTimeInSeconds, lpSet)
 {
 	m_oValues	= m_values;
 }
@@ -1102,15 +1188,15 @@ cMyVideos* cMyVideosList::add(qint32 idMovie, qint32 idFile, const QString& szLo
 							  const QString& szThumbnails, const QString& szIMDBID, const QString& szTitleFormattedForSorting, qint32 iRuntime,
 							  const QString& szMPAARating, qint32 iIMDBTop250Ranking, const QString& szGenre, const QString& szDirector,
 							  const QString& szOriginalMovieTitle, const QString& szStudio, const QString& szTrailerURL, const QString& szFanartURLs,
-							  const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 idSet, qint32 iUserrating, const QString& szSet, const QString& szSetOverview,
+							  const QString& szCountry, const QString& szFilePath, qint32 idPath, qint32 iUserrating,
 							  const QString& szFileName, const QString& szPathURL, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
-							  qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds)
+							  qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds, cMyVideosSet *lpSet)
 {
 	cMyVideos*	lpNew	= new cMyVideos(idMovie, idFile, szLocalMovieTitle, szMoviePlot, szMoviePlotOutline, szMovieTagline, iRatingVotes, dRating,
 										szWriters, iYearReleased, szThumbnails, szIMDBID, szTitleFormattedForSorting, iRuntime, szMPAARating,
 										iIMDBTop250Ranking, szGenre, szDirector, szOriginalMovieTitle, szStudio, szTrailerURL, szFanartURLs,
-										szCountry, szFilePath, idPath, idSet, iUserrating, szSet, szSetOverview, szFileName, szPathURL, iPlayCount,
-										lastPlayed, dateAdded, dResumeTimeInSeconds, dTotalTimeInSeconds);
+										szCountry, szFilePath, idPath, iUserrating, szFileName, szPathURL, iPlayCount,
+										lastPlayed, dateAdded, dResumeTimeInSeconds, dTotalTimeInSeconds, lpSet);
 	append(lpNew);
 	return(lpNew);
 }
@@ -1546,24 +1632,9 @@ QString cMyVideos::filePath()
 	return(m_values.m_szFilePath);
 }
 
-qint32 cMyVideos::idSet()
-{
-	return(m_values.m_idSet);
-}
-
 qint32 cMyVideos::userRating()
 {
 	return(m_values.m_iUserrating);
-}
-
-QString cMyVideos::set()
-{
-	return(m_values.m_szSet);
-}
-
-QString cMyVideos::setOverview()
-{
-	return(m_values.m_szSetOverview);
 }
 
 QString cMyVideos::fileName()
@@ -1599,6 +1670,11 @@ qreal cMyVideos::resumeTimeInSeconds()
 qreal cMyVideos::totalTimeInSeconds()
 {
 	return(m_values.m_dTotalTimeInSeconds);
+}
+
+cMyVideosSet* cMyVideos::set()
+{
+	return(m_values.m_lpSet);
 }
 
 bool cMyVideos::isNew()

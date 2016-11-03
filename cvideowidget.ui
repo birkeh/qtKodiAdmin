@@ -71,7 +71,7 @@
         <item row="0" column="0">
          <widget class="QTabWidget" name="m_lpInformationTab">
           <property name="currentIndex">
-           <number>3</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="m_lpInformationTabBasic">
            <attribute name="title">
@@ -112,9 +112,6 @@
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                 </property>
                </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QLineEdit" name="m_lpSet"/>
               </item>
               <item row="5" column="1">
                <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -370,6 +367,16 @@
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                 </property>
                </widget>
+              </item>
+              <item row="3" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_3">
+                <item>
+                 <widget class="QComboBox" name="m_lpSet"/>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="m_lpSetText"/>
+                </item>
+               </layout>
               </item>
              </layout>
             </item>

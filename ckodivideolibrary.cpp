@@ -66,6 +66,7 @@ qint32 cKodiVideoLibrary::load()
 	loadCountries();
 	loadGenres();
 	loadStudios();
+	loadSets();
 
 	return(loadVideos());
 }
@@ -129,6 +130,20 @@ qint32 cKodiVideoLibrary::loadStudios()
 
 	}
 	return(m_videosStudioList.count());
+}
+
+qint32 cKodiVideoLibrary::loadSets()
+{
+	QSqlQuery	query(m_db);
+
+	query.exec("SELECT idSet, strSet, strOverview FROM sets ORDER BY strSet;");
+	while(query.next())
+	{
+		m_videosSetList.add(query.value("idSet").toInt(),
+							query.value("strSet").toString(),
+							query.value("strOverview").toString());
+	}
+	return(m_videosSetList.count());
 }
 
 qint32 cKodiVideoLibrary::loadVideos()
@@ -210,18 +225,15 @@ qint32 cKodiVideoLibrary::loadVideos()
 			query.value("c21").toString(),
 			query.value("c22").toString(),
 			query.value("c23").toInt(),
-			query.value("idSet").toInt(),
 			query.value("userrating").toInt(),
-			query.value("strSet").toString(),
-			query.value("strSetOverview").toString(),
 			query.value("strFileName").toString(),
 			query.value("strPath").toString(),
 			query.value("playCount").toInt(),
 			QDateTime::fromString(query.value("lastPlayed").toString(), "yyyy-MM-dd HH:mm:ss"),
 			QDateTime::fromString(query.value("dateAdded").toString(), "yyyy-MM-dd HH:mm:ss"),
 			query.value("resumeTimeInSeconds").toDouble(),
-			query.value("totalTimeInSeconds").toDouble());
-
+			query.value("totalTimeInSeconds").toDouble(),
+			m_videosSetList.get(query.value("idSet").toInt()));
 	}
 	return(m_videosList.count());
 }
@@ -250,13 +262,13 @@ void cKodiVideoLibrary::fillVideoList(QStandardItemModel* lpModel)
 	{
 		cMyVideos*	lpVideos	= m_videosList.at(z);
 
-		if(lpVideos->set().length())
+		if(lpVideos->set())
 		{
-			if(szOldSet != lpVideos->set())
+			if(szOldSet != lpVideos->set()->strSet())
 			{
-				szOldSet		= lpVideos->set();
-				lpRoot			= new QStandardItem(QString("<b><i>%1</i></b>").arg(lpVideos->set()));
-				QVariant	v	= qVariantFromValue(lpVideos);
+				szOldSet		= lpVideos->set()->strSet();
+				lpRoot			= new QStandardItem(QString("<b><i>%1</i></b>").arg(lpVideos->set()->strSet()));
+				QVariant	v	= qVariantFromValue(lpVideos->set());
 				lpRoot->setData(v, Qt::UserRole);
 				lpModel->appendRow(lpRoot);
 			}
@@ -319,6 +331,16 @@ void cKodiVideoLibrary::fillStudiosList(QStandardItemModel *lpModel)
 		lpItem->setData(v, Qt::UserRole);
 		lpItem->setCheckable(true);
 		lpModel->appendRow(lpItem);
+	}
+}
+
+void cKodiVideoLibrary::fillSetsList(QComboBox* lpComboBox)
+{
+	lpComboBox->addItem("");
+	for(int z = 0;z < m_videosSetList.count();z++)
+	{
+		QVariant	v	= QVariant::fromValue(m_videosSetList.at(z));
+		lpComboBox->addItem(m_videosSetList.at(z)->strSet(), v);
 	}
 }
 

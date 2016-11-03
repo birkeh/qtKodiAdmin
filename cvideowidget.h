@@ -7,6 +7,10 @@
 #include <QWidget>
 #include <QStandardItemModel>
 #include <QItemSelection>
+#include <QDoubleSpinBox>
+#include <QSpinBox>
+#include <QDateTimeEdit>
+#include <QTextEdit>
 
 
 namespace Ui {
@@ -43,6 +47,17 @@ private:
 
 	void					initUI();
 	void					showList();
+
+	void					displaySet(cMyVideosSet* lpSet);
+	void					displayVideo(cMyVideos* lpVideos);
+
+	void					setValue(QLineEdit* lpLineEdit, QString szText, bool bEnable);
+	void					setValue(QTextEdit* lpLineEdit, QString szText, bool bEnable);
+	void					setValue(QDoubleSpinBox* lpSpinBox, qreal dValue, bool bEnable);
+	void					setValue(QSpinBox* lpSpinBox, qint32 iValue, bool bEnable);
+	void					setValue(QDateTimeEdit* lpDateTimeEdit, QDateTime value, bool bEnable);
+	void					setValue(QTimeEdit* lpTimeEdit, QTime value, bool bEnable);
+
 private slots:
 	void					videoSelectionChanged(const QItemSelection& newSelection, const QItemSelection& oldSelection);
 	void					castSelectionChanged(const QItemSelection& newSelection, const QItemSelection& oldSelection);
