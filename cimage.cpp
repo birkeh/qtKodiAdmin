@@ -44,7 +44,7 @@ cImage::cImage(cKodiVideoLibrary* lpKodiVideoLibrary, cKodiTexturesLibrary* lpKo
 		{
 			if(m_szCachedURL.length())
 			{
-				m_szFileName	= m_szPath + QDir::separator() + "Userdata" + QDir::separator() + "Thumbnails" + QDir::separator() + m_szCachedURL;
+				m_szFileName	= m_szPath + QDir::separator() + "userdata" + QDir::separator() + "Thumbnails" + QDir::separator() + m_szCachedURL;
 				m_image.load(m_szFileName);
 			}
 

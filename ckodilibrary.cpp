@@ -30,7 +30,7 @@ cKodiLibrary::~cKodiLibrary()
 
 QString cKodiLibrary::findFile(const QString& szPath, const QString& szFile)
 {
-	QDir		fileList(szPath + QDir::separator() + QString("Userdata") + QDir::separator() + QString("Database"), szFile + QString("*.*"));
+	QDir		fileList(szPath + QDir::separator() + QString("userdata") + QDir::separator() + QString("Database"), szFile + QString("*.*"));
 	QString		fileName("");
 	QStringList	files		= fileList.entryList(QDir::Files);
 	qint16		iVersion	= -1;
