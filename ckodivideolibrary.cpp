@@ -9,6 +9,8 @@
 
 #include <QDebug>
 #include <QTime>
+#include <QDate>
+#include <QDateTime>
 
 
 cKodiVideoLibrary::cKodiVideoLibrary(const QString& szFileName) :
@@ -60,15 +62,27 @@ qint16 cKodiVideoLibrary::version()
 	return(m_iVersion);
 }
 
-qint32 cKodiVideoLibrary::load()
+qint32 cKodiVideoLibrary::load(QStatusBar *lpStatusBar)
 {
+	lpStatusBar->showMessage("Loading actors ...");
 	loadActors();
+	lpStatusBar->showMessage("Loading countries ...");
 	loadCountries();
+	lpStatusBar->showMessage("Loading genres ...");
 	loadGenres();
+	lpStatusBar->showMessage("Loading studios ...");
 	loadStudios();
+	lpStatusBar->showMessage("Loading sets ...");
 	loadSets();
 
-	return(loadVideos());
+	lpStatusBar->showMessage("Loading videos ...");
+	loadVideos();
+	lpStatusBar->showMessage("Loading tv shows ...");
+	loadTVShows();
+
+	lpStatusBar->showMessage("done.");
+
+	return(1);
 }
 
 qint32 cKodiVideoLibrary::loadActors()
@@ -150,7 +164,6 @@ qint32 cKodiVideoLibrary::loadVideos()
 {
 	QSqlQuery	query(m_db);
 
-	//query.exec("SELECT idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07, c08, c09, c10, c11, c12, c13, c14, c15, c16, c17, c18, c19, c20, c21, c22, c23, idSet, userrating, strSet, strSetOverview, strFileName, strPath, playCount, lastPlayed, dateAdded, resumeTimeInSeconds, totalTimeInSeconds FROM movie_view ORDER BY c00;");
 	query.exec("SELECT		idMovie,"
 				"			idFile,"
 				"			c00,"
@@ -196,7 +209,7 @@ qint32 cKodiVideoLibrary::loadVideos()
 				"			FROM	movie_view"
 				"			)"
 				"			ORDER BY	sortText,"
-				"			c07;");
+				"			CAST(c07 AS INTEGER);");
 	while(query.next())
 	{
 		m_videosList.add(
@@ -236,6 +249,83 @@ qint32 cKodiVideoLibrary::loadVideos()
 			m_videosSetList.get(query.value("idSet").toInt()));
 	}
 	return(m_videosList.count());
+}
+
+qint32 cKodiVideoLibrary::loadTVShows()
+{
+	QSqlQuery	query(m_db);
+
+	query.exec("SELECT		idEpisode,"
+				"			idFile,"
+				"			c00,"
+				"			c01,"
+				"			c03,"
+				"			c04,"
+				"			c05,"
+				"			c06,"
+				"			c09,"
+				"			c10,"
+				"			c12,"
+				"			c13,"
+				"			c15,"
+				"			c16,"
+				"			c17,"
+				"			c18,"
+				"			idShow,"
+				"			userrating,"
+				"			idSeason,"
+				"			strFileName,"
+				"			strPath,"
+				"			playCount,"
+				"			lastPlayed,"
+				"			dateAdded,"
+				"			strTitle,"
+				"			genre,"
+				"			studio,"
+				"			premiered,"
+				"			mpaa,"
+				"			resumeTimeInSeconds,"
+				"			totalTimeInSeconds"
+				"			FROM		episode_view"
+				"			ORDER BY	strTitle,"
+				"			CAST(c12 AS INTEGER),"
+				"			CAST(c13 AS INTEGER);");
+	while(query.next())
+	{
+		m_tvShowsList.add(
+			query.value("idEpisode").toInt(),
+			query.value("idFile").toInt(),
+			query.value("c00").toString(),
+			query.value("c01").toString(),
+			query.value("c03").toDouble(),
+			query.value("c04").toString(),
+			QDateTime::fromString(query.value("c05").toString(), "yyyy-MM-dd"),
+			query.value("c06").toString(),
+			query.value("c09").toInt(),
+			query.value("c10").toString(),
+			query.value("c12").toInt(),
+			query.value("c13").toInt(),
+			query.value("c15").toInt(),
+			query.value("c16").toInt(),
+			query.value("c17").toInt(),
+			query.value("c18").toString(),
+			query.value("idShow").toInt(),
+			query.value("userrating").toInt(),
+			query.value("idSeason").toInt(),
+			query.value("strFileName").toString(),
+			query.value("strPath").toString(),
+			query.value("playCount").toInt(),
+			QDateTime::fromString(query.value("lastPlayed").toString(), "yyyy-MM-dd HH:mm:ss"),
+			QDateTime::fromString(query.value("dateAdded").toString(), "yyyy-MM-dd HH:mm:ss"),
+			query.value("strTitle").toString(),
+			query.value("genre").toString(),
+			query.value("studio").toString(),
+			QDateTime::fromString(query.value("premiered").toString(), "yyyy-MM-dd"),
+			query.value("mpaa").toString(),
+			query.value("resumeTimeInSeconds").toDouble(),
+			query.value("totalTimeInSeconds").toDouble());
+	}
+	return(m_tvShowsList.count());
 }
 
 bool cKodiVideoLibrary::art(const QString& szMediaType, const QString& szType, qint32 idMovie, qint32& artID, QString& szURL)
@@ -283,6 +373,41 @@ void cKodiVideoLibrary::fillVideoList(QStandardItemModel* lpModel)
 			lpRoot->appendRow(lpItem);
 		else
 			lpModel->appendRow(lpItem);
+	}
+}
+
+void cKodiVideoLibrary::fillTVShowList(QStandardItemModel* lpModel)
+{
+	lpModel->clear();
+
+	QStandardItem*	lpRoot		= 0;
+	QStandardItem*	lpSeason	= 0;
+	QString			szOldTVShow	= "";
+	qint32			iOldSeason	= -1;
+
+	for(int z = 0;z < m_tvShowsList.count();z++)
+	{
+		cMyTVShows*	lpTVShows	= m_tvShowsList.at(z);
+
+		if(szOldTVShow != lpTVShows->title())
+		{
+			iOldSeason	= -1;
+			szOldTVShow	= lpTVShows->title();
+			lpRoot	= new QStandardItem(QString("<b>%1</b><br><font color='blue'>%2</font>").arg(lpTVShows->title()).arg(lpTVShows->premierDate().date().year()));
+			lpModel->appendRow(lpRoot);
+		}
+
+		if(iOldSeason != lpTVShows->seasonNumber())
+		{
+			iOldSeason	= lpTVShows->seasonNumber();
+			lpSeason	= new QStandardItem(QString("Season %1").arg(lpTVShows->seasonNumber()));
+			lpRoot->appendRow(lpSeason);
+		}
+
+		QStandardItem*	lpItem	= new QStandardItem(QString("Episode %1: <b>%2</b><br><font color='blue'>%3</font>&nbsp;&nbsp;<i>%4</i>").arg(lpTVShows->episodeNumber()).arg(lpTVShows->episodeTitle()).arg(lpTVShows->firstAired().date().toString(Qt::SystemLocaleShortDate)).arg(lpTVShows->plotSummary()));
+		QVariant		v		= qVariantFromValue(lpTVShows);
+		lpItem->setData(v, Qt::UserRole);
+		lpSeason->appendRow(lpItem);
 	}
 }
 

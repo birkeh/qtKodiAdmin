@@ -70,7 +70,7 @@ bool cKodiLibrary::init()
 
 	m_lpKodiVideoLibrary	= new cKodiVideoLibrary(m_szMyVideos);
 	if(m_lpKodiVideoLibrary->init() != -1)
-		iVideoCount	= m_lpKodiVideoLibrary->load();
+		iVideoCount	= m_lpKodiVideoLibrary->load(m_lpMainWindowStatusBar);
 
 	m_lpMainWindowStatusBar->showMessage("Initializing Textures ...");
 

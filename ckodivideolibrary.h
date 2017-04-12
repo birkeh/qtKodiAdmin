@@ -22,10 +22,11 @@ public:
 	qint16					init();
 	qint16					version();
 
-	qint32					load();
+	qint32					load(QStatusBar* lpStatusBar);
 	bool					art(const QString& szMediaType, const QString& szType, qint32 idMovie, qint32& artID, QString& szURL);
 
 	void					fillVideoList(QStandardItemModel* lpModel);
+	void					fillTVShowList(QStandardItemModel* lpModel);
 	void					fillCountriesList(QStandardItemModel* lpModel);
 	void					fillGenresList(QStandardItemModel* lpModel);
 	void					fillStudiosList(QStandardItemModel* lpModel);
@@ -39,7 +40,6 @@ public:
 	void					fillVideoStreamList(QStandardItemModel* lpModel, cMyVideos* lpVideos);
 	void					fillAudioStreamList(QStandardItemModel* lpModel, cMyVideos* lpVideos);
 	void					fillSubtitleStreamList(QStandardItemModel* lpModel, cMyVideos* lpVideos);
-
 private:
 	QSqlDatabase			m_db;
 	QString					m_szFileName;
@@ -53,11 +53,14 @@ private:
 	cMyVideosSetList		m_videosSetList;
 	cMyVideosList			m_videosList;
 
+	cMyTVShowsList			m_tvShowsList;
+
 	qint32					loadActors();
 	qint32					loadCountries();
 	qint32					loadGenres();
 	qint32					loadStudios();
 	qint32					loadVideos();
+	qint32					loadTVShows();
 	qint32					loadSets();
 };
 

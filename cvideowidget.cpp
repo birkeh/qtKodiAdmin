@@ -5,17 +5,7 @@
 #include "cvideoviewitemdelegate.h"
 #include "ccheckboxitemdelegate.h"
 
-
-#define DELETE(x) { if(x) delete x, x=0; }
-
-#define THUMB_WIDTH		220
-#define THUMB_HEIGHT	390
-#define FANART_WIDTH	480
-#define FANART_HEIGHT	270
-#define POSTER_WIDTH	220
-#define POSTER_HEIGHT	390
-#define BANNER_WIDTH	480
-#define BANNER_HEIGHT	 90
+#include "common.h"
 
 
 cVideoWidget::cVideoWidget(QWidget *parent) :
@@ -134,6 +124,7 @@ void cVideoWidget::showList()
 	m_lpVideoModel->clear();
 	m_lpVideoLibrary->fillVideoList(m_lpVideoModel);
 	ui->m_lpVideoView->resizeColumnToContents(0);
+	ui->m_lpVideoView->selectionModel()->setCurrentIndex(m_lpVideoModel->index(0, 0), QItemSelectionModel::Select | QItemSelectionModel::Current);
 
 	m_lpCountryModel->clear();
 	m_lpVideoLibrary->fillCountriesList(m_lpCountryModel);

@@ -742,4 +742,143 @@ public:
 private:
 };
 
+class cMyTVShowsValues
+{
+public:
+	cMyTVShowsValues();
+	cMyTVShowsValues(qint32 idEpisode, qint32 idFile, const QString& szEpisodeTitle, const QString& szPlotSummary, qreal dRating, const QString& szWriters, const QDateTime firstAired,
+					 const QString& szThumbnailUrl, qint32 iEpisodeLength, const QString& szDirector, qint32 iSeasonNumber, qint32 iEpisodeNumber,
+					 qint32 iSeasonFormattetForSorting, qint32 iEpisodeFormattedForSorting, qint32 iBookmark, const QString& szFullPath, qint32 idShow, qint32 iUserrating,
+					 qint32 idSeason, const QString& szFileName, const QString& szPath, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
+					 const QString& szTitle, const QString& szGenre, const QString& szStudio, const QDateTime& premiereDate, const QString& szMPAA,
+					 qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds);
+
+	void		set(qint32 idEpisode, qint32 idFile, const QString& szepisodeTitle, const QString& szPlotSummary, qreal dRating, const QString& szWriters, const QDateTime firstAired,
+				const QString& szThumbnailUrl, qint32 iEpisodeLength, const QString& szDirector, qint32 iSeasonNumber, qint32 iEpisodeNumber,
+				qint32 iSeasonFormattedForSorting, qint32 iEpisodeFormattedForSorting, qint32 iBookmark, const QString& szFullPath, qint32 idShow, qint32 iUserrating,
+				qint32 idSeason, const QString& szFileName, const QString& szPath, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
+				const QString& szTitle, const QString& szGenre, const QString& szStudio, const QDateTime& premiereDate, const QString& szMPAA,
+				qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds);
+
+	inline bool	operator==(const cMyTVShowsValues b) const;
+	inline bool	operator!=(const cMyTVShowsValues b) const;
+
+	qint32		m_idEpisode;
+	qint32		m_idFile;
+	QString		m_szEpisodeTitle;						// c00
+	QString		m_szPlotSummary;						// c01
+	qreal		m_dRating;								// c03
+	QString		m_szWriters;							// c04
+	QDateTime	m_firstAired;							// c05
+	QString		m_szThumbnailUrl;						// c06
+	qint32		m_iEpisodeLength;						// c09
+	QString		m_szDirector;							// c10
+	qint32		m_iSeasonNumber;						// c12
+	qint32		m_iEpisodeNumber;						// c13
+	qint32		m_iSeasonFormattedForSorting;			// c15
+	qint32		m_iEpisodeFormattedForSorting;			// c16
+	qint32		m_iBookmark;							// c17
+	QString		m_szFullPath;							// c18
+	qint32		m_idShow;
+	qint32		m_iUserrating;							// userrating
+	qint32		m_idSeason;
+	QString		m_szFileName;							// strFileName
+	QString		m_szPath;								// strPath
+	qint32		m_iPlayCount;							// playCount
+	QDateTime	m_lastPlayed;							// lastPlayed
+	QDateTime	m_dateAdded;							// dateAdded
+	QString		m_szTitle;								// strTitle
+	QString		m_szGenre;								// genre
+	QString		m_szStudio;								// studio
+	QDateTime	m_premiereDate;							// premiered
+	QString		m_szMPAA;								// mpaa
+	qreal		m_dResumeTimeInSeconds;					// resumeTimeInSeconds
+	qreal		m_dTotalTimeInSeconds;					// totalTimeInSeconds
+};
+
+class cMyTVShows
+{
+public:
+	cMyTVShows(qint32 idEpisode, qint32 idFile, const QString& szEpisodeTitle, const QString& szPlotSummary, qreal dRating, const QString& szWriters, const QDateTime firstAired,
+			   const QString& szThumbnailUrl, qint32 iEpisodeLength, const QString& szDirector, qint32 iSeasonNumber, qint32 iEpisodeNumber,
+			   qint32 iSeasonFormattedForSorting, qint32 iEpisodeFormattedForSorting, qint32 iBookmark, const QString& szFullPath, qint32 idShow, qint32 iUserrating,
+			   qint32 idSeason, const QString& szFileName, const QString& szPath, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
+			   const QString& szTitle, const QString& szGenre, const QString& szStudio, const QDateTime& premiereDate, const QString& szMPAA,
+			   qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds);
+
+	void			loadActors(QSqlDatabase& m_db, cMyVideosActorList videosActorList);
+	void			loadDirectors(QSqlDatabase& m_db, cMyVideosActorList videosActorList);
+	void			loadWriters(QSqlDatabase& m_db, cMyVideosActorList videosActorList);
+	void			loadCountries(QSqlDatabase& m_db, cMyVideosCountryList videosCountryList);
+	void			loadGenres(QSqlDatabase& m_db, cMyVideosGenreList videosGenreList);
+	void			loadStudios(QSqlDatabase& m_db, cMyVideosStudioList videosStudioList);
+	void			loadVideoStream(QSqlDatabase& m_db);
+	void			loadAudioStream(QSqlDatabase& m_db);
+	void			loadSubtitleStream(QSqlDatabase& m_db);
+
+	void			fillActorsList(QStandardItemModel *lpView);
+	void			fillDirectorsList(QStandardItemModel *lpView);
+	void			fillWritersList(QStandardItemModel *lpView);
+	void			fillCountriesList(QStandardItemModel* lpView);
+	void			fillGenresList(QStandardItemModel* lpView);
+	void			fillStudiosList(QStandardItemModel* lpView);
+	void			fillVideoStreamList(QStandardItemModel* lpView);
+	void			fillAudioStreamList(QStandardItemModel* lpView);
+	void			fillSubtitleStreamList(QStandardItemModel* lpView);
+
+	qint32			idEpisode();
+	qint32			idFile();
+	QString			episodeTitle();
+	QString			plotSummary();
+	qreal			rating();
+	QStringList		writers();
+	QDateTime		firstAired();
+	QString			thumbnailUrl();
+	qint32			episodeLength();
+	QStringList		director();
+	qint32			seasonNumber();
+	qint32			episodeNumber();
+	qint32			seasonFormattedForSorting();
+	qint32			episodeFormattedForSorting();
+	qint32			bookmark();
+	QString			fullPath();
+	qint32			idShow();
+	qint32			userRating();
+	qint32			idSeason();
+	QString			fileName();
+	QString			path();
+	qint32			playCount();
+	QDateTime		lastPlayed();
+	QDateTime		dateAdded();
+	QString			title();
+	QStringList		genre();
+	QStringList		studio();
+	QDateTime		premierDate();
+	QString			mpaaRating();
+	qreal			resumeTimeInSeconds();
+	qreal			totalTimeInSeconds();
+
+	bool			isNew();
+	bool			isChanged();
+
+	cMyTVShowsValues	m_values;
+	cMyTVShowsValues	m_oValues;
+};
+
+Q_DECLARE_METATYPE(cMyTVShows*)
+
+class cMyTVShowsList : public QList<cMyTVShows*>
+{
+public:
+	cMyTVShowsList();
+	cMyTVShows*	add(qint32 idEpisode, qint32 idFile, const QString& szEpisodeTitle, const QString& szPlotSummary, qreal dRating, const QString& szWriters, const QDateTime firstAired,
+					const QString& szThumbnailUrl, qint32 iEpisodeLength, const QString& szDirector, qint32 iSeasonNumber, qint32 iEpisodeNumber,
+					qint32 iSeasonFormattetForSorting, qint32 iEpisodeFormattedForSorting, qint32 iBookmark, const QString& szFullPath, qint32 idShow, qint32 iUserrating,
+					qint32 idSeason, const QString& szFileName, const QString& szPath, qint32 iPlayCount, const QDateTime& lastPlayed, const QDateTime& dateAdded,
+					const QString& szTitle, const QString& szGenre, const QString& szStudio, const QDateTime& premiereDate, const QString& szMPAA,
+					qreal dResumeTimeInSeconds, qreal dTotalTimeInSeconds);
+
+private:
+};
+
 #endif // CMYVIDEOS_H

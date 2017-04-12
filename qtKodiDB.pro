@@ -42,7 +42,8 @@ HEADERS  += cmainwindow.h \
     cvideoviewitemdelegate.h \
     ckoditextureslibrary.h \
     cimage.h \
-    ccheckboxitemdelegate.h
+    ccheckboxitemdelegate.h \
+    common.h
 
 FORMS    += cmainwindow.ui \
     ctvshowwidget.ui \
