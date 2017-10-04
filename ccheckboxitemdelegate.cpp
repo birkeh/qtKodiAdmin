@@ -1,3 +1,4 @@
+/* */
 #include "ccheckboxitemdelegate.h"
 
 #include <QPainter>
