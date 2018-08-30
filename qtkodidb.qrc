@@ -9,5 +9,6 @@
         <file>icons/Videos.ico</file>
         <file>icons/Videos.png</file>
         <file>icons/empty.ico</file>
+        <file>splash/splash.png</file>
     </qresource>
 </RCC>

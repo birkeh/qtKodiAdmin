@@ -12,6 +12,8 @@
 #include <QDate>
 #include <QDateTime>
 
+#include <QApplication>
+
 
 cKodiVideoLibrary::cKodiVideoLibrary(const QString& szFileName) :
 	m_szFileName(szFileName),
@@ -62,25 +64,62 @@ qint16 cKodiVideoLibrary::version()
 	return(m_iVersion);
 }
 
-qint32 cKodiVideoLibrary::load(QStatusBar *lpStatusBar)
+qint32 cKodiVideoLibrary::load(QStatusBar *lpStatusBar, QSplashScreen *lpSplashScreen)
 {
-	lpStatusBar->showMessage("Loading actors ...");
+	if(lpStatusBar)
+		lpStatusBar->showMessage("Loading actors ...");
+	else if(lpSplashScreen)
+		lpSplashScreen->showMessage("Loading actors ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 	loadActors();
-	lpStatusBar->showMessage("Loading countries ...");
+
+	if(lpStatusBar)
+		lpStatusBar->showMessage("Loading countries ...");
+	else if(lpSplashScreen)
+		lpSplashScreen->showMessage("Loading countries ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 	loadCountries();
-	lpStatusBar->showMessage("Loading genres ...");
+
+	if(lpStatusBar)
+		lpStatusBar->showMessage("Loading genres ...");
+	else if(lpSplashScreen)
+		lpSplashScreen->showMessage("Loading genres ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 	loadGenres();
-	lpStatusBar->showMessage("Loading studios ...");
+
+	if(lpStatusBar)
+		lpStatusBar->showMessage("Loading studios ...");
+	else if(lpSplashScreen)
+		lpSplashScreen->showMessage("Loading studios ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 	loadStudios();
-	lpStatusBar->showMessage("Loading sets ...");
+
+	if(lpStatusBar)
+		lpStatusBar->showMessage("Loading sets ...");
+	else if(lpSplashScreen)
+		lpSplashScreen->showMessage("Loading sets ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 	loadSets();
 
-	lpStatusBar->showMessage("Loading videos ...");
+	if(lpStatusBar)
+		lpStatusBar->showMessage("Loading videos ...");
+	else if(lpSplashScreen)
+		lpSplashScreen->showMessage("Loading videos ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 	loadVideos();
-	lpStatusBar->showMessage("Loading tv shows ...");
+
+	if(lpStatusBar)
+		lpStatusBar->showMessage("Loading tv shows ...");
+	else if(lpSplashScreen)
+		lpSplashScreen->showMessage("Loading tv shows ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 	loadTVShows();
 
-	lpStatusBar->showMessage("done.");
+	if(lpStatusBar)
+		lpStatusBar->showMessage("done.");
+	else if(lpSplashScreen)
+		lpSplashScreen->showMessage("done.", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 
 	return(1);
 }

@@ -65,4 +65,7 @@ DISTFILES += \
     icons/Musics.ico \
     icons/TV Shows.ico \
     icons/Videos.ico \
-    icons/empty.ico
+    icons/empty.ico \
+    splash/splash.jpg \
+    splash/splash.png \
+    splash/splash.svg

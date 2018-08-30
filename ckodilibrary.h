@@ -10,6 +10,8 @@
 #include <QStatusBar>
 #include <QStandardItemModel>
 
+#include <QSplashScreen>
+
 
 class cImage;
 class cImageList;
@@ -18,6 +20,7 @@ class cKodiLibrary
 {
 public:
 	cKodiLibrary(QStatusBar* lpMainWindowStatusBar, const QString& szPath);
+	cKodiLibrary(QSplashScreen* lpSplashScreen, const QString& szPath);
 	~cKodiLibrary();
 
 	bool					init();
@@ -27,6 +30,7 @@ public:
 	cImageList*				imageList();
 private:
 	QStatusBar*				m_lpMainWindowStatusBar;
+	QSplashScreen*			m_lpSplashScreen;
 	cKodiVideoLibrary*		m_lpKodiVideoLibrary;
 	cKodiTexturesLibrary*	m_lpKodiTexturesLibrary;
 	cImageList*				m_lpImageList;

@@ -7,7 +7,7 @@
 #include <QSettings>
 
 
-cMainWindow::cMainWindow(QWidget *parent) :
+cMainWindow::cMainWindow(QWidget *parent, QSplashScreen *lpSplashScreen) :
 	QMainWindow(parent),
 	ui(new Ui::cMainWindow),
 	m_lpVideoWidget(0),
@@ -16,9 +16,8 @@ cMainWindow::cMainWindow(QWidget *parent) :
 	m_lpMusicVideoWidget(0),
 	m_lpKodiLibrary(0)
 {
-	initUI();
-
-	initDB();
+	initUI(lpSplashScreen);
+	initDB(lpSplashScreen);
 }
 
 cMainWindow::~cMainWindow()
@@ -41,9 +40,12 @@ cMainWindow::~cMainWindow()
 	delete ui;
 }
 
-void cMainWindow::initUI()
+void cMainWindow::initUI(QSplashScreen* lpSplashScreen)
 {
 	ui->setupUi(this);
+
+	lpSplashScreen->showMessage("initializing UI ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 
 	m_lpVideoWidget			= new cVideoWidget(this);
 	m_lpTVShowWidget		= new cTVShowWidget(this);
@@ -64,16 +66,21 @@ void cMainWindow::initUI()
 	setWindowTitle(tr("qtKodiAdmin"));
 }
 
-void cMainWindow::initDB()
+void cMainWindow::initDB(QSplashScreen* lpSplashScreen)
 {
 	QSettings	settings;
 	QString		szKodiRoot	= settings.value("lastDB", "").toString();
 	if(szKodiRoot.isEmpty())
 		return;
 
-//	m_lpKodiLibrary	= new cKodiLibrary(ui->m_lpStatusBar, QDir::homePath() + QDir::separator() + QString(".kodi"));
-	m_lpKodiLibrary	= new cKodiLibrary(ui->m_lpStatusBar, szKodiRoot);
+	m_lpKodiLibrary	= new cKodiLibrary(lpSplashScreen, szKodiRoot);
 	m_lpKodiLibrary->init();
+
+	lpSplashScreen->showMessage("filling video list ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 	m_lpVideoWidget->setLibrary(m_lpKodiLibrary->videoLibrary(), m_lpKodiLibrary->imageList());
+
+	lpSplashScreen->showMessage("filling tv show list ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 	m_lpTVShowWidget->setLibrary(m_lpKodiLibrary->videoLibrary(), m_lpKodiLibrary->imageList());
 }

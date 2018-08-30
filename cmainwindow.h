@@ -12,6 +12,8 @@
 #include <QMainWindow>
 #include <QSqlDatabase>
 
+#include <QSplashScreen>
+
 
 namespace Ui
 {
@@ -23,7 +25,7 @@ class cMainWindow : public QMainWindow
 	Q_OBJECT
 
 public:
-	explicit cMainWindow(QWidget *parent = 0);
+	explicit cMainWindow(QWidget *parent = 0, QSplashScreen* lpSplashScreen = 0);
 	~cMainWindow();
 
 private slots:
@@ -36,8 +38,8 @@ private:
 	cMusicVideosWidget*	m_lpMusicVideoWidget;
 	cKodiLibrary*		m_lpKodiLibrary;
 
-	void				initUI();
-	void				initDB();
+	void				initUI(QSplashScreen* lpSplashScreen);
+	void				initDB(QSplashScreen* lpSplashScreen);
 };
 
 #endif // CMAINWINDOW_H

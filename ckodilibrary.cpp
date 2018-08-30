@@ -6,9 +6,22 @@
 #include <QString>
 #include <QStringList>
 
+#include <QApplication>
+
 
 cKodiLibrary::cKodiLibrary(QStatusBar* lpMainWindowStatusBar, const QString& szPath) :
 	m_lpMainWindowStatusBar(lpMainWindowStatusBar),
+	m_lpSplashScreen(0),
+	m_lpKodiVideoLibrary(0),
+	m_lpKodiTexturesLibrary(0),
+	m_lpImageList(0),
+	m_szPath(szPath)
+{
+}
+
+cKodiLibrary::cKodiLibrary(QSplashScreen* lpSplashScreen, const QString& szPath) :
+	m_lpMainWindowStatusBar(0),
+	m_lpSplashScreen(lpSplashScreen),
 	m_lpKodiVideoLibrary(0),
 	m_lpKodiTexturesLibrary(0),
 	m_lpImageList(0),
@@ -55,7 +68,11 @@ bool cKodiLibrary::init()
 {
 	qint32	iVideoCount;
 
-	m_lpMainWindowStatusBar->showMessage("Initializing ...");
+	if(m_lpMainWindowStatusBar)
+		m_lpMainWindowStatusBar->showMessage("Initializing ...");
+	else if(m_lpSplashScreen)
+		m_lpSplashScreen->showMessage("Initializing ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 
 	m_szAddons		= findFile(m_szPath, "Addons");
 	m_szADSP		= findFile(m_szPath, "ADSP");
@@ -66,13 +83,21 @@ bool cKodiLibrary::init()
 	m_szTV			= findFile(m_szPath, "TV");
 	m_szViewModes	= findFile(m_szPath, "ViewModes");
 
-	m_lpMainWindowStatusBar->showMessage("Initializing Videos ...");
+	if(m_lpMainWindowStatusBar)
+		m_lpMainWindowStatusBar->showMessage("Initializing Videos ...");
+	else if(m_lpSplashScreen)
+		m_lpSplashScreen->showMessage("Initializing Videos ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 
 	m_lpKodiVideoLibrary	= new cKodiVideoLibrary(m_szMyVideos);
 	if(m_lpKodiVideoLibrary->init() != -1)
-		iVideoCount	= m_lpKodiVideoLibrary->load(m_lpMainWindowStatusBar);
+		iVideoCount	= m_lpKodiVideoLibrary->load(m_lpMainWindowStatusBar, m_lpSplashScreen);
 
-	m_lpMainWindowStatusBar->showMessage("Initializing Textures ...");
+	if(m_lpMainWindowStatusBar)
+		m_lpMainWindowStatusBar->showMessage("Initializing Textures ...");
+	else if(m_lpSplashScreen)
+		m_lpSplashScreen->showMessage("Initializing Textures ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 
 	m_lpKodiTexturesLibrary	= new cKodiTexturesLibrary(m_szTextures);
 	if(m_lpKodiTexturesLibrary->init() != -1)
@@ -82,7 +107,11 @@ bool cKodiLibrary::init()
 
 	m_lpImageList			= new cImageList(m_lpKodiVideoLibrary, m_lpKodiTexturesLibrary, m_szPath);
 
-	m_lpMainWindowStatusBar->showMessage("Done.", 3000);
+	if(m_lpMainWindowStatusBar)
+		m_lpMainWindowStatusBar->showMessage("Done.", 3000);
+	else if(m_lpSplashScreen)
+		m_lpSplashScreen->showMessage("Done.", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
+	QApplication::processEvents();
 
 	return(iVideoCount != 0);
 }

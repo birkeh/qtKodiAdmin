@@ -7,6 +7,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QStatusBar>
+#include <QSplashScreen>
 
 #include <QStandardItemModel>
 #include <QTreeView>
@@ -22,7 +23,7 @@ public:
 	qint16					init();
 	qint16					version();
 
-	qint32					load(QStatusBar* lpStatusBar);
+	qint32					load(QStatusBar* lpStatusBar, QSplashScreen* lpSplashScreen);
 	bool					art(const QString& szMediaType, const QString& szType, qint32 idMovie, qint32& artID, QString& szURL);
 
 	void					fillVideoList(QStandardItemModel* lpModel);
