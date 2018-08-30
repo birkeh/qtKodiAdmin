@@ -4,6 +4,8 @@
 #include <QDir>
 #include <QIcon>
 
+#include <QSettings>
+
 
 cMainWindow::cMainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -15,6 +17,7 @@ cMainWindow::cMainWindow(QWidget *parent) :
 	m_lpKodiLibrary(0)
 {
 	initUI();
+
 	initDB();
 }
 
@@ -63,8 +66,13 @@ void cMainWindow::initUI()
 
 void cMainWindow::initDB()
 {
-	m_lpKodiLibrary	= new cKodiLibrary(ui->m_lpStatusBar, QDir::homePath() + QDir::separator() + QString(".kodi"));
-//	m_lpKodiLibrary	= new cKodiLibrary(ui->m_lpStatusBar, "\\\\MEDIAPC\\system");
+	QSettings	settings;
+	QString		szKodiRoot	= settings.value("lastDB", "").toString();
+	if(szKodiRoot.isEmpty())
+		return;
+
+//	m_lpKodiLibrary	= new cKodiLibrary(ui->m_lpStatusBar, QDir::homePath() + QDir::separator() + QString(".kodi"));
+	m_lpKodiLibrary	= new cKodiLibrary(ui->m_lpStatusBar, szKodiRoot);
 	m_lpKodiLibrary->init();
 	m_lpVideoWidget->setLibrary(m_lpKodiLibrary->videoLibrary(), m_lpKodiLibrary->imageList());
 	m_lpTVShowWidget->setLibrary(m_lpKodiLibrary->videoLibrary(), m_lpKodiLibrary->imageList());
