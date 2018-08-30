@@ -5,7 +5,6 @@
 #include <QSettings>
 
 
-
 int main(int argc, char *argv[])
 {
 	QTranslator		translator;
