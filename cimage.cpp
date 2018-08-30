@@ -3,7 +3,6 @@
 #include <QDir>
 
 
-
 QString strMEDIATYPE[] =
 {
 	"unknown",
