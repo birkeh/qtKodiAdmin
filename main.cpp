@@ -12,16 +12,16 @@ int main(int argc, char *argv[])
 {
 	QTranslator		translator;
 
-	translator.load("qtKodiDB_de");
+	translator.load("qtKodiAdmin_de");
 
 	QApplication	a(argc, argv);
 	a.installTranslator(&translator);
 
 	a.setApplicationVersion("0.1");
-	a.setApplicationDisplayName("qtKodiDB");
+	a.setApplicationDisplayName("qtKodiAdmin");
 	a.setOrganizationName("WIN-DESIGN");
 	a.setOrganizationDomain("windesign.at");
-	a.setApplicationName("qtKodiDB");
+	a.setApplicationName("qtKodiAdmin");
 
 	QPixmap			pixmap(":/splash/splash.png");
 	QSplashScreen*	lpSplashScreen	= new QSplashScreen(pixmap);

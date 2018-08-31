@@ -8,10 +8,10 @@ QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = qtKodiDB
+TARGET = qtKodiAdmin
 TEMPLATE = app
 
-TRANSLATIONS    = qtKodiDB_de.ts
+TRANSLATIONS    = qtKodiAdmin_de.ts
 
 SOURCES += main.cpp\
         cmainwindow.cpp \
@@ -52,7 +52,7 @@ FORMS    += cmainwindow.ui \
     cvideowidget.ui
 
 RESOURCES += \
-    qtkodidb.qrc
+    qtkodiadmin.qrc
 
 DISTFILES += \
     icons/TV Shows.png \
