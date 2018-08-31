@@ -39,7 +39,9 @@ qint16 cKodiVideoLibrary::init()
 		return(-1);
 
 	QSqlQuery	query(m_db);
-	if(!query.exec("SELECT idVersion FROM version;"))
+	query.prepare("SELECT idVersion "
+				  "FROM   version;");
+	if(!query.exec())
 	{
 		m_db.close();
 		return(-1);
@@ -128,7 +130,12 @@ qint32 cKodiVideoLibrary::loadActors()
 {
 	QSqlQuery	query(m_db);
 
-	query.exec("SELECT actor_id, name, art_urls FROM actor ORDER BY name;");
+	query.prepare("SELECT   actor_id, "
+				  "         name, "
+				  "         art_urls "
+				  "FROM     actor "
+				  "ORDER BY name;");
+	query.exec();
 	while(query.next())
 	{
 		m_videosActorList.add(
@@ -144,7 +151,11 @@ qint32 cKodiVideoLibrary::loadCountries()
 {
 	QSqlQuery	query(m_db);
 
-	query.exec("SELECT country_id, name FROM country ORDER BY name;");
+	query.prepare("SELECT   country_id, "
+				  "         name "
+				  "FROM     country "
+				  "ORDER BY name;");
+	query.exec();
 	while(query.next())
 	{
 		m_videosCountryList.add(
@@ -159,7 +170,11 @@ qint32 cKodiVideoLibrary::loadGenres()
 {
 	QSqlQuery	query(m_db);
 
-	query.exec("SELECT genre_id, name FROM genre ORDER BY name;");
+	query.prepare("SELECT   genre_id, "
+				  "         name "
+				  "FROM     genre "
+				  "ORDER BY name;");
+	query.exec();
 	while(query.next())
 	{
 		m_videosGenreList.add(
@@ -174,7 +189,11 @@ qint32 cKodiVideoLibrary::loadStudios()
 {
 	QSqlQuery	query(m_db);
 
-	query.exec("SELECT studio_id, name FROM studio ORDER BY name;");
+	query.prepare("SELECT   studio_id, "
+				  "         name "
+				  "FROM     studio "
+				  "ORDER BY name;");
+	query.exec();
 	while(query.next())
 	{
 		m_videosStudioList.add(
@@ -189,7 +208,12 @@ qint32 cKodiVideoLibrary::loadSets()
 {
 	QSqlQuery	query(m_db);
 
-	query.exec("SELECT idSet, strSet, strOverview FROM sets ORDER BY strSet;");
+	query.prepare("SELECT   idSet, "
+				  "         strSet, "
+				  "         strOverview "
+				  "FROM     sets "
+				  "ORDER BY strSet;");
+	query.exec();
 	while(query.next())
 	{
 		m_videosSetList.add(query.value("idSet").toInt(),
@@ -203,52 +227,53 @@ qint32 cKodiVideoLibrary::loadVideos()
 {
 	QSqlQuery	query(m_db);
 
-	query.exec("SELECT		idMovie,"
-				"			idFile,"
-				"			c00,"
-				"			c01,"
-				"			c02,"
-				"			c03,"
-				"			c04,"
-				"			c05,"
-				"			c06,"
-				"			c07,"
-				"			c08,"
-				"			c09,"
-				"			c10,"
-				"			c11,"
-				"			c12,"
-				"			c13,"
-				"			c14,"
-				"			c15,"
-				"			c16,"
-				"			c17,"
-				"			c18,"
-				"			c19,"
-				"			c20,"
-				"			c21,"
-				"			c22,"
-				"			c23,"
-				"			idSet,"
-				"			userrating,"
-				"			strSet,"
-				"			strSetOverview,"
-				"			strFileName,"
-				"			strPath,"
-				"			playCount,"
-				"			lastPlayed,"
-				"			dateAdded,"
-				"			resumeTimeInSeconds,"
-				"			totalTimeInSeconds,"
-				"			sortText"
-				"			FROM"
-				"			("
-				"			SELECT	*,"
-				"			ifnull(strSet, c00) as sortText"
-				"			FROM	movie_view"
-				"			)"
-				"			ORDER BY	sortText,"
-				"			CAST(c07 AS INTEGER);");
+	query.prepare("SELECT		idMovie, "
+				  "				idFile, "
+				  "				c00, "
+				  "				c01, "
+				  "				c02, "
+				  "				c03, "
+				  "				c04, "
+				  "				c05, "
+				  "				c06, "
+				  "				c07, "
+				  "				c08, "
+				  "				c09, "
+				  "				c10, "
+				  "				c11, "
+				  "				c12, "
+				  "				c13, "
+				  "				c14, "
+				  "				c15, "
+				  "				c16, "
+				  "				c17, "
+				  "				c18, "
+				  "				c19, "
+				  "				c20, "
+				  "				c21, "
+				  "				c22, "
+				  "				c23, "
+				  "				idSet, "
+				  "				userrating, "
+				  "				strSet, "
+				  "				strSetOverview, "
+				  "				strFileName, "
+				  "				strPath, "
+				  "				playCount, "
+				  "				lastPlayed, "
+				  "				dateAdded, "
+				  "				resumeTimeInSeconds, "
+				  "				totalTimeInSeconds, "
+				  "				sortText "
+				  "FROM "
+				  "				( "
+				  "					SELECT	*, "
+				  "							ifnull(strSet, c00) as sortText "
+				  "					FROM	movie_view "
+				  "				) "
+				  "ORDER BY		sortText, "
+				  "				CAST(c07 AS INTEGER);");
+	query.exec();
 	while(query.next())
 	{
 		m_videosList.add(
@@ -294,41 +319,43 @@ qint32 cKodiVideoLibrary::loadTVShows()
 {
 	QSqlQuery	query(m_db);
 
-	query.exec("SELECT		idEpisode,"
-				"			idFile,"
-				"			c00,"
-				"			c01,"
-				"			c03,"
-				"			c04,"
-				"			c05,"
-				"			c06,"
-				"			c09,"
-				"			c10,"
-				"			c12,"
-				"			c13,"
-				"			c15,"
-				"			c16,"
-				"			c17,"
-				"			c18,"
-				"			idShow,"
-				"			userrating,"
-				"			idSeason,"
-				"			strFileName,"
-				"			strPath,"
-				"			playCount,"
-				"			lastPlayed,"
-				"			dateAdded,"
-				"			strTitle,"
-				"			genre,"
-				"			studio,"
-				"			premiered,"
-				"			mpaa,"
-				"			resumeTimeInSeconds,"
-				"			totalTimeInSeconds"
-				"			FROM		episode_view"
-				"			ORDER BY	strTitle,"
-				"			CAST(c12 AS INTEGER),"
-				"			CAST(c13 AS INTEGER);");
+	query.prepare("SELECT		idEpisode, "
+				  "				idFile, "
+				  "				c00, "
+				  "				c01, "
+				  "				c03, "
+				  "				c04, "
+				  "				c05, "
+				  "				c06, "
+				  "				c09, "
+				  "				c10, "
+				  "				c12, "
+				  "				c13, "
+				  "				c15, "
+				  "				c16, "
+				  "				c17, "
+				  "				c18, "
+				  "				idShow, "
+				  "				userrating, "
+				  "				idSeason, "
+				  "				strFileName, "
+				  "				strPath, "
+				  "				playCount, "
+				  "				lastPlayed, "
+				  "				dateAdded, "
+				  "				strTitle, "
+				  "				genre, "
+				  "				studio, "
+				  "				premiered, "
+				  "				mpaa, "
+				  "				resumeTimeInSeconds, "
+				  "				totalTimeInSeconds "
+				  "FROM			episode_view "
+				  "ORDER BY		strTitle, "
+				  "				CAST(c12 AS INTEGER), "
+				  "				CAST(c13 AS INTEGER);");
+
+	query.exec();
 	while(query.next())
 	{
 		m_tvShowsList.add(
@@ -370,7 +397,19 @@ qint32 cKodiVideoLibrary::loadTVShows()
 bool cKodiVideoLibrary::art(const QString& szMediaType, const QString& szType, qint32 idMovie, qint32& artID, QString& szURL)
 {
 	QSqlQuery	query(m_db);
-	query.exec(QString("SELECT art_id, media_id, media_type, type, url FROM art WHERE media_type='%1' AND type='%2' AND media_id=%3;").arg(szMediaType).arg(szType).arg(idMovie));
+	query.prepare("SELECT art_id, "
+				  "       media_id, "
+				  "       media_type, "
+				  "       type, "
+				  "       url "
+				  "FROM   art "
+				  "WHERE  media_type=:media_type AND "
+				  "       type=:type AND "
+				  "       media_id=:media_id;");
+	query.bindValue(":media_type", szMediaType);
+	query.bindValue(":type", szType);
+	query.bindValue(":media_id", idMovie);
+	query.exec();
 	if(query.next())
 	{
 		artID	= query.value("art_id").toInt();

@@ -42,6 +42,8 @@ cMainWindow::~cMainWindow()
 
 void cMainWindow::initUI(QSplashScreen* lpSplashScreen)
 {
+	QSettings	settings;
+
 	ui->setupUi(this);
 
 	lpSplashScreen->showMessage("initializing UI ...", Qt::AlignLeft | Qt::AlignBottom, Qt::white);
@@ -52,14 +54,20 @@ void cMainWindow::initUI(QSplashScreen* lpSplashScreen)
 	m_lpMusicWidget			= new cMusicWidget(this);
 	m_lpMusicVideoWidget	= new cMusicVideosWidget(this);
 
-	ui->m_lpMainTab->addTab(m_lpVideoWidget, QIcon(":/icons/Videos.ico"), "Movies");
-	ui->m_lpMainTab->addTab(m_lpTVShowWidget, QIcon(":/icons/TV Shows.ico"), "TV Shows");
-	ui->m_lpMainTab->addTab(m_lpMusicWidget, QIcon(":/icons/Musics.ico"), "Music");
-	ui->m_lpMainTab->addTab(m_lpMusicVideoWidget, QIcon(":/icons/Videos.ico"), "Music Videos");
-//	ui->m_lpMainTab->addTab(m_lpVideoWidget, QIcon(":/icons/empty.ico"), tr("Movies"));
-//	ui->m_lpMainTab->addTab(m_lpTVShowWidget, QIcon(":/icons/empty.ico"), tr("TV Shows"));
-//	ui->m_lpMainTab->addTab(m_lpMusicWidget, QIcon(":/icons/empty.ico"), tr("Music"));
-//	ui->m_lpMainTab->addTab(m_lpMusicVideoWidget, QIcon(":/icons/empty.ico"), tr("Music Videos"));
+	if(settings.value("icons").toBool())
+	{
+		ui->m_lpMainTab->addTab(m_lpVideoWidget, QIcon(":/icons/Videos.ico"), "Movies");
+		ui->m_lpMainTab->addTab(m_lpTVShowWidget, QIcon(":/icons/TV Shows.ico"), "TV Shows");
+		ui->m_lpMainTab->addTab(m_lpMusicWidget, QIcon(":/icons/Musics.ico"), "Music");
+		ui->m_lpMainTab->addTab(m_lpMusicVideoWidget, QIcon(":/icons/Videos.ico"), "Music Videos");
+	}
+	else
+	{
+		ui->m_lpMainTab->addTab(m_lpVideoWidget, QIcon(":/icons/empty.ico"), tr("Movies"));
+		ui->m_lpMainTab->addTab(m_lpTVShowWidget, QIcon(":/icons/empty.ico"), tr("TV Shows"));
+		ui->m_lpMainTab->addTab(m_lpMusicWidget, QIcon(":/icons/empty.ico"), tr("Music"));
+		ui->m_lpMainTab->addTab(m_lpMusicVideoWidget, QIcon(":/icons/empty.ico"), tr("Music Videos"));
+	}
 
 	ui->m_lpMainTab->setCurrentIndex(0);
 
@@ -69,7 +77,7 @@ void cMainWindow::initUI(QSplashScreen* lpSplashScreen)
 void cMainWindow::initDB(QSplashScreen* lpSplashScreen)
 {
 	QSettings	settings;
-	QString		szKodiRoot	= settings.value("lastDB", "").toString();
+	QString		szKodiRoot	= settings.value("kodiRoot", "").toString();
 	if(szKodiRoot.isEmpty())
 		return;
 

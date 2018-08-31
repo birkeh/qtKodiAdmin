@@ -1207,7 +1207,15 @@ void cMyVideos::loadActors(QSqlDatabase& m_db, cMyVideosActorList videosActorLis
 		return;
 
 	QSqlQuery	query(m_db);
-	query.exec(QString("SELECT actor_id, role, cast_order FROM actor_link WHERE media_id=%1 AND media_type='movie' ORDER BY cast_order;").arg(m_values.m_idMovie));
+	query.prepare("SELECT   actor_id, "
+				  "         role, "
+				  "         cast_order "
+				  "FROM     actor_link "
+				  "WHERE    media_id=:media_id AND "
+				  "         media_type='movie' "
+				  "ORDER BY cast_order;");
+	query.bindValue(":media_id", m_values.m_idMovie);
+	query.exec();
 	while(query.next())
 	{
 		cMyVideosActor*	lpActor	= videosActorList.find(query.value("actor_id").toInt());
@@ -1223,7 +1231,12 @@ void cMyVideos::loadDirectors(QSqlDatabase& m_db, cMyVideosActorList videosActor
 		return;
 
 	QSqlQuery	query(m_db);
-	query.exec(QString("SELECT actor_id FROM director_link WHERE media_id=%1 AND media_type='movie';").arg(m_values.m_idMovie));
+	query.prepare("SELECT   actor_id "
+				  "FROM     director_link "
+				  "WHERE    media_id=:media_id AND "
+				  "         media_type='movie';");
+	query.bindValue(":media_id", m_values.m_idMovie);
+	query.exec();
 	while(query.next())
 	{
 		cMyVideosActor*	lpActor	= videosActorList.find(query.value("actor_id").toInt());
@@ -1239,7 +1252,12 @@ void cMyVideos::loadWriters(QSqlDatabase& m_db, cMyVideosActorList videosActorLi
 		return;
 
 	QSqlQuery	query(m_db);
-	query.exec(QString("SELECT actor_id FROM writer_link WHERE media_id=%1 AND media_type='movie';").arg(m_values.m_idMovie));
+	query.prepare("SELECT   actor_id "
+				  "FROM     writer_link "
+				  "WHERE    media_id=:media_id AND "
+				  "         media_type='movie';");
+	query.bindValue(":media_id", m_values.m_idMovie);
+	query.exec();
 	while(query.next())
 	{
 		cMyVideosActor*	lpActor	= videosActorList.find(query.value("actor_id").toInt());
@@ -1255,7 +1273,12 @@ void cMyVideos::loadCountries(QSqlDatabase& m_db, cMyVideosCountryList videosCou
 		return;
 
 	QSqlQuery	query(m_db);
-	query.exec(QString("SELECT country_id FROM country_link WHERE media_id=%1 AND media_type='movie';").arg(m_values.m_idMovie));
+	query.prepare("SELECT   country_id "
+				  "FROM     country_link "
+				  "WHERE    media_id=:media_id AND "
+				  "         media_type='movie';");
+	query.bindValue(":media_id", m_values.m_idMovie);
+	query.exec();
 	while(query.next())
 	{
 		cMyVideosCountry*	lpCountry	= videosCountryList.find(query.value("country_id").toInt());
@@ -1271,7 +1294,12 @@ void cMyVideos::loadGenres(QSqlDatabase& m_db, cMyVideosGenreList videosGenreLis
 		return;
 
 	QSqlQuery	query(m_db);
-	query.exec(QString("SELECT genre_id FROM genre_link WHERE media_id=%1 AND media_type='movie';").arg(m_values.m_idMovie));
+	query.prepare("SELECT   genre_id "
+				  "FROM     genre_link "
+				  "WHERE    media_id=:media_id AND "
+				  "         media_type='movie';");
+	query.bindValue(":media_id", m_values.m_idMovie);
+	query.exec();
 	while(query.next())
 	{
 		cMyVideosGenre*	lpGenre	= videosGenreList.find(query.value("genre_id").toInt());
@@ -1287,7 +1315,12 @@ void cMyVideos::loadStudios(QSqlDatabase& m_db, cMyVideosStudioList videosStudio
 		return;
 
 	QSqlQuery	query(m_db);
-	query.exec(QString("SELECT studio_id FROM studio_link WHERE media_id=%1 AND media_type='movie';").arg(m_values.m_idMovie));
+	query.prepare("SELECT   studio_id "
+				  "FROM     studio_link "
+				  "WHERE    media_id=:media_id AND "
+				  "         media_type='movie';");
+	query.bindValue(":media_id", m_values.m_idMovie);
+	query.exec();
 	while(query.next())
 	{
 		cMyVideosStudio*	lpStudio	= videosStudioList.find(query.value("studio_id").toInt());
@@ -1303,7 +1336,16 @@ void cMyVideos::loadVideoStream(QSqlDatabase& m_db)
 		return;
 
 	QSqlQuery	query(m_db);
-	query.exec(QString("SELECT strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, iVideoDuration FROM streamdetails WHERE idFile=%1 AND iStreamType=0;").arg(m_values.m_idFile));
+	query.prepare("SELECT   strVideoCodec, "
+				  "         fVideoAspect, "
+				  "         iVideoWidth, "
+				  "         iVideoHeight, "
+				  "         iVideoDuration "
+				  "FROM     streamdetails "
+				  "WHERE    idFile=:idFile AND "
+				  "         iStreamType=0;");
+	query.bindValue(":idFile", m_values.m_idFile);
+	query.exec();
 	while(query.next())
 	{
 		m_values.m_streamVideo.add(query.value("strVideoCodec").toString(), query.value("fVideoAspect").toDouble(), query.value("iVideoWidth").toInt(), query.value("iVideoHeight").toInt());
@@ -1320,7 +1362,15 @@ void cMyVideos::loadAudioStream(QSqlDatabase& m_db)
 		return;
 
 	QSqlQuery	query(m_db);
-	query.exec(QString("SELECT strAudioCodec, iAudioChannels, strAudioLanguage, strStereoMode FROM streamdetails WHERE idFile=%1 AND iStreamType=1;").arg(m_values.m_idFile));
+	query.prepare("SELECT   strAudioCodec, "
+				  "         iAudioChannels, "
+				  "         strAudioLanguage, "
+				  "         strStereoMode "
+				  "FROM     streamdetails "
+				  "WHERE    idFile=:idFile AND "
+				  "         iStreamType=1;");
+	query.bindValue(":idFile", m_values.m_idFile);
+	query.exec();
 	while(query.next())
 		m_values.m_streamAudio.add(query.value("strAudioCodec").toString(), query.value("iAudioChannels").toInt(), query.value("strAudioLanguage").toString(), query.value("strStereoMode").toString());
 
@@ -1333,7 +1383,12 @@ void cMyVideos::loadSubtitleStream(QSqlDatabase& m_db)
 		return;
 
 	QSqlQuery	query(m_db);
-	query.exec(QString("SELECT strSubtitleLanguage FROM streamdetails WHERE idFile=%1 AND iStreamType=2;").arg(m_values.m_idFile));
+	query.prepare("SELECT   strSubtitleLanguage "
+				  "FROM     streamdetails "
+				  "WHERE    idFile=:idFile AND "
+				  "         iStreamType=2;");
+	query.bindValue(":idFile", m_values.m_idFile);
+	query.exec();
 	while(query.next())
 		m_values.m_streamSubtitle.add(query.value("strSubtitleLanguage").toString());
 

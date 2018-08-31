@@ -34,7 +34,9 @@ qint16 cKodiTexturesLibrary::init()
 		return(-1);
 
 	QSqlQuery	query(m_db);
-	if(!query.exec("SELECT idVersion FROM version;"))
+	query.prepare("SELECT idVersion "
+				  "FROM   version;");
+	if(!query.exec())
 	{
 		m_db.close();
 		return(-1);
@@ -62,7 +64,13 @@ qint16 cKodiTexturesLibrary::version()
 bool cKodiTexturesLibrary::texture(const QString& szURL, qint32& id, QString& szCachedURL)
 {
 	QSqlQuery	query(m_db);
-	query.exec(QString("SELECT id, url, cachedurl FROM texture WHERE url='%1';").arg(szURL));
+	query.prepare("SELECT id, "
+				  "       url, "
+				  "       cachedurl "
+				  "FROM   texture "
+				  "WHERE  url=:url;");
+	query.bindValue(":url", szURL);
+	query.exec();
 	if(query.next())
 	{
 		id			= query.value("id").toInt();
