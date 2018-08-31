@@ -5,6 +5,11 @@
 #include <QTabWidget>
 
 
+/*!
+ \brief
+
+ \class cMainTabWidget cmaintabwidget.h "cmaintabwidget.h"
+*/
 class cMainTabWidget : public QTabWidget
 {
 public:

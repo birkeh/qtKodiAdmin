@@ -68,4 +68,5 @@ DISTFILES += \
     icons/empty.ico \
     splash/splash.jpg \
     splash/splash.png \
-    splash/splash.svg
+    splash/splash.svg \
+    Doxyfile
