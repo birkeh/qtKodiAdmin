@@ -54,7 +54,7 @@ void cMainWindow::initUI(QSplashScreen* lpSplashScreen)
 	m_lpMusicWidget			= new cMusicWidget(this);
 	m_lpMusicVideoWidget	= new cMusicVideosWidget(this);
 
-	if(settings.value("icons").toBool())
+	if(settings.value("icons", 1).toBool())
 	{
 		ui->m_lpMainTab->addTab(m_lpVideoWidget, QIcon(":/icons/Videos.ico"), "Movies");
 		ui->m_lpMainTab->addTab(m_lpTVShowWidget, QIcon(":/icons/TV Shows.ico"), "TV Shows");
